@@ -25,13 +25,13 @@ info:
       version: 3.1.1
 fetch:
   -
-    id: getNMdata
+    id: get_NM_data
     location: cache/NMdaily.rds
-    fetcher: getNMdata
+    fetcher: get_dv_data
     siteID: "08279500"
     refetch: FALSE
     reader: rds
-    scripts: scripts/fetch/getNMdata.R
+    scripts: scripts/fetch/get_dv_data.R
 process:
   -
     id: state-map
