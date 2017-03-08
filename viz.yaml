@@ -8,14 +8,38 @@ info:
   analytics-id: UA-78530187-1
   description: >-
     Describe project here
-  thumbnail:    
-  url:    
-  width: 250    
-  height: 250    
-  alttext:
+  thumbnail:  
+    url:  "none"  
+    width: 250    
+    height: 250    
+    alttext: "some text here"
+  required-packages:
+    dataRetrieval:
+      repo: CRAN
+      version: 2.6.3
+    sp:
+      repo: CRAN
+      version: 1.2-4
+    maps:
+      repo: CRAN
+      version: 3.1.1
 fetch:
+  -
+    id: NM_data
+    location: cache/NMdaily.rds
+    fetcher: dv_data
+    siteID: "08279500"
+    refetch: FALSE
+    reader: rds
+    scripts: scripts/fetch/dv_data.R
 process:
-  - 
+  -
+    id: state-map
+    location: cache/state-map.rds
+    processor: state_map
+    scripts: scripts/process/process_map.R
+    reader: rds
+- 
     id: calc-hydrographTotal
     location: cache/hydrographTotal.rds
     processor: hydrographTotal
