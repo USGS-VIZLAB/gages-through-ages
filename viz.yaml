@@ -21,5 +21,11 @@ process:
     processor: state_map
     scripts: scripts/process/process_map.R
     reader: rds
+  -
+    id: watermark
+    location: cache/watermark.rds
+    processor: watermark
+    scripts: scripts/process/process_map.R
+    reader: rds
 visualize:
 publish:
