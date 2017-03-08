@@ -23,3 +23,20 @@ process:
     reader: rds
 visualize:
 publish:
+  -
+    id: index
+    name: index
+    publisher: page
+    template: fullpage
+    depends:
+      footer: footer
+    context:
+      footer: footer
+  -
+    id: footer
+    publisher: footer
+    template: footer-template
+    vizzies:
+      -
+        org: USGS-VIZLAB
+        repo: water-use
