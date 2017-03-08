@@ -60,7 +60,7 @@ process:
     scripts: scripts/process/hydrographs.R
     reader: rds
     depends: 
-      dischargeTS: NM_data
+      dailyData: NM_data
   -
     id: watermark
     location: cache/watermark.rds

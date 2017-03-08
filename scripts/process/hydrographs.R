@@ -7,10 +7,13 @@ process.hydrographTotal <- function(viz, smooth.days){
 }
 
 process.hydrographByYear <- function(viz){
-  dischargeTS <- readData(viz[['depends']][['dischargeTS']])
+  library(dataRetrieval)
   
-  dischargeTS[['DayOfYear']] <- as.numeric(format(dischargeTS[['Date']], "%j"))
-  dischargeTS[['Year']] <- as.numeric(format(dischargeTS[['Date']], "%Y"))
+  dailyData <- readData(viz[['depends']][['dailyData']])
+  dailyData <- renameNWISColumns(dailyData)
   
-  saveRDS(dischargeTS, file=viz[["location"]])
+  dailyData[['DayOfYear']] <- as.numeric(format(dailyData[['Date']], "%j"))
+  dailyData[['Year']] <- as.numeric(format(dailyData[['Date']], "%Y"))
+  
+  saveRDS(dailyData, file=viz[["location"]])
 }
