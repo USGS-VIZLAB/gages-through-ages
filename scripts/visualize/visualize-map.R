@@ -15,28 +15,12 @@ visualize.states_svg <- function(viz){
   }, width = size[1], height = size[2])
   
   library(xml2)
-
-  # let this thing scale:
-  xml_attr(svg, "preserveAspectRatio") <- "xMidYMid meet"
-  xml_attr(svg, "xmlns") <- 'http://www.w3.org/2000/svg'
-  xml_attr(svg, "xmlns:xlink") <- 'http://www.w3.org/1999/xlink'
-  xml_attr(svg, "id") <- "map-svg"
   vb.num <- as.numeric(strsplit(xml_attr(svg, 'viewBox'),'[ ]')[[1]])
-  r <- xml_find_all(svg, '//*[local-name()="rect"]')
-
-  xml_add_sibling(xml_children(svg)[[1]], 'desc', .where='before', viz[["alttext"]])
-  xml_add_sibling(xml_children(svg)[[1]], 'title', .where='before', viz[["title"]])
-  
-  # clean up junk that svglite adds:
-  .junk <- lapply(r, xml_remove)
   p <- xml_find_all(svg, '//*[local-name()="path"]')
   if (length(p) != (length(states))){
     stop('something is wrong, the number of states and polys is different')
   }
   
-  defs <- xml_find_all(svg, '//*[local-name()="defs"]')
-  # !!---- use these lines when we have css for the svg ---!!
-  xml_remove(defs)
   defs <- xml_add_child(svg, 'defs')
   
   g.states <- xml_add_child(svg, 'g', 'id' = 'state-polygons')
@@ -55,4 +39,31 @@ visualize.states_svg <- function(viz){
   
   write_xml(svg, viz[['location']])
   
+}
+
+#' do the things to the svg that we need to do every time if they come from svglite:
+#' 
+#' @param svg the svglite xml object from svglite
+#' @param viz the vizlab object
+#' 
+#' @return a modified version of svg
+clean_up_svg <- function(svg, viz){
+  # let this thing scale:
+  xml_attr(svg, "preserveAspectRatio") <- "xMidYMid meet"
+  xml_attr(svg, "xmlns") <- 'http://www.w3.org/2000/svg'
+  xml_attr(svg, "xmlns:xlink") <- 'http://www.w3.org/1999/xlink'
+  xml_attr(svg, "id") <- "map-svg"
+  
+  r <- xml_find_all(svg, '//*[local-name()="rect"]')
+  
+  xml_add_sibling(xml_children(svg)[[1]], 'desc', .where='before', viz[["alttext"]])
+  xml_add_sibling(xml_children(svg)[[1]], 'title', .where='before', viz[["title"]])
+  
+  defs <- xml_find_all(svg, '//*[local-name()="defs"]')
+  # !!---- use these lines when we have css for the svg ---!!
+  xml_remove(defs)
+  
+  # clean up junk that svglite adds:
+  .junk <- lapply(r, xml_remove)
+  return(svg)
 }
