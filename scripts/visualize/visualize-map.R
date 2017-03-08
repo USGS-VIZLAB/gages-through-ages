@@ -1,6 +1,6 @@
 
 
-visualize.states_svg <- function(viz){
+visualize.states_svg <- function(viz = getContentInfo(viz.id = "states.svg")){
   data <- readDepends(viz)
   states <- data[['state-map']][['states']]
   
