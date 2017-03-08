@@ -23,6 +23,9 @@ info:
     maps:
       repo: CRAN
       version: 3.1.1
+    maptools:
+      repo: CRAN
+      version: 0.9-1
     xml2:
       repo: CRAN
       version: 1.1.1
@@ -83,3 +86,20 @@ visualize:
     title: "Map of U.S. Geological Survey gages through the ages"
     alttext: "Map of U.S. Geological Survey gages"
 publish:
+  -
+    id: index
+    name: index
+    publisher: page
+    template: fullpage
+    depends:
+      footer: footer
+    context:
+      footer: footer
+  -
+    id: footer
+    publisher: footer
+    template: footer-template
+    vizzies:
+      -
+        org: USGS-VIZLAB
+        repo: water-use
