@@ -4,4 +4,5 @@ user/
 figures/
 vizlab/
 makefile
-.Rproj.user
+*.Rproj
+*.Rproj.user
