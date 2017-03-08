@@ -8,7 +8,12 @@ info:
   analytics-id: UA-78530187-1
   description: >-
     Describe project here
-  thumbnail:    url:    width: 250    height: 250    alttext:fetch:
+  thumbnail:  
+    url:  "none"  
+    width: 250    
+    height: 250    
+    alttext: "some text here"
+fetch:
 process:
   -
     id: state-map
