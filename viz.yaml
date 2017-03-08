@@ -10,5 +10,11 @@ info:
     Describe project here
   thumbnail:    url:    width: 250    height: 250    alttext:fetch:
 process:
+  -
+    id: state-map
+    location: cache/state-map.rds
+    processor: state_map
+    scripts: scripts/process/process_map.R
+    reader: rds
 visualize:
 publish:
