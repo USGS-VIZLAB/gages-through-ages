@@ -8,7 +8,28 @@ info:
   analytics-id: UA-78530187-1
   description: >-
     Describe project here
-  thumbnail:    url:    width: 250    height: 250    alttext:fetch:
+  thumbnail:    
+  url:    
+  width: 250    
+  height: 250    
+  alttext:
+fetch:
 process:
+  - 
+    id: calc-hydrographTotal
+    location: cache/hydrographTotal.rds
+    processor: hydrographTotal
+    scripts: scripts/process/hydrographs.R
+    reader: rds
+    depends: 
+      dischargeTS: getNMdata
+  - 
+    id: calc-hydrographByYear
+    location: cache/hydrographByYear.rds
+    processor: hydrographByYear
+    scripts: scripts/process/hydrographs.R
+    reader: rds
+    depends: 
+      dischargeTS: getNMdata
 visualize:
 publish:
