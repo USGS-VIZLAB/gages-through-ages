@@ -36,7 +36,7 @@ process.state_map <- function(viz){
   
   states.out <- rbind(puerto, conus, alaska, hawaii, makeUniqueIDs = TRUE)
   
-  saveRDS(states.out, file = viz[['location']])
+  saveRDS(list(states=states.out), file = viz[['location']])
 }
 
 get_region <- function(xs){
