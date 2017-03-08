@@ -1,9 +1,15 @@
-process.hydrographTotal <- function(viz, smooth.days){
-  dischargeTS <- readData(viz[['depends']][['dischargeTS']])
+process.hydrographTotal <- function(viz){
+  library(dataRetrieval)
+  library(caTools)
   
+  dailyData <- readData(viz[['depends']][['dailyData']])
+  smooth.days <- viz[['smooth.days']]
+
+  dailyData <- renameNWISColumns(dailyData)
   
+  dailyData[['Flow.smooth']] <- runmean(dailyData[['Flow']], smooth.days, endrule = "constant", align="left")
   
-  saveRDS(dischargeTS, file=viz[["location"]])
+  saveRDS(dailyData, file=viz[["location"]])
 }
 
 process.hydrographByYear <- function(viz){
