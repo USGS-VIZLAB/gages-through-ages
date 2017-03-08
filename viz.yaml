@@ -48,6 +48,22 @@ process:
     processor: state_map
     scripts: scripts/process/process_map.R
     reader: rds
+  - 
+    id: calc-hydrographTotal
+    location: cache/hydrographTotal.rds
+    processor: hydrographTotal
+    scripts: scripts/process/hydrographs.R
+    reader: rds
+    depends: 
+      dischargeTS: NM_data
+  - 
+    id: calc-hydrographByYear
+    location: cache/hydrographByYear.rds
+    processor: hydrographByYear
+    scripts: scripts/process/hydrographs.R
+    reader: rds
+    depends: 
+      dailyData: NM_data
   -
     id: watermark
     location: cache/watermark.rds
