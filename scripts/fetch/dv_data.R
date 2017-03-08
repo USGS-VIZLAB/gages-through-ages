@@ -1,7 +1,7 @@
 #' Get NM daily data
 #'
 #'@param viz the vizlab object 
-fetcher.get_dv_data <- function(viz = getContentInfo(viz.id = "get_NM_data")){
+fetch.dv_data <- function(viz = getContentInfo(viz.id = "NM_data")){
   library(dataRetrieval)
   site.id <- viz[["siteID"]]
   
