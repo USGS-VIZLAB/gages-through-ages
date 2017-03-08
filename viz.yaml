@@ -8,7 +8,18 @@ info:
   analytics-id: UA-78530187-1
   description: >-
     Describe project here
-  thumbnail:    url:    width: 250    height: 250    alttext:fetch:
+  thumbnail:  
+    url:  "none"  
+    width: 250    
+    height: 250    
+    alttext: "some text here"
+fetch:
 process:
+  -
+    id: state-map
+    location: cache/state-map.rds
+    processor: state_map
+    scripts: scripts/process/process_map.R
+    reader: rds
 visualize:
 publish:
