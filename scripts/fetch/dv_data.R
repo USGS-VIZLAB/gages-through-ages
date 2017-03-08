@@ -6,6 +6,7 @@ fetch.dv_data <- function(viz = getContentInfo(viz.id = "NM_data")){
   site.id <- viz[["siteID"]]
   
   dailyData <- readNWISdv(site.id, "00060","","")
+  dailyData <- renameNWISColumns(dailyData)
   
   saveRDS(dailyData, viz[["location"]])
     
