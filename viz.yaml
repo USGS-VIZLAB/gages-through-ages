@@ -1,0 +1,14 @@
+vizlab: "0.1.7"
+info:
+  id: gages-through-ages
+  name: Visualization long name
+  date: 2017-03-08
+  publish-date: 2017-03-22
+  path: /gages-through-ages
+  analytics-id: UA-78530187-1
+  description: >-
+    Describe project here
+  thumbnail:    url:    width: 250    height: 250    alttext:fetch:
+process:
+visualize:
+publish:
