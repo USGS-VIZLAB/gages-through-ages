@@ -23,6 +23,12 @@ info:
     maps:
       repo: CRAN
       version: 3.1.1
+    xml2:
+      repo: CRAN
+      version: 1.1.1
+    rgeos:
+      repo: CRAN
+      version: 0.3.21
 fetch:
   -
     id: NM_data
@@ -55,5 +61,21 @@ process:
     reader: rds
     depends: 
       dischargeTS: NM_data
+  -
+    id: watermark
+    location: cache/watermark.rds
+    processor: watermark
+    scripts: scripts/process/process_usgs_watermark.R
+    reader: rds
 visualize:
+  -
+    id: map-svg
+    location: figures/states_map.svg
+    visualizer: states_svg
+    depends: ["state-map", "watermark"]
+    scripts: scripts/visualize/visualize-map.R
+    mimetype: image/svg+xml
+    inline: true
+    title: "Map of U.S. Geological Survey gages through the ages"
+    alttext: "Map of U.S. Geological Survey gages"
 publish:
