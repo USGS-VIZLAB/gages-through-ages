@@ -11,7 +11,7 @@ fetch.disch_sites <- function(viz){
     sites <- rbind(sites, cbind(resp, data.frame(stringsAsFactors = FALSE, huc=huc)))
   }
   
-  sites <- filter(sites, dec_long_va < -65.4) # remove US virgin Islands and other things we won't plot
+  sites <- dplyr::filter(sites, dec_long_va < -65.4) # remove US virgin Islands and other things we won't plot
   saveRDS(sites, viz[["location"]])
   
 }
