@@ -119,14 +119,13 @@ visualize:
     title: "Map of U.S. Geological Survey gages through the ages"
     alttext: "Map of U.S. Geological Survey gages"
   -
-    id: fullhydrograph-svg
-    location: figures/fullhydrograph.svg
+    id: NMHydrograhTotal-svg
+    location: figures/NMHydrograhTotal.svg
     visualizer: plot_hydrographTotal
     depends: 
-      dailySmoothSVG: calc-hydrographTotal
+      dailySmoothSVG: calc-NMHydrographSVGLand
       rectangles: calc-NMRectangles
-    scripts: scripts/visualize/visualize-hydrographs.R
-    mimetype: image/svg+xml
+    scripts: ["scripts/visualize/visualize-hydrograph.R","scripts/visualize/visualize-map.R"]
     inline: true
     title: ""
     alttext: ""
