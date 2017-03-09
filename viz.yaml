@@ -101,16 +101,6 @@ process:
     processor: watermark
     scripts: scripts/process/process_usgs_watermark.R
     reader: rds
-  -
-    id: doy-NM
-    location: cache/doyNM.rds
-    processor: doy
-    depends: 
-      daily: calc-hydrographByYear
-    scripts: ["scripts/process/doy.R","scripts/visualize/visualize-map.R"]
-    reader: rds
-    title: "NM through the ages"
-    alttext: "NM gage"
   - 
     id: site-map
     location: cache/site-map.rds
@@ -129,6 +119,16 @@ visualize:
     inline: true
     title: "Map of U.S. Geological Survey gages through the ages"
     alttext: "Map of U.S. Geological Survey gages"
+  -
+    id: doy-NM
+    location: figures/doyNM.xml
+    visualizer: doy
+    depends: 
+      daily: calc-hydrographByYear
+    scripts: ["scripts/process/doy.R","scripts/visualize/visualize-map.R"]
+    reader: rds
+    title: "NM through the ages"
+    alttext: "NM gage"
 publish:
   -
     id: index
