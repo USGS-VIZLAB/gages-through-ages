@@ -70,8 +70,6 @@ process:
     processor: state_map
     scripts: scripts/process/process_map.R
     reader: rds
-    export: true
-    mimetype: application/json
   - 
     id: calc-hydrographTotal
     location: cache/hydrographTotal.rds
@@ -116,6 +114,8 @@ process:
     processor: time_json
     scripts: scripts/visualize/visualize-map.R
     depends: "site-map"
+    export: true
+    mimetype: application/json
 visualize:
   -
     id: map-svg
