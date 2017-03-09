@@ -3,7 +3,7 @@ process.hydrographTotal <- function(viz){
   library(caTools)
   
   dailyData <- readData(viz[['depends']][['dailyData']])
-  smooth.days <- readData(viz[['smooth.days']])
+  smooth.days <- viz[['smooth.days']]
   dailyData <- renameNWISColumns(dailyData)
   
   dailyData[['Flow.smooth']] <- runmean(dailyData[['Flow']], smooth.days, endrule = "constant", align="left")
@@ -24,7 +24,7 @@ process.hydrographByYear <- function(viz){
 }
 
 process.hydrographRectangles <- function(viz){
-  dailySmooth <- viz[['depends']][['dailySmooth']]
+  dailySmooth <- readData(viz[['depends']][['dailySmooth']])
   
   heightOfRect <- 50
   widthOfPlotRegion <- 366
