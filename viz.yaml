@@ -99,7 +99,7 @@ process:
     processor: doy
     depends: 
       daily: calc-hydrographByYear
-    scripts: ["scripts/process/doy.R","scripts/visualize/visualize-map.R"]"
+    scripts: ["scripts/process/doy.R","scripts/visualize/visualize-map.R"]
     reader: rds
     title: "NM through the ages"
     alttext: "NM gage"
