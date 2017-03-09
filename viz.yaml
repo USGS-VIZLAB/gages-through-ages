@@ -78,14 +78,14 @@ process:
     reader: rds
     depends: 
       dailyData: NM_data
-  - 
-    id: calc-NMRectangles
-    location: cache/NMRectangles.rds
-    processor: hydrographRectangles
-    scripts: scripts/process/hydrographs.R
-    reader: rds
-    depends: 
-      dailySmooth: calc-hydrographTotal
+#  - 
+#    id: calc-NMRectangles
+#    location: cache/NMRectangles.rds
+#    processor: hydrographRectangles
+#    scripts: scripts/process/hydrographs.R
+#    reader: rds
+#    depends: 
+#      dailySmooth: calc-hydrographTotal
   -
     id: watermark
     location: cache/watermark.rds
@@ -118,8 +118,25 @@ publish:
     template: fullpage
     depends:
       footer: footer
+      map-section: map-section
+      jquery: jquery-js
+      gages-js: gages-js
+      year-data: year-data
     context:
       footer: footer
+      sections: [ map-section ]
+      resources: [ jquery, gages-js ]
+  -
+    id: map-section
+    publisher: section
+    template: simplefigure
+    depends:
+      map: map-svg
+      gages-js: gages-js
+    context:
+      id: gage-map
+      figure: map
+      caption: states
   -
     id: footer
     publisher: footer
@@ -128,3 +145,16 @@ publish:
       -
         org: USGS-VIZLAB
         repo: water-use
+  -
+    id: jquery-js
+    location: layout/js/jquery311.min.js
+    mimetype: text/javascript
+  -
+    id: gages-js
+    location: layout/js/gages.js
+    mimetype: text/javascript
+  -
+    id: year-data
+    location: data/year-data.json
+    mimetype: application/json
+    export: true
