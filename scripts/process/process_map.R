@@ -16,6 +16,15 @@ to_sp <- function(...){
   return(map.sp.t)
 }
 
+#' @param locations a data.frame with dec_long_va and dec_lat_va
+points_sp <- function(locations){
+  library(dplyr)
+  
+  points <- cbind(locations$dec_long_va, locations$dec_lat_va) %>% 
+    sp::SpatialPoints(proj4string = CRS("+proj=longlat +datum=WGS84")) %>% 
+    sp::spTransform(CRS(proj.string)) %>% 
+    sp::SpatialPointsDataFrame(data = locations[c('site_no')])
+}
 
 shifts <- list(AK = list(scale = 0.33, shift = c(80,-450), rotate = -50),
                HI = list(scale = 1, shift = c(520, -110), rotate = -35),
@@ -42,26 +51,26 @@ process.state_map <- function(viz){
     states.out <- rbind(shifted, states.out, makeUniqueIDs = TRUE)
   }
   
-  saveRDS(list(states=states.out), file = viz[['location']])
+  saveRDS(states.out, file = viz[['location']])
 }
 
-get_region <- function(xs){
-  regions <- xs
-  for (i in 1:length(xs)){
-    twod <- substr(xs[i],1,2)
-    if (twod == '19'){
-      region = 'AK'
-    } else if (twod == '20'){
-      region = 'HI'
-    } else if (twod == '21'){
-      region = 'PR'
-    } else {
-      region = 'US'
-    }
-    regions[i] <- region
-  }
+process.site_map <- function(viz){
+  sites <- readData(viz[['depends']]) 
+  huc.map <- c(AK = "19", HI = "20", PR = "21")
   
-  return(regions)
+  
+  library(dplyr)
+  sites.out <- sites %>% filter(!huc %in% huc.map) %>% 
+    points_sp()
+  
+  for (region in names(huc.map)){
+    sites.tmp <- sites %>% filter(huc %in% huc.map[[region]]) %>% 
+      points_sp()
+    sites.tmp <- do.call(shift_sp, c(sp = sites.tmp, ref = stuff_to_move[[region]], 
+                                shifts[[region]]))
+    sites.out <- rbind(sites.out, sites.tmp)
+  }
+  saveRDS(sites.out, file = viz[['location']])
 }
 
 library(rgeos)

@@ -64,12 +64,19 @@ process:
     processor: watermark
     scripts: scripts/process/process_usgs_watermark.R
     reader: rds
+  - 
+    id: site-map
+    location: cache/site-map.rds
+    processor: site_map
+    scripts: scripts/process/process_map.R
+    reader: rds
+    depends: disch-sites
 visualize:
   -
     id: map-svg
     location: figures/states_map.svg
     visualizer: states_svg
-    depends: ["state-map", "watermark"]
+    depends: ["state-map", "site-map", "watermark"]
     scripts: scripts/visualize/visualize-map.R
     mimetype: image/svg+xml
     inline: true
