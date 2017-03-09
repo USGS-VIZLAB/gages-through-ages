@@ -14,6 +14,9 @@ info:
     height: 250    
     alttext: "some text here"
   required-packages:
+    vizlab:
+      repo: GRAN
+      version: 0.1.7
     dataRetrieval:
       repo: CRAN
       version: 2.6.3
@@ -81,6 +84,17 @@ visualize:
     inline: true
     title: "Map of U.S. Geological Survey gages through the ages"
     alttext: "Map of U.S. Geological Survey gages"
+  -
+    id: doy-NM-svg
+    location: figures/doy_NM_svg.svg
+    visualizer: doy_svg
+    depends: 
+      daily: calc-hydrographTotal
+    scripts: scripts/visualize/visualize-doy.R
+    mimetype: image/svg+xml
+    inline: true
+    title: "New Mexico Plot"
+    alttext: "New Mexico Plot"
 publish:
   -
     id: index
