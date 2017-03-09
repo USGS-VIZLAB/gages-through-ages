@@ -35,6 +35,9 @@ info:
     stringr:
       repo: CRAN
       version: 1.2.0
+    caTools:
+      repo: CRAN
+      version: 1.17.1
 fetch:
   -
     id: NM_data
@@ -58,6 +61,23 @@ process:
     processor: state_map
     scripts: scripts/process/process_map.R
     reader: rds
+  - 
+    id: calc-hydrographTotal
+    location: cache/hydrographTotal.rds
+    processor: hydrographTotal
+    scripts: scripts/process/hydrographs.R
+    reader: rds
+    smooth.days: 30
+    depends: 
+      dailyData: NM_data
+  - 
+    id: calc-hydrographByYear
+    location: cache/hydrographByYear.rds
+    processor: hydrographByYear
+    scripts: scripts/process/hydrographs.R
+    reader: rds
+    depends: 
+      dailyData: NM_data
   -
     id: watermark
     location: cache/watermark.rds
