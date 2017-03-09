@@ -34,6 +34,7 @@ visualize.states_svg <- function(viz){
   defs <- xml_add_child(svg, 'defs')
   
   g.states <- xml_add_child(svg, 'g', 'id' = 'state-polygons')
+  g.sites <- xml_add_child(svg, 'g', 'id' = 'site-dots',stroke="green", 'stroke-linecap'="round", 'stroke-width'="3")
   g.watermark <- xml_add_child(svg, 'g', id='usgs-watermark', 
                                transform = sprintf('translate(2,%s)scale(0.20)', as.character(vb.num[4]-30)))
 
@@ -44,28 +45,20 @@ visualize.states_svg <- function(viz){
   }
   rm(p)
   
-  cxs <- xml_attr(c, 'cx')
-  cys <- xml_attr(c, 'cy')
+  library(dplyr)
+  
+  cxs <- as.numeric(xml_attr(c, 'cx')) %>% round(0) %>% as.character()
+  cys <- as.numeric(xml_attr(c, 'cy')) %>% round(0) %>% as.character()
 
+  chunk.s <- seq(1,by=1000, to=length(cxs))
+  chunk.e <- c(tail(chunk.s, -1L), length(cxs))
+  if (tail(chunk.e,1) == tail(chunk.s,1)) stop("can't handle this case")
+  
+  for (i in 1:length(chunk.s)){
+    xml_add_child(g.sites, 'path', d = paste("M",cxs[chunk.s[i]:chunk.e[i]], " ",  cys[chunk.s[i]:chunk.e[i]], "v0", collapse="", sep=''), id=sprintf('all-sites-%s', i))
+  }
+  
   rm(c)
-
-  chunk.s <- seq(1, length(site.num), by = 100)
-  chunk.e <- c(tail(chunk.s, -1L)-1, length(site.num))
-  if (tail(chunk.s,1) == tail(chunk.e,1)){
-    stop('need to handle this case')
-  }
-  
-  
-  c.nodes <- rep(NA_character_, length(site.num))
-  for (i in 1:length(site.num)){
-    classes <- paste('y',sample(1900:2016, sample(1:30, 1)), sep='', collapse = " ") # FAKE DATA!
-    c.nodes[i] <- sprintf('<circle cx="%s" cy="%s" r="0.5" fill="red" class="%s"/>' , cx = cxs[i], cy = cys[i], classes)
-  }
-  
-  # this is a hack because we don't have a good workaround for https://github.com/hadley/xml2/issues/170
-  g.sites <- read_xml(paste('<g id="site-circles" style="display:none;">', paste(c.nodes, collapse ='', sep=''), '</g>', collapse ='', sep=''))
-  
-  xml_add_child(svg, g.sites)
   
   xml_add_child(g.watermark,'path', d=watermark[['usgs']], onclick="window.open('https://www2.usgs.gov/water/','_blank')", 'class'='watermark')
   xml_add_child(g.watermark,'path', d=watermark[['wave']], onclick="window.open('https://www2.usgs.gov/water/','_blank')", 'class'='watermark')
