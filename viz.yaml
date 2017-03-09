@@ -35,6 +35,9 @@ info:
     rgeos:
       repo: CRAN
       version: 0.3.21
+    caTools:
+      repo: CRAN
+      version: 1.17.1
 fetch:
   -
     id: NM_data
@@ -57,8 +60,9 @@ process:
     processor: hydrographTotal
     scripts: scripts/process/hydrographs.R
     reader: rds
+    smooth.days: 30
     depends: 
-      dischargeTS: NM_data
+      dailyData: NM_data
   - 
     id: calc-hydrographByYear
     location: cache/hydrographByYear.rds
