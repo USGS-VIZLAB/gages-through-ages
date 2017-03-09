@@ -59,7 +59,7 @@ visualize.states_svg <- function(viz){
   c.nodes <- rep(NA_character_, length(site.num))
   for (i in 1:length(site.num)){
     id.name <- paste0('nwis-',site.num[i])
-    classes <- paste('yr-',sample(1900:2016, 30), sep='', collapse = " ") # FAKE DATA!
+    classes <- paste('y',sample(1900:2016, sample(1:30, 1)), sep='', collapse = " ") # FAKE DATA!
     c.nodes[i] <- sprintf('<circle id = "%s" cx = "%s" cy = "%s" r = "0.5" fill="red" class = "%s"/>' , id.name, cx = cxs[i], cy = cys[i], classes)
   }
   message('num sites ', length(site.num))
