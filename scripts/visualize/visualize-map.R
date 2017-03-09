@@ -64,7 +64,7 @@ visualize.states_svg <- function(viz){
   }
   message('num sites ', length(site.num))
   # this is a hack because we don't have a good workaround for https://github.com/hadley/xml2/issues/170
-  g.sites <- read_xml(paste('<g id="site-circles">', paste(c.nodes, collapse ='', sep=''), '</g>', collapse ='', sep=''))
+  g.sites <- read_xml(paste('<g id="site-circles" style="display:none;">', paste(c.nodes, collapse ='', sep=''), '</g>', collapse ='', sep=''))
   
   xml_add_child(svg, g.sites)
   
