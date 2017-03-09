@@ -32,6 +32,9 @@ info:
     rgeos:
       repo: CRAN
       version: 0.3.21
+    stringr:
+      repo: CRAN
+      version: 1.2.0
     caTools:
       repo: CRAN
       version: 1.17.1
@@ -44,6 +47,13 @@ fetch:
     refetch: FALSE
     reader: rds
     scripts: scripts/fetch/dv_data.R
+  -
+    id: disch-sites
+    location: cache/disch-sites.rds
+    fetcher: disch_sites
+    refetch: FALSE
+    reader: rds
+    scripts: scripts/fetch/disch_sites.R
 process:
   -
     id: state-map
@@ -74,12 +84,19 @@ process:
     processor: watermark
     scripts: scripts/process/process_usgs_watermark.R
     reader: rds
+  - 
+    id: site-map
+    location: cache/site-map.rds
+    processor: site_map
+    scripts: scripts/process/process_map.R
+    reader: rds
+    depends: disch-sites
 visualize:
   -
     id: map-svg
     location: figures/states_map.svg
     visualizer: states_svg
-    depends: ["state-map", "watermark"]
+    depends: ["state-map", "site-map", "watermark"]
     scripts: scripts/visualize/visualize-map.R
     mimetype: image/svg+xml
     inline: true
