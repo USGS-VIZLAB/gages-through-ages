@@ -38,6 +38,12 @@ info:
     caTools:
       repo: CRAN
       version: 1.17.1
+    gsplot:
+      repo: GRAN
+      version: 0.7.3
+    svglite:
+      repo: CRAN
+      version: 1.2.0
 fetch:
   -
     id: NM_data
@@ -77,6 +83,16 @@ process:
     processor: watermark
     scripts: scripts/process/process_usgs_watermark.R
     reader: rds
+  -
+    id: doy-NM
+    location: cache/doyNM.rds
+    processor: doy
+    depends: 
+      daily: calc-hydrographByYear
+    scripts: ["scripts/process/doy.R","scripts/visualize/visualize-map.R"]"
+    reader: rds
+    title: "NM through the ages"
+    alttext: "NM gage"
 visualize:
   -
     id: map-svg
@@ -88,17 +104,6 @@ visualize:
     inline: true
     title: "Map of U.S. Geological Survey gages through the ages"
     alttext: "Map of U.S. Geological Survey gages"
-  -
-    id: doy-NM-svg
-    location: figures/doy_NM_svg.svg
-    visualizer: doy_svg
-    depends: 
-      daily: calc-hydrographTotal
-    scripts: scripts/visualize/visualize-doy.R
-    mimetype: image/svg+xml
-    inline: true
-    title: "New Mexico Plot"
-    alttext: "New Mexico Plot"
 publish:
   -
     id: index
