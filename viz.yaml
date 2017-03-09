@@ -108,6 +108,12 @@ process:
     scripts: scripts/process/process_map.R
     reader: rds
     depends: disch-sites
+  - 
+    id: year-data
+    location: cache/year-data.json
+    processor: time_json
+    scripts: scripts/visualize/visualize-map.R
+    depends: "site-map"
 visualize:
   -
     id: map-svg
