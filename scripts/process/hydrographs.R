@@ -42,7 +42,7 @@ process.hydrographRectangles <- function(viz){
     rect_args <- c(x=x, width=widthOfRect, height=heightOfRect)
     return(rect_args)
   }, widthOfRect, heightOfRect)
-  names(rect_specs) <- allYrs
+  names(rect_specs) <- paste0("y", allYrs)
   
   saveRDS(dailyData, file=viz[["location"]])
 }
