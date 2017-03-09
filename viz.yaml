@@ -112,19 +112,42 @@ visualize:
     alttext: "Map of U.S. Geological Survey gages"
 publish:
   -
+    id: vizCSS
+    location: layout/css/viz.css
+    mimetype: text/css
+    publisher: resource
+  -
     id: index
     name: index
     publisher: page
     template: fullpage
     depends:
+      header: header
       footer: footer
+      vizCSS: vizCSS
+      headerCSS: lib-header-css
+      footerCSS: lib-footer-css
     context:
+      header: header
       footer: footer
+      resources: ['headerCSS', 'footerCSS', 'vizCSS']
+  -
+    id: header
+    publisher: section
+    template: header-template
+    context:
+      title: Gages Through the Ages
   -
     id: footer
     publisher: footer
     template: footer-template
+    blogsInFooter: TRUE
     vizzies:
       -
         org: USGS-VIZLAB
-        repo: water-use
+        repo: hurricane-matthew
+    blogs:
+      -
+        name: Using the dataRetrieval Stats Service
+        url: https://owi.usgs.gov/blog/stats-service-map/
+        thumbLoc: https://owi.usgs.gov/blog/static/stats-service-map/plot-1.png
