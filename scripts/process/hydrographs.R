@@ -38,7 +38,9 @@ process.hydrographRectangles <- function(viz){
   xvals <- seq(0, by=widthOfRect, length.out=totalNumYrs)
   
   rect_specs <-lapply(xvals, function(x, widthOfRect, heightOfRect) {
-    rect_args <- c(x=x, width=widthOfRect, height=heightOfRect)
+    rect_args <- list(x=as.character(x),
+                      width=as.character(widthOfRect),
+                      height=as.character(heightOfRect))
     return(rect_args)
   }, widthOfRect, heightOfRect)
   names(rect_specs) <- paste0("y", allYrs)
@@ -51,7 +53,7 @@ process.hydrographSVGLand <- function(viz){
   
   heightOfPlotRegion <- 50
   widthOfPlotRegion <- 366
-  heightOfOneFlow <- round(50/max(dailySmooth[['Flow.smooth']]), 5)
+  heightOfOneFlow <- round(heightOfPlotRegion/max(dailySmooth[['Flow.smooth']]), 5)
   widthOfDay <- round(widthOfPlotRegion/nrow(dailySmooth), 4)
 
   dailySmooth[['DateSVG']] <- seq(0, by=widthOfDay, length.out=nrow(dailySmooth))
