@@ -1,5 +1,8 @@
 
 
+site.chunk <- 1000
+group.names <- 'sites-group-%s'
+
 visualize.states_svg <- function(viz){
   data <- readDepends(viz)
   states <- data[['state-map']]
@@ -50,12 +53,12 @@ visualize.states_svg <- function(viz){
   cxs <- as.numeric(xml_attr(c, 'cx')) %>% round(0) %>% as.character()
   cys <- as.numeric(xml_attr(c, 'cy')) %>% round(0) %>% as.character()
 
-  chunk.s <- seq(1,by=1000, to=length(cxs))
+  chunk.s <- seq(1,by=site.chunk, to=length(cxs))
   chunk.e <- c(tail(chunk.s, -1L), length(cxs))
   if (tail(chunk.e,1) == tail(chunk.s,1)) stop("can't handle this case")
   
   for (i in 1:length(chunk.s)){
-    xml_add_child(g.sites, 'path', d = paste("M",cxs[chunk.s[i]:chunk.e[i]], " ",  cys[chunk.s[i]:chunk.e[i]], "v0", collapse="", sep=''), id=sprintf('all-sites-%s', i))
+    xml_add_child(g.sites, 'path', d = paste("M",cxs[chunk.s[i]:chunk.e[i]], " ",  cys[chunk.s[i]:chunk.e[i]], "v0", collapse="", sep=''), id=sprintf(group.names, i))
   }
   
   rm(c)
@@ -67,6 +70,26 @@ visualize.states_svg <- function(viz){
   
 }
 
+process.time_json <- function(viz){
+  data <- readDepends(viz)
+  sites <- data[['site-map']]
+  chunk.s <- seq(1,by=site.chunk, to=length(sites))
+  chunk.e <- c(tail(chunk.s, -1L), length(sites))
+  json.out <- list()
+  for (i in 1:length(chunk.s)){
+    chunk <- list()
+    for (yr in 1880:2016){
+      tmp <- list(sort(c(sample(1:1000, sample(40:500))))) #which of the sites 
+      names(tmp) <- yr
+      chunk <- append(chunk, tmp)
+    }
+    tmp <- list(chunk)
+    names(tmp) <- sprintf(group.names, i)
+    json.out <- append(json.out, tmp)
+  }
+  json.text <- jsonlite::toJSON(json.out)
+  cat(json.text, file = viz[['location']])
+}
 
 #' do the things to the svg that we need to do every time if they come from svglite:
 #' 
