@@ -1,0 +1,17 @@
+*{
+	padding:0; margin:0;
+}
+
+a{
+  text-decoration:none;
+  cursor:pointer;
+  font-weight:normal;
+}
+
+a:hover{
+  text-decoration:underline;
+}
+
+body{
+  font-family:sans-serif;
+}
