@@ -3,7 +3,7 @@
 #'@param viz the vizlab object 
 fetch.disch_sites <- function(viz){
   library(dataRetrieval)
-  hucs <- stringr::str_pad(1:21, width = 2, pad = "0")
+  hucs <- dataRetrieval::zeroPad(1:21,2)
   
   sites <- data.frame(stringsAsFactors = FALSE)
   for (huc in hucs){
