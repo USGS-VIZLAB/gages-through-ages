@@ -121,7 +121,7 @@ visualize:
     alttext: "Map of U.S. Geological Survey gages"
   -
     id: doy-NM
-    location: figures/doyNM.xml
+    location: figures/doyNM.svg
     visualizer: doy
     depends: 
       daily: calc-hydrographByYear
