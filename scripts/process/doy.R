@@ -34,12 +34,12 @@ process.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
     x <- grab_spark(select(year_data, DayOfYear, Flow))
   }
 
+  # 
+  # polyline <- xml_children(x)[3]
+  # xml_attr(polyline, "id") <- "year123"
+  # xml_attr(polyline, "id")
   
-  polyline <- xml_children(x)[3]
-  xml_attr(polyline, "id") <- "year123"
-  xml_attr(polyline, "id")
   
-  
-  saveRDS(gs, viz[["location"]])
+  saveRDS(doy_svg, viz[["location"]])
   
 }
