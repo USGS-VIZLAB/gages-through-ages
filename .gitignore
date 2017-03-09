@@ -6,3 +6,4 @@ vizlab/
 makefile
 *.Rproj
 *.Rproj.user
+.Rproj.user
