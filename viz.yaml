@@ -194,8 +194,3 @@ publish:
     id: gages-js
     location: layout/js/gages.js
     mimetype: text/javascript
-  -
-    id: year-data
-    location: data/year-data.json
-    mimetype: application/json
-    export: true
