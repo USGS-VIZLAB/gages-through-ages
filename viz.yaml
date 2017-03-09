@@ -85,7 +85,7 @@ process:
     scripts: scripts/process/hydrographs.R
     reader: rds
     depends: 
-      dailyData: calc-hydrographTotal
+      dailySmooth: calc-hydrographTotal
   -
     id: watermark
     location: cache/watermark.rds
