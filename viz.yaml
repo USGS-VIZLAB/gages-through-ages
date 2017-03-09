@@ -86,6 +86,14 @@ process:
     reader: rds
     depends: 
       dailySmooth: calc-hydrographTotal
+  - 
+    id: calc-NMHydrographSVGLand
+    location: cache/NMHydrographSVGLand.rds
+    processor: hydrographSVGLand
+    scripts: scripts/process/hydrographs.R
+    reader: rds
+    depends: 
+      dailySmooth: calc-hydrographTotal
   -
     id: watermark
     location: cache/watermark.rds
@@ -115,7 +123,7 @@ visualize:
     location: figures/fullhydrograph.svg
     visualizer: plot_hydrographTotal
     depends: 
-      dailySmooth: calc-hydrographTotal
+      dailySmoothSVG: calc-hydrographTotal
       rectangles: calc-NMRectangles
     scripts: scripts/visualize/visualize-hydrographs.R
     mimetype: image/svg+xml

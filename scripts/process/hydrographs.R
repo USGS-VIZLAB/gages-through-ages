@@ -46,3 +46,17 @@ process.hydrographRectangles <- function(viz){
   
   saveRDS(rect_specs, file=viz[["location"]])
 }
+
+process.hydrographSVGLand <- function(viz){
+  dailySmooth <- readData(viz[['depends']][['dailySmooth']])
+  
+  heightOfPlotRegion <- 50
+  widthOfPlotRegion <- 366
+  heightOfOneFlow <- round(50/max(dailySmooth[['Flow.smooth']]), 5)
+  widthOfDay <- round(widthOfPlotRegion/nrow(dailySmooth), 4)
+
+  dailySmooth[['DateSVG']] <- seq(0, by=widthOfDay, length.out=nrow(dailySmooth))
+  dailySmooth[['FlowSVG']] <- dailySmooth[['Flow.smooth']]*heightOfOneFlow
+
+  saveRDS(dailySmooth, file=viz[['location']])
+}
