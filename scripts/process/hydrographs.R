@@ -3,8 +3,7 @@ process.hydrographTotal <- function(viz){
   library(caTools)
   
   dailyData <- readData(viz[['depends']][['dailyData']])
-  smooth.days <- viz[['smooth.days']]
-
+  smooth.days <- readData(viz[['smooth.days']])
   dailyData <- renameNWISColumns(dailyData)
   
   dailyData[['Flow.smooth']] <- runmean(dailyData[['Flow']], smooth.days, endrule = "constant", align="left")
