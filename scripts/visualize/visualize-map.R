@@ -62,7 +62,7 @@ visualize.states_svg <- function(viz){
     classes <- paste('y',sample(1900:2016, sample(1:30, 1)), sep='', collapse = " ") # FAKE DATA!
     c.nodes[i] <- sprintf('<circle id = "%s" cx = "%s" cy = "%s" r = "0.5" fill="red" class = "%s"/>' , id.name, cx = cxs[i], cy = cys[i], classes)
   }
-  message('num sites ', length(site.num))
+  
   # this is a hack because we don't have a good workaround for https://github.com/hadley/xml2/issues/170
   g.sites <- read_xml(paste('<g id="site-circles" style="display:none;">', paste(c.nodes, collapse ='', sep=''), '</g>', collapse ='', sep=''))
   
