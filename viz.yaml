@@ -14,6 +14,9 @@ info:
     height: 250    
     alttext: "some text here"
   required-packages:
+    vizlab:
+      repo: GRAN
+      version: 0.1.7
     dataRetrieval:
       repo: CRAN
       version: 2.6.3
@@ -38,6 +41,12 @@ info:
     caTools:
       repo: CRAN
       version: 1.17.1
+    gsplot:
+      repo: GRAN
+      version: 0.7.3
+    svglite:
+      repo: CRAN
+      version: 1.2.0
 fetch:
   -
     id: NM_data
@@ -78,14 +87,14 @@ process:
     reader: rds
     depends: 
       dailyData: NM_data
-#  - 
-#    id: calc-NMRectangles
-#    location: cache/NMRectangles.rds
-#    processor: hydrographRectangles
-#    scripts: scripts/process/hydrographs.R
-#    reader: rds
-#    depends: 
-#      dailySmooth: calc-hydrographTotal
+  - 
+    id: calc-NMRectangles
+    location: cache/NMRectangles.rds
+    processor: hydrographRectangles
+    scripts: scripts/process/hydrographs.R
+    reader: rds
+    depends: 
+      dailySmooth: calc-hydrographTotal
   -
     id: watermark
     location: cache/watermark.rds
@@ -110,22 +119,42 @@ visualize:
     inline: true
     title: "Map of U.S. Geological Survey gages through the ages"
     alttext: "Map of U.S. Geological Survey gages"
+  -
+    id: doy-NM
+    location: figures/doyNM.svg
+    visualizer: doy
+    depends: 
+      daily: calc-hydrographByYear
+    scripts: ["scripts/process/doy.R","scripts/visualize/visualize-map.R"]
+    reader: rds
+    title: "NM through the ages"
+    alttext: "NM gage"
 publish:
+  -
+    id: vizCSS
+    location: layout/css/viz.css
+    mimetype: text/css
+    publisher: resource
   -
     id: index
     name: index
     publisher: page
     template: fullpage
     depends:
+      header: header
       footer: footer
       map-section: map-section
       jquery: jquery-js
       gages-js: gages-js
       year-data: year-data
+      vizCSS: vizCSS
+      headerCSS: lib-header-css
+      footerCSS: lib-footer-css
     context:
+      header: header
       footer: footer
       sections: [ map-section ]
-      resources: [ jquery, gages-js ]
+      resources: [ "jquery", "gages-js", "headerCSS", "footerCSS", "vizCSS"]
   -
     id: map-section
     publisher: section
@@ -138,13 +167,25 @@ publish:
       figure: map
       caption: states
   -
+    id: header
+    publisher: section
+    template: header-template
+    context:
+      title: Gages Through the Ages
+  -
     id: footer
     publisher: footer
     template: footer-template
+    blogsInFooter: TRUE
     vizzies:
       -
         org: USGS-VIZLAB
-        repo: water-use
+        repo: hurricane-matthew
+    blogs:
+      -
+        name: Using the dataRetrieval Stats Service
+        url: https://owi.usgs.gov/blog/stats-service-map/
+        thumbLoc: https://owi.usgs.gov/blog/static/stats-service-map/plot-1.png
   -
     id: jquery-js
     location: layout/js/jquery311.min.js
