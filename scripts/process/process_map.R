@@ -16,25 +16,31 @@ to_sp <- function(...){
   return(map.sp.t)
 }
 
+
+shifts <- list(AK = list(scale = 0.33, shift = c(80,-450), rotate = -50),
+               HI = list(scale = 1, shift = c(520, -110), rotate = -35),
+               PR = list(scale = 2.5, shift = c(-140, 90), rotate=20))
+
+stuff_to_move <- list(
+  AK = to_sp("world", "USA:alaska"),
+  HI = to_sp("world", "USA:hawaii"),
+  PR = to_sp("world", "Puerto Rico")
+)
+
+
 #' create the sp object 
 #'
 #'@param viz the vizlab object 
 process.state_map <- function(viz){
   library(sp)
-  conus <- to_sp('state')
-  HI <- to_sp("world", "USA:hawaii")
-  AK <- to_sp("world", "USA:alaska")
-  PR <- to_sp("world", "Puerto Rico")
-  
-  # thanks to Bob Rudis (hrbrmstr):
-  # https://github.com/hrbrmstr/rd3albers
-  
-  # -- if moving any more states, do it here: --
-  alaska <- shift_sp(AK, 0.33, shift = c(80,-450), rotate=-50, proj.string = proj4string(conus), row.names = 'alaska') 
-  hawaii <- shift_sp(HI, 1, shift=c(520, -110), rotate=-35, proj.string = proj4string(conus), row.names = 'hawaii') 
-  puerto <- shift_sp(PR, 2.5, shift = c(-140, 90), rotate=20, proj.string = proj4string(conus), row.names = 'puerto')
-  
-  states.out <- rbind(puerto, conus, alaska, hawaii, makeUniqueIDs = TRUE)
+  states.out <- to_sp('state')
+  for(i in names(shifts)){
+    shifted <- do.call(shift_sp, c(sp = stuff_to_move[[i]], 
+                                   shifts[[i]],  
+                                   proj.string = proj4string(states.out),
+                                   row.names = i))
+    states.out <- rbind(shifted, states.out, makeUniqueIDs = TRUE)
+  }
   
   saveRDS(list(states=states.out), file = viz[['location']])
 }
@@ -60,7 +66,10 @@ get_region <- function(xs){
 
 library(rgeos)
 
-shift_sp <- function(sp, scale, shift, rotate = 0, ref=sp, proj.string=NULL, row.names=NULL){
+shift_sp <- function(sp, scale = NULL, shift = NULL, rotate = 0, ref=sp, proj.string=NULL, row.names=NULL){
+  if (is.null(scale) & is.null(shift) & rotate == 0){
+    return(obj)
+  }
   orig.cent <- rgeos::gCentroid(ref, byid=TRUE)@coords
   scale <- max(apply(bbox(ref), 1, diff)) * scale
   obj <- elide(sp, rotate=rotate, center=orig.cent, bb = bbox(ref))

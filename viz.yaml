@@ -32,6 +32,9 @@ info:
     rgeos:
       repo: CRAN
       version: 0.3.21
+    stringr:
+      repo: CRAN
+      version: 1.2.0
 fetch:
   -
     id: NM_data
@@ -41,6 +44,13 @@ fetch:
     refetch: FALSE
     reader: rds
     scripts: scripts/fetch/dv_data.R
+  -
+    id: disch-sites
+    location: cache/disch-sites.rds
+    fetcher: disch_sites
+    refetch: FALSE
+    reader: rds
+    scripts: scripts/fetch/disch_sites.R
 process:
   -
     id: state-map
