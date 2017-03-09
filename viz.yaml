@@ -70,6 +70,8 @@ process:
     processor: state_map
     scripts: scripts/process/process_map.R
     reader: rds
+    export: true
+    mimetype: application/json
   - 
     id: calc-hydrographTotal
     location: cache/hydrographTotal.rds
