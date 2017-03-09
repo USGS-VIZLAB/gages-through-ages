@@ -49,11 +49,14 @@ fetch:
     scripts: scripts/fetch/dv_data.R
   -
     id: disch-sites
-    location: cache/disch-sites.rds
-    fetcher: disch_sites
-    refetch: FALSE
-    reader: rds
-    scripts: scripts/fetch/disch_sites.R
+    location: cache/allSitesYears.csv
+    fetcher: sciencebase
+    refetch: false
+    scripts:
+    remoteItemId: 58c1c297e4b014cc3a3d3aa4 
+    remoteFilename: allSitesYears_355.csv 
+    mimetype: text/csv
+    
 process:
   -
     id: state-map

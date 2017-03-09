@@ -58,9 +58,11 @@ process.site_map <- function(viz){
   sites <- readData(viz[['depends']]) 
   huc.map <- c(AK = "19", HI = "20", PR = "21")
   
-  
   library(dplyr)
-  sites.out <- sites %>% filter(!huc %in% huc.map) %>% 
+  #parse huc_cd to 2 digits, and rename to huc to stay consistent
+  sites <- sites %>% rename(huc = huc_cd) %>% mutate(huc = substr(huc, 1,2))
+ 
+  sites.out <- sites %>% filter(!huc %in% huc.map) %>% filter(!is.na(dec_lat_va)) %>% 
     points_sp()
   
   for (region in names(huc.map)){
