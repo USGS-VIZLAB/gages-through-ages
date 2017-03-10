@@ -64,16 +64,3 @@ getWidthOfDay <- function(date_vec, plot_width){
   pixels_per_day <- plot_width/total_num_days
   return(pixels_per_day)
 }
-
-#' handle date converion to SVG coords
-#' 
-#' @param date_vec a vector of all dates to use
-#' @param plot_width a single numeric value indicating the width
-#' of the plot in pixels.
-#' 
-#' @return SVG coords
-getWidthOfYear <- function(date_vec, plot_width){
-  total_num_days <- as.numeric(max(date_vec) - min(date_vec))
-  pixels_per_day <- plot_width/total_num_days
-  return(pixels_per_day)
-}
