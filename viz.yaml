@@ -293,11 +293,8 @@ publish:
       header: header
       footer: footer
       sections: [ "map-section", "doy-section", "graph-section" ]
-<<<<<<< HEAD
-      resources: [ "jquery", "svg-js", "gages-js", "headerCSS", "footerCSS", "vizCSS"]
-=======
-      resources: [ "jquery", "gages-js", "headerCSS", "footerCSS", "vizCSS", "svgCSS"]
->>>>>>> 2905a824e655f34aee45bd2597bf7d5d472ea94c
+
+      resources: [ "jquery", "svg-js", "gages-js", "headerCSS", "footerCSS", "vizCSS", "svgCSS"]
   -
     id: map-section
     publisher: section

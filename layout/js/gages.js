@@ -78,7 +78,6 @@ var hovertext;
     vizlab.showyear(year);
   };
   
-  window.vizlab = window.vizlab || {}; // remove this
   vizlab.showyear = function(year) {
     return;
     year = "" + year; // force year to be string
