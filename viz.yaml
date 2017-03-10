@@ -6,19 +6,9 @@ info:
   publish-date: 2017-03-22
   path: /gages-through-ages
   analytics-id: UA-78530187-1
-  description: >-
-    The U.S. Geological Survey Groundwater and Streamflow Information Program is 
-	funded by Congress to monitor drought and flood across the US through a network 
-	of stream gages. The USGS has been monitoring streamflow since 1889, and data 
-	from streamgages have since become critical to hydropower operations, recreation, 
-	streamflow prediction, flood forecasts, emergency management, engineering designs, 
-	and many other purposes. This data visualization shows an animation of stream gages 
-	since the late 1800s, by year, across the US. In addition, records from one of the 
-	oldest continuously active USGS stream gages, on the Rio Grande River at Embudo, NM, 
-	is shown in an interactive plot.  
-  keywords: >-
-    water, USGS, VIZLAB, stream gages
   audience: General public
+  keywords: [ "water", "USGS", "VIZLAB", "stream gages" ]
+  description: The U.S. Geological Survey Groundwater and Streamflow ...
   url: https://owi.usgs.gov/vizlab/gages-through-ages/
   thumbnail:  
     url:  "none"  
