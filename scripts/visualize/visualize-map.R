@@ -3,6 +3,10 @@
 site.chunk <- 1000
 group.names <- 'sites-group-%s'
 
+size_map_svg <- function(sp){
+  apply(sp::bbox(sp), 1, diff)/500000
+}
+
 visualize.states_svg <- function(viz){
   data <- readDepends(viz)
   states <- data[['state-map']]
@@ -14,7 +18,7 @@ visualize.states_svg <- function(viz){
   
   library(svglite)
   library(sp)
-  size <- apply(bbox(states), 1, diff)/500000
+  size <- size_map_svg(states)
   svg <- svglite::xmlSVG({
     par(mai=c(0,0,0,0), omi=c(0,0,0,0))
     sp::plot(states, ylim=bbox(states)[2,], xlim=bbox(states)[1,], setParUsrBB = TRUE)
@@ -74,38 +78,20 @@ visualize.states_svg <- function(viz){
 }
 
 add_bar_chart <- function(svg, bars){
+  vb <- as.numeric(strsplit(xml_attr(svg, "viewBox"), '[ ]')[[1]])
+  xml_attr(bars, 'transform') <- sprintf("translate(0,%s)", vb[4])
   
-  xml_attr(svg, "viewBox") <- "0 0 658.75 550.10" # hack, but do the math!
-  xml_attr(bars, 'transform') <- "translate(0,440)scale(4,1)"  # hack, but need to do the math!
+  
+  h <- xml_find_all(bars, '//*[local-name()="rect"]') %>% xml_attr('height') %>% as.numeric() %>% max
+  vb[4] <- vb[4] + h
+
+  xml_attr(svg, "viewBox") <- paste(vb, collapse=' ')
+  
   xml_add_child(svg, bars)
   return(svg)
 }
 
-process.time_json <- function(viz){
-  data.in <- readDepends(viz)
-  library(dplyr)
-  sites <- data.in[['site-map']]
-  sites.w.data <- data.in[["disch-data"]]
-  
-  chunk.s <- seq(1,by=site.chunk, to=length(sites))
-  chunk.e <- c(tail(chunk.s, -1L), length(sites))
-  json.out <- list()
-  for (i in 1:length(chunk.s)){
-    chunk <- list()
-    for (yr in viz[['min-year']]:viz[['max-year']]){
-      sites.n.chunk <- sites$site_no[chunk.s[i]:chunk.e[i]]
-      sites.yr <- sites.w.data %>% filter(year == yr ) %>% .$site_no
-      tmp <- list(which(sites.n.chunk %in% sites.yr)) #which of the sites 
-      names(tmp) <- yr
-      chunk <- append(chunk, tmp)
-    }
-    tmp <- list(chunk)
-    names(tmp) <- sprintf(group.names, i)
-    json.out <- append(json.out, tmp)
-  }
-  json.text <- jsonlite::toJSON(json.out)
-  cat(json.text, file = viz[['location']])
-}
+
 
 #' do the things to the svg that we need to do every time if they come from svglite:
 #' 
