@@ -340,6 +340,7 @@ publish:
     publisher: section
     template: layout/templates/figureTemplate.mustache
     depends:
+      siteText: siteText
       doyNM_graph: doy-NM
       svg-js: svg-js
       gages-js: gages-js
@@ -347,7 +348,7 @@ publish:
     context:
       id: doyNM-graph
       figure: doyNM_graph
-      caption: ["siteText.explanationText2", "dataSources"]
+      caption: ["siteText.explanationText2", "siteText.dataSources"]
   -
     id: header
     publisher: section
