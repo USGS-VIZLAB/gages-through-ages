@@ -98,11 +98,10 @@ var hovertext;
   }
   
   hovertext = function(text, event) {
-    console.log('text is"' + text + '"');
     if (text) {
       var id = event.currentTarget.id;
       var year = id.slice(2);
-      var tooltipText = text + ', year: ' + year;
+      var tooltipText = text + ' in ' + year;
       mapSVG.showTooltip(event.clientX, event.clientY, tooltipText);
     } else {
       mapSVG.hideTooltip();
