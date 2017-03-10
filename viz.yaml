@@ -278,7 +278,7 @@ publish:
       footer: footer
       intro: intro
       map-section: map-section
-      intro2: intro
+      intro2: intro2
       doy-section: doy-section
       graph-section: graph-section
       social-section: social-section
@@ -292,7 +292,7 @@ publish:
     context:
       header: header
       footer: footer
-      sections: [ "intro", "map-section", "doy-section", "graph-section" ]
+      sections: [ "intro", "map-section", "intro2" "doy-section", "graph-section" ]
       resources: [ "jquery", "gages-js", "headerCSS", "footerCSS", "vizCSS", "svgCSS"]
   -
     id: intro
