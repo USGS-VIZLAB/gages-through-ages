@@ -44,7 +44,9 @@ process.hydrographRectangles <- function(viz){
   
   data <- group_by(data, Year)
   data <- summarize(data, x=min(DateSVG), width=max(DateSVG) - min(DateSVG))
-  data <- mutate(data, x=as.character(x), width=as.character(width), height="100%")
+  data <- mutate(data, 
+                 xleft=as.character(x), 
+                 xright=as.character(x+width))
   
   rect_specs <- by(data, 1:nrow(data), as.list)
   names(rect_specs) <- paste0("y", allYrs)
