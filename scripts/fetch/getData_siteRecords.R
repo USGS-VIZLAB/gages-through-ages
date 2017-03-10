@@ -85,5 +85,5 @@ incomplete_lat_lon <- left_join(allIncompleteDF, allDF_oneLineSite, by = "site_n
 
 fwrite(incomplete_lat_lon, file = "incomplete_lat_lon_355.csv")
 allSites_355 <- bind_rows(longOK_join, incomplete_lat_lon)
-fwrite(allSites_355, file = "allSitesYears_355.csv")
+fwrite(allSites_355, file = "allSitesYears_355.csv", quote = TRUE)
 

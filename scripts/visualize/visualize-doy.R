@@ -15,7 +15,7 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
          label = month.abb, tick = FALSE)
     axis(1, at = c(32,60,91,121,152,182,213,244,274,305,335), 
          tick=TRUE, label=FALSE)
-  }, height=5, width=5.0833)
+  }, height=5, width=5.083333)
   
   doy_svg <- clean_up_svg(doy_svg, viz)
   
@@ -26,7 +26,7 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
           las=1, mgp=c(2.5,0.25,0), xaxs = "i")
       plot(vals, type='l', axes=F, ann=F,
            xlim=c(0, 366), ylim=c(0, 16000))
-    }, height=5, width=5.0833)
+    }, height=5, width=5.083333)
     
   }
   
@@ -34,9 +34,14 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
   
   for(i in unique(daily$Year)){
     year_data <- filter(daily, Year == i) 
-    #TODO: add NA to Feb.29
+
+    if((i%%4 == 0) & ((i%%100 != 0) | (i%%400 == 0))){
+      year_data$DayOfYear[year_data$DayOfYear>=60] <- year_data$DayOfYear[year_data$DayOfYear>=60]+1
+    }
     
-    x <- grab_spark(select(year_data, DayOfYear, Flow))
+    sub_data <- data.frame(approx(year_data$DayOfYear, year_data$Flow, n = 183))
+    
+    x <- grab_spark(sub_data)
     polyline <- xml_children(x)[4]
     xml_attr(polyline, "id") <- paste0("y",i)
     xml_attr(polyline, "class") <- "doy-lines-by-year"

@@ -3,17 +3,22 @@
 site.chunk <- 1000
 group.names <- 'sites-group-%s'
 
+size_map_svg <- function(sp){
+  apply(sp::bbox(sp), 1, diff)/500000
+}
+
 visualize.states_svg <- function(viz){
   data <- readDepends(viz)
   states <- data[['state-map']]
   sites <- data[['site-map']]
   watermark <- data[['watermark']]
+  bars <- data[['bar-data']]
   state.name <- as.character(row.names(states)[states@plotOrder])
   site.num <- sites$site_no # note that points sp objects don't have `plotOrder`, so we need to verify this
   
   library(svglite)
   library(sp)
-  size <- apply(bbox(states), 1, diff)/500000
+  size <- size_map_svg(states)
   svg <- svglite::xmlSVG({
     par(mai=c(0,0,0,0), omi=c(0,0,0,0))
     sp::plot(states, ylim=bbox(states)[2,], xlim=bbox(states)[1,], setParUsrBB = TRUE)
@@ -66,30 +71,27 @@ visualize.states_svg <- function(viz){
   xml_add_child(g.watermark,'path', d=watermark[['usgs']], onclick="window.open('https://www2.usgs.gov/water/','_blank')", 'class'='watermark')
   xml_add_child(g.watermark,'path', d=watermark[['wave']], onclick="window.open('https://www2.usgs.gov/water/','_blank')", 'class'='watermark')
   
+  bars.xml <- read_xml(bars)
+  svg <- add_bar_chart(svg, bars.xml)
   write_xml(svg, viz[['location']])
   
 }
 
-process.time_json <- function(viz){
-  data <- readDepends(viz)
-  sites <- data[['site-map']]
-  chunk.s <- seq(1,by=site.chunk, to=length(sites))
-  chunk.e <- c(tail(chunk.s, -1L), length(sites))
-  json.out <- list()
-  for (i in 1:length(chunk.s)){
-    chunk <- list()
-    for (yr in 1880:2016){
-      tmp <- list(sort(c(sample(1:1000, sample(40:500))))) #which of the sites 
-      names(tmp) <- yr
-      chunk <- append(chunk, tmp)
-    }
-    tmp <- list(chunk)
-    names(tmp) <- sprintf(group.names, i)
-    json.out <- append(json.out, tmp)
-  }
-  json.text <- jsonlite::toJSON(json.out)
-  cat(json.text, file = viz[['location']])
+add_bar_chart <- function(svg, bars){
+  vb <- as.numeric(strsplit(xml_attr(svg, "viewBox"), '[ ]')[[1]])
+  xml_attr(bars, 'transform') <- sprintf("translate(0,%s)", vb[4])
+  
+  
+  h <- xml_find_all(bars, '//*[local-name()="rect"]') %>% xml_attr('height') %>% as.numeric() %>% max
+  vb[4] <- vb[4] + h
+
+  xml_attr(svg, "viewBox") <- paste(vb, collapse=' ')
+  
+  xml_add_child(svg, bars)
+  return(svg)
 }
+
+
 
 #' do the things to the svg that we need to do every time if they come from svglite:
 #' 
@@ -102,7 +104,7 @@ clean_up_svg <- function(svg, viz){
   xml_attr(svg, "preserveAspectRatio") <- "xMidYMid meet"
   xml_attr(svg, "xmlns") <- 'http://www.w3.org/2000/svg'
   xml_attr(svg, "xmlns:xlink") <- 'http://www.w3.org/1999/xlink'
-  xml_attr(svg, "id") <- "map-svg"
+  xml_attr(svg, "id") <- viz[["id"]]
   
   r <- xml_find_all(svg, '//*[local-name()="rect"]')
   
