@@ -264,6 +264,13 @@ publish:
     title: "Embed"
     alttext: "Vizlab Embed Icon"
   -
+    id: blackEmbedIcon
+    location: images/blackEmbed.svg
+    mimetype: image/svg
+    inline: true
+    title: "Embed"
+    alttext: "Vizlab Embed Icon"
+  -
     id: vizCSS
     location: layout/css/viz.css
     mimetype: text/css
@@ -286,6 +293,7 @@ publish:
       intro2: intro2
       doy-section: doy-section
       social-section: social-section
+      embed-section: embed-section
       jquery: jquery-js
       svg-js: svg-js
       gages-js: gages-js
@@ -297,7 +305,7 @@ publish:
     context:
       header: header
       footer: footer
-      sections: [ "intro", "map-section", "intro2", "doy-section" ]
+      sections: [ "intro", "map-section", "intro2", "doy-section", "social-section", "embed-section" ]
       resources: [ "jquery", "svg-js", "gages-js", "headerCSS", "footerCSS", "vizCSS", "svgCSS"]
   -
     id: intro
@@ -332,6 +340,7 @@ publish:
     publisher: section
     template: layout/templates/figureTemplate.mustache
     depends:
+      siteText: siteText
       doyNM_graph: doy-NM
       svg-js: svg-js
       gages-js: gages-js
@@ -339,7 +348,7 @@ publish:
     context:
       id: doyNM-graph
       figure: doyNM_graph
-      caption: ["siteText.explanationText2", "dataSources"]
+      caption: ["siteText.explanationText2", "siteText.dataSources"]
   -
     id: header
     publisher: section
@@ -360,6 +369,18 @@ publish:
       twitterLogo: twitterLogo 
       facebookLogo: facebookLogo
       embedIcon: embedIcon 
+  -
+    id: embed-section
+    publisher: section
+    template: layout/templates/embedTemplate.mustache
+    depends:
+      blackEmbedIcon: blackEmbedIcon
+    context:
+      blackEmbedIcon: blackEmbedIcon
+      embeds: 
+        -
+          description: Embed Description Area
+          url: "urltosweetplace"
   -
     id: footer
     publisher: footer
