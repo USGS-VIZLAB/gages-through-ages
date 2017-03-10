@@ -9,6 +9,7 @@ size_map_svg <- function(sp){
 
 visualize.map_thumbnail <- function(viz){
   library(xml2)
+  library(dplyr)
   data <- readDepends(viz)
   states <- data[['state-map']]
   sites <- data[['site-map']]
@@ -29,6 +30,7 @@ visualize.map_thumbnail <- function(viz){
   rect(xleft, ybottom, xright, ytop, col='dodgerblue', border = NA)
   dev.off()
 }
+
 visualize.states_svg <- function(viz){
   data <- readDepends(viz)
   states <- data[['state-map']]
