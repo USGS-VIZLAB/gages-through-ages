@@ -78,6 +78,47 @@ body{
   background:rgb(86,130,189);
 }
 
+#embedSection h4{
+  margin-bottom:5px;
+  font-weight:normal;
+}
+
+.embedHolder{
+  display:flex;
+  flex-direction:row;
+}
+
+.embed,
+#embedSection iframe{
+  border:1px solid #ccc;
+  background:#fff;
+  height:30px;
+  outline:none;
+}
+
+.embed{
+  margin:0 -5px 0 0;
+  border-radius:5px 0 0 5px;
+  width:30px;
+  position:relative;
+  cursor:pointer;
+}
+
+.embed:hover{
+  background:#ccc;
+}
+
+.embed .socialMediaImage{
+  width:20px;
+  height:20px;
+}
+
+#embedSection iframe{
+  flex:1;
+  padding:0 10px;
+  border-radius:0 5px 5px  0;
+}
+
 .responsiveGrid{
   padding:15px 40px;
   margin-top:10px;
