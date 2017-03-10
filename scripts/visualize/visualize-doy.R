@@ -55,9 +55,9 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
   g.zoomer <- xml_add_sibling(xml_children(doy_svg)[[length(xml_children(doy_svg))]], 'g', id='total_hydro','class'='total_hydro')
   xml_attr(g.zoomer, "transform") <- "translate(0,370)"
   
-  
-  
   xml_add_child(g.zoomer, zoomer.xml)
+  
+  xml_attr(doy_svg, "viewBox") <- paste(c(0,0,360,566), collapse=' ')
   
   write_xml(doy_svg, viz[["location"]])
   
