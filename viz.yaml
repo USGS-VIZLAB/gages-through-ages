@@ -88,13 +88,21 @@ process:
     depends: 
       dailyData: NM_data
   - 
+    id: calc-NMHydrographSVGLand
+    location: cache/NMHydrographSVGLand.rds
+    processor: hydrographSVGLand
+    scripts: scripts/process/hydrographs.R
+    reader: rds
+    depends: 
+      dailySmooth: calc-hydrographTotal
+  - 
     id: calc-NMRectangles
     location: cache/NMRectangles.rds
     processor: hydrographRectangles
     scripts: scripts/process/hydrographs.R
     reader: rds
     depends: 
-      dailySmooth: calc-hydrographTotal
+      dailySmoothSVG: calc-NMHydrographSVGLand
   -
     id: watermark
     location: cache/watermark.rds
@@ -125,6 +133,8 @@ process:
     reader: rds
     min-year: 1890
     max-year: 2015
+    export: true
+    mimetype: application/json
 visualize:
   -
     id: map-svg
@@ -137,13 +147,26 @@ visualize:
     title: "Map of U.S. Geological Survey gages through the ages"
     alttext: "Map of U.S. Geological Survey gages"
   -
+    id: NMHydrograhTotal-svg
+    location: figures/NMHydrograhTotal.svg
+    visualizer: plot_hydrographTotal
+    mimetype: image/svg+xml
+    depends: 
+      dailySmoothSVG: calc-NMHydrographSVGLand
+      rectangles: calc-NMRectangles
+    scripts: ["scripts/visualize/visualize-hydrograph.R","scripts/visualize/visualize-map.R"]
+    inline: true
+    title: ""
+    alttext: ""
+  -
     id: doy-NM
     location: figures/doyNM.svg
     visualizer: doy
+    mimetype: image/svg+xml
+    inline: true
     depends: 
       daily: calc-hydrographByYear
     scripts: ["scripts/process/doy.R","scripts/visualize/visualize-map.R"]
-    reader: rds
     title: "NM through the ages"
     alttext: "NM gage"
 publish:
@@ -160,13 +183,53 @@ publish:
     depends:
       header: header
       footer: footer
+      map-section: map-section
+      doy-section: doy-section
+      graph-section: graph-section
+      jquery: jquery-js
+      gages-js: gages-js
+      year-data: year-data
       vizCSS: vizCSS
       headerCSS: lib-header-css
       footerCSS: lib-footer-css
     context:
       header: header
       footer: footer
-      resources: ['headerCSS', 'footerCSS', 'vizCSS']
+      sections: [ "map-section", "doy-section", "graph-section" ]
+      resources: [ "jquery", "gages-js", "headerCSS", "footerCSS", "vizCSS"]
+  -
+    id: map-section
+    publisher: section
+    template: simplefigure
+    depends:
+      map: map-svg
+      gages-js: gages-js
+    context:
+      id: gage-map
+      figure: map
+      caption: states
+  -
+    id: doy-section
+    publisher: section
+    template: simplefigure
+    depends:
+      doyNM_graph: doy-NM
+      gages-js: gages-js
+    context:
+      id: doyNM-graph
+      figure: doyNM_graph
+      caption: doyNM
+  -
+    id: graph-section
+    publisher: section
+    template: simplefigure
+    depends:
+      POR_graph: NMHydrograhTotal-svg
+      gages-js: gages-js
+    context:
+      id: POR_graph
+      figure: POR_graph
+      caption: PORgraph
   -
     id: header
     publisher: section
@@ -187,3 +250,11 @@ publish:
         name: Using the dataRetrieval Stats Service
         url: https://owi.usgs.gov/blog/stats-service-map/
         thumbLoc: https://owi.usgs.gov/blog/static/stats-service-map/plot-1.png
+  -
+    id: jquery-js
+    location: layout/js/jquery311.min.js
+    mimetype: text/javascript
+  -
+    id: gages-js
+    location: layout/js/gages.js
+    mimetype: text/javascript
