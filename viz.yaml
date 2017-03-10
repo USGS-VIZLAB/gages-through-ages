@@ -124,13 +124,23 @@ process:
     depends: "site-map"
     min-year: 1890
     max-year: 2015
-
+  - 
+    id: bar-data
+    location: cache/bar-data.rds
+    processor: bar_chart
+    scripts: scripts/process/process_bar_chart.R
+    depends: disch-sites
+    reader: rds
+    min-year: 1890
+    max-year: 2015
+    export: true
+    mimetype: application/json
 visualize:
   -
     id: map-svg
     location: figures/states_map.svg
     visualizer: states_svg
-    depends: ["state-map", "site-map", "watermark"]
+    depends: ["state-map", "site-map", "watermark","bar-data"]
     scripts: scripts/visualize/visualize-map.R
     mimetype: image/svg+xml
     inline: true
