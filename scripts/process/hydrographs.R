@@ -17,7 +17,7 @@ process.hydrographData <- function(viz){
 }
 
 
-process.hydrographDataSVG <- function(viz){
+process.hydrographDataSVG <- function(viz=getContentInfo("processedNMdailySVG")){
   data <- readData(viz[['depends']][['dailyData']])
   pixelHeight <- viz[['pixelHeight']]
   pixelWidth <- viz[['pixelWidth']]
