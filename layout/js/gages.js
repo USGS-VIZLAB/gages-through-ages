@@ -5,6 +5,12 @@
   var yeardata = {};
   var paths = {};
   
+  var yearPointer = 0;
+  var startYear = undefined;
+  var numYears = undefined;
+  var delay = 500; // ms
+  var playInterval = undefined;
+  
   var interval = setInterval(function(){
     var checkEle = $('#footer')
     if (checkEle.length > 0) {
@@ -14,7 +20,26 @@
   }, 25);
   
   $.get("data/year-data.json", function(data) {
-    yeardata = data;
+    lsfilter = function(val, i) {
+      return (ls.indexOf(val) == -1); // filter if missing from ls
+    };
+    for (var group in data) {
+      var prevgages = [];
+      yeardata[group] = {};
+      if (undefined === numYears && undefined === startYear) {
+        var keys = Object.keys(data[group])
+        startYear = Number(keys[0]);
+        numYears = keys.length;
+      }
+      for (var year in data[group]) {
+        var gn = data[group][year]["gn"]
+        var ls = data[group][year]["ls"]
+        var newgages = prevgages.filter(lsfilter)
+        newgages = newgages.concat(gn);
+        yeardata[group][year] = newgages;
+        prevgages = newgages;
+      }
+    }
     dataPromise.resolve();
   });
   
@@ -25,9 +50,24 @@
       paths[group]["orig"] = $('#' + group).attr("d");
       paths[group]["split"] = paths[group]["orig"].split("M");
     }
+    play();
   });
   
-  window.vizlab = {}; // remove this
+  var play = function() {
+    playInterval = setInterval(function(){
+      var year = startYear + yearPointer;
+      yearPointer = (yearPointer + 1) % numYears;
+      vizlab.showyear(year);
+    }, delay);
+  };
+  
+  var pause = function(year) {
+    clearInterval(playInterval);
+    yearPointer = year - startYear;
+    vizlab.showyear(year);
+  };
+  
+  window.vizlab = window.vizlab || {}; // remove this
   vizlab.showyear = function(year) {
     year = "" + year; // force year to be string
     var filterFunc = function(val, i){
