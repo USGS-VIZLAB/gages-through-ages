@@ -118,7 +118,6 @@ fetch:
     scripts:
     reader: md
     mimetype: text/yaml
-    
 process:
   -
     id: disch-sites
@@ -192,7 +191,6 @@ process:
     reader: filepath
     min-year: 1890
     max-year: 2015
-    
 visualize:
   -
     id: map-svg
@@ -316,7 +314,7 @@ publish:
     publisher: section
     depends: siteText
     context:
-      data: ["siteText.title", "siteText.introText"]
+      data: ["siteText.title", "siteText.introText1"]
   -
     id: map-section
     publisher: section
@@ -326,6 +324,7 @@ publish:
       svg-js: svg-js
       gages-js: gages-js
       svgCSS: svgCSS
+      siteText: siteText
     context:
       id: gage-map
       figure: map
@@ -336,7 +335,7 @@ publish:
     publisher: section
     depends: siteText
     context:
-      data: siteText.introText
+      data: siteText.introText2
   -
     id: doy-section
     publisher: section
@@ -359,10 +358,11 @@ publish:
       svg-js: svg-js
       gages-js: gages-js
       svgCSS: svgCSS
+      siteText: siteText
     context:
       id: POR_graph
       figure: POR_graph
-      caption: ["siteText.explanationText2", "dataSources"]
+      caption: ["siteText.explanationText2", "siteText.dataSources"]
   -
     id: header
     publisher: section
