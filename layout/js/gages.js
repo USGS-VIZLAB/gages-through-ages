@@ -55,7 +55,7 @@ var hovertext;
       paths[group]["split"] = paths[group]["orig"].split("M");
     }
     
-    play();
+    vizlab.play();
   });
   
   $(document).ready(function() {
@@ -79,7 +79,6 @@ var hovertext;
   };
   
   vizlab.showyear = function(year) {
-    return;
     year = "" + year; // force year to be string
     var filterFunc = function(val, i){
       if (undefined !== indices) {
