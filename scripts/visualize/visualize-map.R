@@ -8,6 +8,7 @@ visualize.states_svg <- function(viz){
   states <- data[['state-map']]
   sites <- data[['site-map']]
   watermark <- data[['watermark']]
+  bars <- data[['bar-data']]
   state.name <- as.character(row.names(states)[states@plotOrder])
   site.num <- sites$site_no # note that points sp objects don't have `plotOrder`, so we need to verify this
   
@@ -66,8 +67,18 @@ visualize.states_svg <- function(viz){
   xml_add_child(g.watermark,'path', d=watermark[['usgs']], onclick="window.open('https://www2.usgs.gov/water/','_blank')", 'class'='watermark')
   xml_add_child(g.watermark,'path', d=watermark[['wave']], onclick="window.open('https://www2.usgs.gov/water/','_blank')", 'class'='watermark')
   
+  bars.xml <- read_xml(bars)
+  svg <- add_bar_chart(svg, bars.xml)
   write_xml(svg, viz[['location']])
   
+}
+
+add_bar_chart <- function(svg, bars){
+  
+  xml_attr(svg, "viewBox") <- "0 0 658.75 550.10" # hack, but do the math!
+  xml_attr(bars, 'transform') <- "translate(0,440)"
+  xml_add_child(svg, bars)
+  return(svg)
 }
 
 process.time_json <- function(viz){
