@@ -191,6 +191,18 @@ process:
     reader: filepath
     min-year: 1890
     max-year: 2015
+  -
+    id: NMHydrograhTotal-svg
+    location: cache/zoom-bar.xml
+    processor: plot_hydrographTotal
+    reader: filepath
+    depends: 
+      dailySmoothSVG: processedNMdailySVG
+      rectangles: processedNMdailyRect
+    pixelHeight: 50
+    pixelWidth: 366
+    scripts: ["scripts/process/process-hydrograph.R","scripts/visualize/visualize-map.R"]
+    inline: true
 visualize:
   -
     id: map-svg
@@ -202,20 +214,7 @@ visualize:
     inline: true
     title: "U.S. Geological Survey Active Stream Gages"
     alttext: "Map of U.S. Geological Survey gages"
-  -
-    id: NMHydrograhTotal-svg
-    location: figures/NMHydrograhTotal.svg
-    visualizer: plot_hydrographTotal
-    mimetype: image/svg+xml
-    depends: 
-      dailySmoothSVG: processedNMdailySVG
-      rectangles: processedNMdailyRect
-    pixelHeight: 50
-    pixelWidth: 366
-    scripts: ["scripts/visualize/visualize-hydrograph.R","scripts/visualize/visualize-map.R"]
-    inline: true
-    title: ""
-    alttext: ""
+
   -
     id: doy-NM
     location: figures/doyNM.svg
@@ -224,6 +223,7 @@ visualize:
     inline: true
     depends: 
       daily: processedNMdaily
+      zoomer: NMHydrograhTotal-svg
     scripts: ["scripts/visualize/visualize-doy.R","scripts/visualize/visualize-map.R"]
     title: "NM through the ages"
     alttext: "NM gage"
@@ -285,7 +285,6 @@ publish:
       map-section: map-section
       intro2: intro2
       doy-section: doy-section
-      graph-section: graph-section
       social-section: social-section
       jquery: jquery-js
       svg-js: svg-js
@@ -298,7 +297,7 @@ publish:
     context:
       header: header
       footer: footer
-      sections: [ "intro", "map-section", "intro2", "doy-section", "graph-section" ]
+      sections: [ "intro", "map-section", "intro2", "doy-section" ]
       resources: [ "jquery", "svg-js", "gages-js", "headerCSS", "footerCSS", "vizCSS", "svgCSS"]
   -
     id: intro
@@ -340,21 +339,7 @@ publish:
     context:
       id: doyNM-graph
       figure: doyNM_graph
-      caption: 
-  -
-    id: graph-section
-    publisher: section
-    template: layout/templates/figureTemplate.mustache
-    depends:
-      POR_graph: NMHydrograhTotal-svg
-      svg-js: svg-js
-      gages-js: gages-js
-      svgCSS: svgCSS
-      siteText: siteText
-    context:
-      id: POR_graph
-      figure: POR_graph
-      caption: ["siteText.explanationText2", "siteText.dataSources"]
+      caption: ["siteText.explanationText2", "dataSources"]
   -
     id: header
     publisher: section
