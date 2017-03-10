@@ -104,7 +104,7 @@ clean_up_svg <- function(svg, viz){
   xml_attr(svg, "preserveAspectRatio") <- "xMidYMid meet"
   xml_attr(svg, "xmlns") <- 'http://www.w3.org/2000/svg'
   xml_attr(svg, "xmlns:xlink") <- 'http://www.w3.org/1999/xlink'
-  xml_attr(svg, "id") <- "map-svg"
+  xml_attr(svg, "id") <- viz[["id"]]
   
   r <- xml_find_all(svg, '//*[local-name()="rect"]')
   
