@@ -21,9 +21,9 @@ process.bar_chart <- function(viz){
                   x = as.character((i-1)*(bin.w+spc)), 
                   height = as.character(bin.h[i]), 
                   width = as.character(bin.w), y = as.character(h - bin.h[i]), id = paste0('yr', bars$year[i]), 
-                  #onmousemove = sprintf("hovertext('%s gages', evt);", bars$n[i]),
+                  onmousemove = sprintf("hovertext('%s gages', evt);", bars$n[i]),
                   onmouseover = sprintf("vizlab.pause('%s')", bars$year[i]),
-                  onmouseout = sprintf("vizlab.play()", bars$year[i])) #hovertext(' ');
+                  onmouseout = sprintf("hovertext(' ');vizlab.play()", bars$year[i])) #
   }
   write_xml(x = g.bars, file = viz[['location']])
   
