@@ -8,7 +8,11 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
   zoomer <- readData(viz[["depends"]][["zoomer"]])
   zoomer.xml <- read_xml(zoomer)
   
-
+  zoom.stuff <- xml_find_first(zoomer.xml, '//*[local-name() != "title"]')
+  xml_remove(zoom.stuff)
+  zoom.stuff <- xml_find_first(zoomer.xml, '//*[local-name() != "desc"]')
+  xml_remove(zoom.stuff)
+  
   doy_svg = svglite::xmlSVG({
     par(omi=c(0,0,0,0), mai=c(0.5,0.75,0,0),las=1, xaxs = "i")
     plot(1, type="n", xlab="", frame.plot=FALSE,
@@ -52,7 +56,11 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
     xml_attr(polyline, "style") <- NULL
     xml_add_child(g.doys, polyline[[1]])
   }
-
+  
+  g.zoomer <- xml_add_sibling(xml_children(doy_svg)[[length(xml_children(doy_svg))]], 'g', id='total_hydro','class'='total_hydro')
+  xml_attr(g.zoomer, "transform") <- "translate(0,500)"
+  xml_add_child(g.zoomer, zoom.stuff)
+  
   write_xml(doy_svg, viz[["location"]])
   
 }
