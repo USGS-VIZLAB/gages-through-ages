@@ -1,18 +1,66 @@
 vizlab: "0.1.7"
 info:
   id: gages-through-ages
-  name: Visualization long name
+  name: Stream Gages Through the Ages
   date: 2017-03-08
   publish-date: 2017-03-22
   path: /gages-through-ages
   analytics-id: UA-78530187-1
   description: >-
-    Describe project here
+    The U.S. Geological Survey Groundwater and Streamflow Information Program is 
+	funded by Congress to monitor drought and flood across the US through a network 
+	of stream gages. The USGS has been monitoring streamflow since 1889, and data 
+	from streamgages have since become critical to hydropower operations, recreation, 
+	streamflow prediction, flood forecasts, emergency management, engineering designs, 
+	and many other purposes. This data visualization shows an animation of stream gages 
+	since the late 1800s, by year, across the US. In addition, records from one of the 
+	oldest continuously active USGS stream gages, on the Rio Grande River at Embudo, NM, 
+	is shown in an interactive plot.  
+  keywords: >-
+    water, USGS, VIZLAB, stream gages
+  audience: General public
+  url: https://owi.usgs.gov/vizlab/gages-through-ages/
   thumbnail:  
     url:  "none"  
     width: 250    
     height: 250    
     alttext: "some text here"
+  thumbnail-landing: 
+    url: "none"
+  contributors:
+    -
+      name: Mary Bucknell
+      email: mbucknell@usgs.gov
+      affiliation: U.S. Geological Survey
+    -
+      name: Lindsay Carr
+      email: lcarr@usgs.gov
+      affiliation: U.S. Geological Survey
+    -
+      name: Laura DeCicco
+      email: ldecicco@usgs.gov
+      affiliation: U.S. Geological Survey
+    -
+      name: Emily Read
+      email: eread@usgs.gov
+      affiliation: U.S. Geological Survey
+    -
+      name: Jordan Read
+      email: jread@usgs.gov
+      affiliation: U.S. Geological Survey
+    -
+      name: Jordan Walker
+      email: jiwalker@usgs.gov
+      affiliation: U.S. Geological Survey
+    -
+      name: David Watkins
+      email: wwatkins@usgs.gov
+      affiliation: U.S. Geological Survey
+    -
+      name: Marty Wernimont
+      email: mwernimont@usgs.gov
+      affiliation: U.S. Geological Survey
+  twitter: "@USGS_R"
   required-packages:
     vizlab:
       repo: GRAN
