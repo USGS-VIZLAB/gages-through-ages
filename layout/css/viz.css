@@ -16,6 +16,19 @@ body{
   font-family:sans-serif;
 }
 
+.hidden {
+  opacity: 0;
+}
+.shown {
+  z-index: 100;
+  opacity: 1;
+}
+.tooltip-box{
+  stroke: none;
+  opacity: 0.85;
+  fill: white;
+}
+
 .socialHolder{
   width:30px;
   min-height:20px;
@@ -90,5 +103,4 @@ body{
     
   }
 }
-
 
