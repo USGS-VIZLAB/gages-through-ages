@@ -118,7 +118,6 @@ fetch:
     scripts:
     reader: md
     mimetype: text/yaml
-    
 process:
   -
     id: disch-sites
@@ -192,6 +191,7 @@ process:
     reader: filepath
     min-year: 1890
     max-year: 2015
+<<<<<<< HEAD
   -
     id: NMHydrograhTotal-svg
     location: cache/zoom-bar.xml
@@ -205,6 +205,8 @@ process:
     scripts: ["scripts/process/process-hydrograph.R","scripts/visualize/visualize-map.R"]
     inline: true
     
+=======
+>>>>>>> 01420b4ca4f4d523dab972082b41c644772dc280
 visualize:
   -
     id: map-svg
@@ -301,15 +303,13 @@ publish:
       footer: footer
       sections: [ "intro", "map-section", "intro2", "doy-section" ]
       resources: [ "jquery", "svg-js", "gages-js", "headerCSS", "footerCSS", "vizCSS", "svgCSS"]
-
   -
     id: intro
     template: layout/templates/intro.mustache
     publisher: section
     depends: siteText
     context:
-      data: ["siteText.title", "siteText.introText"]
-  
+      data: ["siteText.title", "siteText.introText1"]
   -
     id: map-section
     publisher: section
@@ -319,17 +319,18 @@ publish:
       svg-js: svg-js
       gages-js: gages-js
       svgCSS: svgCSS
+      siteText: siteText
     context:
       id: gage-map
       figure: map
       caption: siteText.explanationText1
   -
-   id: intro2
-   template: layout/templates/intro.mustache
-   publisher: section
-   depends: siteText
-   context:
-     data: siteText.introText
+    id: intro2
+    template: layout/templates/intro.mustache
+    publisher: section
+    depends: siteText
+    context:
+      data: siteText.introText2
   -
     id: doy-section
     publisher: section
@@ -342,7 +343,25 @@ publish:
     context:
       id: doyNM-graph
       figure: doyNM_graph
+<<<<<<< HEAD
       caption: ["siteText.explanationText2", "dataSources"]
+=======
+      caption: 
+  -
+    id: graph-section
+    publisher: section
+    template: layout/templates/figureTemplate.mustache
+    depends:
+      POR_graph: NMHydrograhTotal-svg
+      svg-js: svg-js
+      gages-js: gages-js
+      svgCSS: svgCSS
+      siteText: siteText
+    context:
+      id: POR_graph
+      figure: POR_graph
+      caption: ["siteText.explanationText2", "siteText.dataSources"]
+>>>>>>> 01420b4ca4f4d523dab972082b41c644772dc280
   -
     id: header
     publisher: section

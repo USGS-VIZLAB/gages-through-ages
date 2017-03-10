@@ -55,7 +55,7 @@ var hovertext;
       paths[group]["split"] = paths[group]["orig"].split("M");
     }
     
-    play();
+    vizlab.play();
   });
   
   $(document).ready(function() {
@@ -64,7 +64,7 @@ var hovertext;
     mapSVG.addTooltip();
   });
   
-  var play = function() {
+  vizlab.play = function() {
     playInterval = setInterval(function(){
       var year = startYear + yearPointer;
       yearPointer = (yearPointer + 1) % numYears;
@@ -72,7 +72,7 @@ var hovertext;
     }, delay);
   };
   
-  var pause = function(year) {
+  vizlab.pause = function(year) {
     clearInterval(playInterval);
     yearPointer = year - startYear;
     vizlab.showyear(year);

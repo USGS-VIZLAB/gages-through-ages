@@ -20,7 +20,7 @@ process.bar_chart <- function(viz){
     xml_add_child(g.bars, 'rect', class = "gage-count-bar",
                   x = as.character((i-1)*(bin.w+spc)), 
                   height = as.character(bin.h[i]), 
-                  width = as.character(bin.w), y = as.character(h - bin.h[i]), id = paste0('yr', bars$year[i]), 
+                  width = as.character(bin.w), y = as.character(h - bin.h[i]), id = paste0('yr', bars$year[i]), class = paste0('total-bar-', bars$year[i]),
                   onmousemove = sprintf("hovertext('%s gages', evt);", bars$n[i]),
                   onmouseover = sprintf("vizlab.pause('%s')", bars$year[i]),
                   onmouseout = sprintf("hovertext('');vizlab.play()", bars$year[i])) #
