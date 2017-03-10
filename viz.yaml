@@ -276,9 +276,9 @@ publish:
     depends:
       header: header
       footer: footer
-	  intro: intro
+      intro: intro
       map-section: map-section
-	  intro2: intro
+      intro2: intro
       doy-section: doy-section
       graph-section: graph-section
       social-section: social-section
