@@ -78,9 +78,15 @@ visualize.states_svg <- function(viz){
 }
 
 add_bar_chart <- function(svg, bars){
+  vb <- as.numeric(strsplit(xml_attr(svg, "viewBox"), '[ ]')[[1]])
+  xml_attr(bars, 'transform') <- sprintf("translate(0,%s)", vb[4])
   
-  xml_attr(svg, "viewBox") <- "0 0 658.75 550.10" # hack, but do the math!
-  xml_attr(bars, 'transform') <- "translate(0,440)"  # hack, but need to do the math!
+  
+  h <- xml_find_all(bars, '//*[local-name()="rect"]') %>% xml_attr('height') %>% as.numeric() %>% max
+  vb[4] <- vb[4] + h
+
+  xml_attr(svg, "viewBox") <- paste(vb, collapse=' ')
+  
   xml_add_child(svg, bars)
   return(svg)
 }
