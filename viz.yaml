@@ -139,6 +139,7 @@ visualize:
     id: NMHydrograhTotal-svg
     location: figures/NMHydrograhTotal.svg
     visualizer: plot_hydrographTotal
+    mimetype: image/svg+xml
     depends: 
       dailySmoothSVG: calc-NMHydrographSVGLand
       rectangles: calc-NMRectangles
@@ -150,10 +151,11 @@ visualize:
     id: doy-NM
     location: figures/doyNM.svg
     visualizer: doy
+    mimetype: image/svg+xml
+    inline: true
     depends: 
       daily: calc-hydrographByYear
     scripts: ["scripts/process/doy.R","scripts/visualize/visualize-map.R"]
-    reader: rds
     title: "NM through the ages"
     alttext: "NM gage"
 publish:
@@ -171,6 +173,8 @@ publish:
       header: header
       footer: footer
       map-section: map-section
+      doy-section: doy-section
+      graph-section: graph-section
       jquery: jquery-js
       gages-js: gages-js
       year-data: year-data
@@ -180,7 +184,7 @@ publish:
     context:
       header: header
       footer: footer
-      sections: [ map-section ]
+      sections: [ "map-section", "doy-section", "graph-section" ]
       resources: [ "jquery", "gages-js", "headerCSS", "footerCSS", "vizCSS"]
   -
     id: map-section
@@ -193,6 +197,28 @@ publish:
       id: gage-map
       figure: map
       caption: states
+  -
+    id: doy-section
+    publisher: section
+    template: simplefigure
+    depends:
+      doyNM_graph: doy-NM
+      gages-js: gages-js
+    context:
+      id: doyNM-graph
+      figure: doyNM_graph
+      caption: doyNM
+  -
+    id: graph-section
+    publisher: section
+    template: simplefigure
+    depends:
+      POR_graph: NMHydrograhTotal-svg
+      gages-js: gages-js
+    context:
+      id: POR_graph
+      figure: POR_graph
+      caption: PORgraph
   -
     id: header
     publisher: section
