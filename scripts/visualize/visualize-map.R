@@ -10,24 +10,16 @@ size_map_svg <- function(sp){
 visualize.map_thumbnail <- function(viz){
   library(xml2)
   library(dplyr)
+  
   data <- readDepends(viz)
   states <- data[['state-map']]
   sites <- data[['site-map']]
   bars <- data[['bar-data']]
-  png(filename = viz[['location']], width = 250, height = 250, units = 'px')
-  par(mai=c(0,0,0,0), omi=c(0,0,0,0))
-  sp::plot(states, expandBB = c(0.7,0,0,0))
-  sp::plot(sites, add=TRUE, pch = 20, cex=0.1)
-  bars.xml <- xml2::read_xml(bars)
-  rects <- xml_children(bars.xml)
-  xleft <- xml_attr(rects, 'x') %>% as.numeric()
-  ys <- xml_attr(rects, 'y') %>% as.numeric()
-  ytop <- max(ys) - ys
-  ybottom <- 0
-  xright <- xml_attr(rects, 'width') %>% as.numeric %>%  + xleft
-  par(new=TRUE, mar=c(0,0,10,0))
-  plot(0,NA, xlim = c(0,tail(xright,1)), ylim = c(0, max(ys)), axes=FALSE , ylab="", xlab="")
-  rect(xleft, ybottom, xright, ytop, col='dodgerblue', border = NA)
+  height <- viz[['fig-height']]
+  width <- viz[['fig-width']]
+  
+  png(filename = viz[['location']], width = width, height = height, units = 'px')
+  createThumbnailPlot(states, sites, bars)
   dev.off()
 }
 
@@ -142,4 +134,27 @@ clean_up_svg <- function(svg, viz){
   # clean up junk that svglite adds:
   .junk <- lapply(r, xml_remove)
   return(svg)
+}
+
+#' Create the actual map + bars separately from saving image
+#' 
+#' @param states spatial polygon of state outlines
+#' @param sites spatial polygon of site locations
+#' @param bars filepath to the xml file with bar data
+#' 
+#' @result a plot
+createThumbnailPlot <- function(states, sites, bars){
+  par(mai=c(0,0,0,0), omi=c(0,0,0,0))
+  sp::plot(states, expandBB = c(0.7,0,0,0))
+  sp::plot(sites, add=TRUE, pch = 20, cex=0.1)
+  bars.xml <- xml2::read_xml(bars)
+  rects <- xml_children(bars.xml)
+  xleft <- xml_attr(rects, 'x') %>% as.numeric()
+  ys <- xml_attr(rects, 'y') %>% as.numeric()
+  ytop <- max(ys) - ys
+  ybottom <- 0
+  xright <- xml_attr(rects, 'width') %>% as.numeric %>%  + xleft
+  par(new=TRUE, mar=c(0,0,10,0))
+  plot(0,NA, xlim = c(0,tail(xright,1)), ylim = c(0, max(ys)), axes=FALSE , ylab="", xlab="")
+  rect(xleft, ybottom, xright, ytop, col='dodgerblue', border = NA)
 }
