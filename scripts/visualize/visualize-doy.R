@@ -8,12 +8,10 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
   zoomer <- readData(viz[["depends"]][["zoomer"]])
   zoomer.xml <- read_xml(zoomer)
   
-  zoom.stuff <- xml_children(zoomer.xml)
-
   doy_svg = svglite::xmlSVG({
     par(omi=c(0,0,0,0), mai=c(0.5,0.75,0,0),las=1, xaxs = "i")
     plot(1, type="n", xlab="", frame.plot=FALSE,
-         ylab="Cubic Feed Per Second", mgp=c(2.5,0.25,0), 
+         ylab="Cubic Feet Per Second", mgp=c(2.5,0.25,0), 
          xlim=c(0, 366), ylim=c(0, 16000),xaxt="n")
     axis(1, at=c(15,46,74,105,135,166,196,227,258,288,319,349),
          label = month.abb, tick = FALSE)
@@ -55,11 +53,11 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
   }
   
   g.zoomer <- xml_add_sibling(xml_children(doy_svg)[[length(xml_children(doy_svg))]], 'g', id='total_hydro','class'='total_hydro')
-  xml_attr(g.zoomer, "transform") <- "translate(0,500)"
+  xml_attr(g.zoomer, "transform") <- "translate(0,370)"
   
   
   
-  # xml_add_child(g.zoomer, "g")
+  xml_add_child(g.zoomer, zoomer.xml)
   
   write_xml(doy_svg, viz[["location"]])
   
