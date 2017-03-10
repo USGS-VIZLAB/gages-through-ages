@@ -112,6 +112,12 @@ fetch:
     remoteItemId: 58c1c297e4b014cc3a3d3aa4 
     remoteFilename: allSitesYears_355.csv 
     mimetype: text/csv
+  -
+    id: siteText
+    location: data/siteText.yaml
+    scripts:
+    reader: md
+    mimetype: text/yaml
     
 process:
   -
@@ -196,7 +202,7 @@ visualize:
     scripts: scripts/visualize/visualize-map.R
     mimetype: image/svg+xml
     inline: true
-    title: "Map of U.S. Geological Survey gages through the ages"
+    title: "U.S. Geological Survey Active Stream Gages"
     alttext: "Map of U.S. Geological Survey gages"
   -
     id: NMHydrograhTotal-svg
@@ -223,6 +229,13 @@ visualize:
     scripts: ["scripts/visualize/visualize-doy.R","scripts/visualize/visualize-map.R"]
     title: "NM through the ages"
     alttext: "NM gage"
+  -
+    id: thumbnail-map
+    location: figures/thumb-gages-ages.png
+    visualizer: map_thumbnail
+    scripts: ["scripts/visualize/visualize-map.R"]
+    depends: ["state-map", "site-map", "watermark", "bar-data"]
+    export: true
 publish:
   -
     id: githubLogo
@@ -277,12 +290,15 @@ publish:
     depends:
       header: header
       footer: footer
+      intro: intro
       map-section: map-section
+      intro2: intro2
       doy-section: doy-section
       graph-section: graph-section
       social-section: social-section
       embed-section: embed-section
       jquery: jquery-js
+      svg-js: svg-js
       gages-js: gages-js
       year-data: year-data
       svgCSS: svgCSS
@@ -293,43 +309,60 @@ publish:
       header: header
       footer: footer
       sections: [ "map-section", "doy-section", "graph-section", "social-section", "embed-section" ]
-      resources: [ "jquery", "gages-js", "headerCSS", "footerCSS", "vizCSS", "svgCSS"]
+      resources: [ "jquery", "svg-js", "gages-js", "headerCSS", "footerCSS", "vizCSS", "svgCSS"]
+  -
+    id: intro
+    template: layout/templates/intro.mustache
+    publisher: section
+    depends: siteText
+    context:
+      data: ["siteText.title", "siteText.introText"]
   -
     id: map-section
     publisher: section
     template: layout/templates/figureTemplate.mustache
     depends:
       map: map-svg
+      svg-js: svg-js
       gages-js: gages-js
       svgCSS: svgCSS
     context:
       id: gage-map
       figure: map
-      caption: states
+      caption: siteText.explanationText1
+  -
+    id: intro2
+    template: layout/templates/intro.mustache
+    publisher: section
+    depends: siteText
+    context:
+      data: siteText.introText
   -
     id: doy-section
     publisher: section
     template: layout/templates/figureTemplate.mustache
     depends:
       doyNM_graph: doy-NM
+      svg-js: svg-js
       gages-js: gages-js
       svgCSS: svgCSS
     context:
       id: doyNM-graph
       figure: doyNM_graph
-      caption: doyNM
+      caption: 
   -
     id: graph-section
     publisher: section
     template: layout/templates/figureTemplate.mustache
     depends:
       POR_graph: NMHydrograhTotal-svg
+      svg-js: svg-js
       gages-js: gages-js
       svgCSS: svgCSS
     context:
       id: POR_graph
       figure: POR_graph
-      caption: PORgraph
+      caption: ["siteText.explanationText2", "dataSources"]
   -
     id: header
     publisher: section
@@ -379,6 +412,10 @@ publish:
   -
     id: jquery-js
     location: layout/js/jquery311.min.js
+    mimetype: text/javascript
+  - 
+    id: svg-js
+    location: layout/js/svg.js
     mimetype: text/javascript
   -
     id: gages-js
