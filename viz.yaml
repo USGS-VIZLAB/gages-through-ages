@@ -122,6 +122,8 @@ process:
     processor: time_json
     scripts: scripts/visualize/visualize-map.R
     depends: "site-map"
+    export: true
+    mimetype: application/json
 visualize:
   -
     id: map-svg
