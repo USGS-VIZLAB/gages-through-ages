@@ -299,7 +299,7 @@ publish:
     context:
       header: header
       footer: footer
-      sections: [ "intro", "map-section", "intro2" "doy-section" ]
+      sections: [ "intro", "map-section", "intro2","doy-section" ]
       resources: [ "jquery", "svg-js", "gages-js", "headerCSS", "footerCSS", "vizCSS", "svgCSS"]
 
   -
@@ -323,15 +323,13 @@ publish:
       id: gage-map
       figure: map
       caption: siteText.explanationText1
- 
- -
+  -
    id: intro2
    template: layout/templates/intro.mustache
    publisher: section
    depends: siteText
    context:
      data: siteText.introText
-	 
   -
     id: doy-section
     publisher: section
@@ -344,27 +342,8 @@ publish:
     context:
       id: doyNM-graph
       figure: doyNM_graph
-      caption: 
-
-  -
-<<<<<<< HEAD
-=======
-    id: graph-section
-    publisher: section
-    template: layout/templates/figureTemplate.mustache
-    depends:
-      POR_graph: NMHydrograhTotal-svg
-      svg-js: svg-js
-      gages-js: gages-js
-      svgCSS: svgCSS
-    context:
-      id: POR_graph
-      figure: POR_graph
       caption: ["siteText.explanationText2", "dataSources"]
- 
-
   -
->>>>>>> 94a5033de420f5dee93f4b068f88bf11f37583b3
     id: header
     publisher: section
     template: header-template
