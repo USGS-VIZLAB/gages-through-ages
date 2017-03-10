@@ -81,38 +81,32 @@ process:
     scripts: scripts/process/process_map.R
     reader: rds
   - 
-    id: calc-hydrographTotal
-    location: cache/hydrographTotal.rds
-    processor: hydrographTotal
+    id: processedNMdaily
+    location: cache/processedNMdaily.rds
+    processor: hydrographData
     scripts: scripts/process/hydrographs.R
     reader: rds
     smooth.days: 30
     depends: 
       dailyData: NM_data
   - 
-    id: calc-hydrographByYear
-    location: cache/hydrographByYear.rds
-    processor: hydrographByYear
+    id: processedNMdailySVG
+    location: cache/processedNMdailySVG.rds
+    processor: hydrographDataSVG
     scripts: scripts/process/hydrographs.R
     reader: rds
     depends: 
-      dailyData: NM_data
+      dailyData: processedNMdaily
+    pixelHeight: 50
+    pixelWidth: 366
   - 
-    id: calc-NMHydrographSVGLand
-    location: cache/NMHydrographSVGLand.rds
-    processor: hydrographSVGLand
-    scripts: scripts/process/hydrographs.R
-    reader: rds
-    depends: 
-      dailySmooth: calc-hydrographTotal
-  - 
-    id: calc-NMRectangles
-    location: cache/NMRectangles.rds
+    id: processedNMdailyRect
+    location: cache/processedNMdailyRect.rds
     processor: hydrographRectangles
     scripts: scripts/process/hydrographs.R
     reader: rds
     depends: 
-      dailySmoothSVG: calc-NMHydrographSVGLand
+      dailyDataSVG: processedNMdailySVG
   -
     id: watermark
     location: cache/watermark.rds
@@ -163,8 +157,10 @@ visualize:
     visualizer: plot_hydrographTotal
     mimetype: image/svg+xml
     depends: 
-      dailySmoothSVG: calc-NMHydrographSVGLand
-      rectangles: calc-NMRectangles
+      dailySmoothSVG: processedNMdailySVG
+      rectangles: processedNMdailyRect
+    pixelHeight: 50
+    pixelWidth: 366
     scripts: ["scripts/visualize/visualize-hydrograph.R","scripts/visualize/visualize-map.R"]
     inline: true
     title: ""
@@ -176,7 +172,7 @@ visualize:
     mimetype: image/svg+xml
     inline: true
     depends: 
-      daily: calc-hydrographByYear
+      daily: processedNMdaily
     scripts: ["scripts/process/doy.R","scripts/visualize/visualize-map.R"]
     title: "NM through the ages"
     alttext: "NM gage"
