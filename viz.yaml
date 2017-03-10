@@ -223,6 +223,13 @@ visualize:
     scripts: ["scripts/visualize/visualize-doy.R","scripts/visualize/visualize-map.R"]
     title: "NM through the ages"
     alttext: "NM gage"
+  -
+    id: thumbnail-map
+    location: figures/thumb-gages-ages.png
+    visualizer: map_thumbnail
+    scripts: ["scripts/visualize/visualize-map.R"]
+    depends: ["state-map", "site-map", "watermark", "bar-data"]
+    export: true
 publish:
   -
     id: githubLogo
