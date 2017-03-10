@@ -197,7 +197,7 @@ visualize:
     scripts: scripts/visualize/visualize-map.R
     mimetype: image/svg+xml
     inline: true
-    title: "Map of U.S. Geological Survey gages through the ages"
+    title: "U.S. Geological Survey Active Stream Gages"
     alttext: "Map of U.S. Geological Survey gages"
   -
     id: NMHydrograhTotal-svg
@@ -256,24 +256,26 @@ publish:
     id: map-section
     publisher: section
     template: simplefigure
-    depends:
+    depends: siteText
       map: map-svg
       gages-js: gages-js
     context:
       id: gage-map
       figure: map
-      caption: states
+      caption: siteText.explanationText1
+		  data: ["siteText.title", "siteText.subtitle"]
   -
     id: doy-section
     publisher: section
     template: simplefigure
-    depends:
+    depends: siteText
       doyNM_graph: doy-NM
       gages-js: gages-js
     context:
       id: doyNM-graph
       figure: doyNM_graph
-      caption: doyNM
+      caption: siteText.explanationText2
+	  data: siteText.dataSources
   -
     id: graph-section
     publisher: section
