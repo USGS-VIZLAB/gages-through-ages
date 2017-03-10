@@ -299,7 +299,7 @@ publish:
     context:
       header: header
       footer: footer
-      sections: [ "intro", "map-section", "intro2","doy-section" ]
+      sections: [ "intro", "map-section", "intro2", "doy-section" ]
       resources: [ "jquery", "svg-js", "gages-js", "headerCSS", "footerCSS", "vizCSS", "svgCSS"]
 
   -
