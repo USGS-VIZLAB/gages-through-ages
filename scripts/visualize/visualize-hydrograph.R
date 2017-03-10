@@ -15,7 +15,7 @@ visualize.plot_hydrographTotal <- function(viz){
   at <- yrs_since*widthOfYear
   
   total_svg <- svglite::xmlSVG({
-    par(omi=c(0,0,0,0), mai=c(0.3,0,0,0),las=1,xaxs="i")
+    par(omi=c(0,0,0,0), mai=c(0.5,0.75,0,0),las=1, xaxs = "i")
     plot(data_hydrograph, type='l', axes=F, ann=F, xaxt="n")
     axis(side=1, at=at, labels=labels, cex.axis=0.6)
   }, height=1, width=5.083333)
