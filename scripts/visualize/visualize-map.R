@@ -147,7 +147,7 @@ createThumbnailPlot <- function(states, sites, bars){
   
   par(mar=c(0,0,0,0), oma=c(0,0,0,0))
   sp::plot(states, expandBB = c(0.8,0,0,1.5))
-  sp::plot(sites, add=TRUE, pch = 20, cex=cex)
+  sp::plot(sites, add=TRUE, pch = 20, cex=0.05)
   
   bars.xml <- xml2::read_xml(bars)
   rects <- xml_children(bars.xml)
