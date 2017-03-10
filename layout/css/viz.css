@@ -16,11 +16,6 @@ body{
   font-family:sans-serif;
 }
 
-.doy-polyline {
-  fill:none;
-  stroke:#e0e0e0
-}
-
 .hidden {
   opacity: 0;
 }
