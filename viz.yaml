@@ -57,13 +57,23 @@ fetch:
     reader: rds
     scripts: scripts/fetch/dv_data.R
   -
+    id: disch-data
+    location: cache/allSitesYears.csv
+    fetcher: sciencebase
+    refetch: false
+    scripts:
+    remoteItemId: 58c1c297e4b014cc3a3d3aa4 
+    remoteFilename: allSitesYears_355.csv 
+    mimetype: text/csv
+    
+process:
+  -
     id: disch-sites
     location: cache/disch-sites.rds
-    fetcher: disch_sites
-    refetch: FALSE
+    processor: disch_sites
+    scripts: scripts/process/disch_sites.R
     reader: rds
-    scripts: scripts/fetch/disch_sites.R
-process:
+    depends: disch-data
   -
     id: state-map
     location: cache/state-map.rds
@@ -121,15 +131,27 @@ process:
     location: cache/year-data.json
     processor: time_json
     scripts: scripts/visualize/visualize-map.R
-    depends: "site-map"
+    depends: ["site-map", "disch-data"]
+    min-year: 1890
+    max-year: 2015
     export: true
     mimetype: application/json
+  - 
+    id: bar-data
+    location: cache/bar-data.rds
+    processor: bar_chart
+    scripts: scripts/process/process_bar_chart.R
+    depends: disch-data
+    reader: rds
+    min-year: 1890
+    max-year: 2015
+    
 visualize:
   -
     id: map-svg
     location: figures/states_map.svg
     visualizer: states_svg
-    depends: ["state-map", "site-map", "watermark"]
+    depends: ["state-map", "site-map", "watermark", "bar-data"]
     scripts: scripts/visualize/visualize-map.R
     mimetype: image/svg+xml
     inline: true
