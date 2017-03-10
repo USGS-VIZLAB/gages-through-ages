@@ -6,10 +6,10 @@ process.bar_chart <- function(viz){
   bars <- filter(sites, year >= viz[['min-year']], year <= viz[['max-year']]) %>% 
     group_by(year) %>% tally %>% data.frame
   
-  browser()
   max.sites <- max(bars$n)
   library(xml2)
-  g.bars <- read_xml("<g id='year-bars''/>")
+  g.bars <- read_xml("<g id='year-bars'/>")
+  stop('just starting on this')
   for (bar in bars$year){
     xml_add_child(g.bars, 'rect', x)
   }

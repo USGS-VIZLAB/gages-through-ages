@@ -72,14 +72,18 @@ visualize.states_svg <- function(viz){
 
 process.time_json <- function(viz){
   data <- readDepends(viz)
+  library(dplyr)
   sites <- data[['site-map']]
+  sites.w.data <- readr::read_csv('cache/allSitesYears_355.csv')
   chunk.s <- seq(1,by=site.chunk, to=length(sites))
   chunk.e <- c(tail(chunk.s, -1L), length(sites))
   json.out <- list()
   for (i in 1:length(chunk.s)){
     chunk <- list()
-    for (yr in 1880:2016){
-      tmp <- list(sort(c(sample(1:1000, sample(40:500))))) #which of the sites 
+    for (yr in viz[['min-year']]:viz[['max-year']]){
+      sites.n.chunk <- sites$site_no[chunk.s[i]:chunk.e[i]]
+      sites.yr <- sites.w.data %>% filter(year == yr ) %>% .$site_no
+      tmp <- list(which(sites.n.chunk %in% sites.yr)) #which of the sites 
       names(tmp) <- yr
       chunk <- append(chunk, tmp)
     }
