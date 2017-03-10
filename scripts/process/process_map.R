@@ -55,11 +55,13 @@ process.state_map <- function(viz){
 }
 
 process.site_map <- function(viz){
-  sites <- readData(viz[['depends']]) 
+  library(dplyr)
+  sites <- readData(viz[['depends']]) %>% filter(!is.na(dec_lat_va))
   huc.map <- c(AK = "19", HI = "20", PR = "21")
   
-  
-  library(dplyr)
+  #parse huc_cd to 2 digits, and rename to huc to stay consistent
+  sites <- sites %>% rename(huc = huc_cd) %>% mutate(huc = substr(huc, 1,2)) 
+ 
   sites.out <- sites %>% filter(!huc %in% huc.map) %>% 
     points_sp()
   
