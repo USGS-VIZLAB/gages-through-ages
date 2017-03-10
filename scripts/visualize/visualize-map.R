@@ -71,10 +71,11 @@ visualize.states_svg <- function(viz){
 }
 
 process.time_json <- function(viz){
-  data <- readDepends(viz)
+  data.in <- readDepends(viz)
   library(dplyr)
-  sites <- data[['site-map']]
-  sites.w.data <- readr::read_csv('cache/allSitesYears_355.csv')
+  sites <- data.in[['site-map']]
+  sites.w.data <- data.in[["disch-data"]]
+  
   chunk.s <- seq(1,by=site.chunk, to=length(sites))
   chunk.e <- c(tail(chunk.s, -1L), length(sites))
   json.out <- list()
