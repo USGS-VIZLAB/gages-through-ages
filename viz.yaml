@@ -16,9 +16,8 @@ info:
     since the late 1800s, by year, across the US. In addition, records from one of the
     oldest continuously active USGS stream gages, on the Rio Grande River at Embudo, NM,
     is shown in an interactive plot.  
-  keywords: >-
-    water, USGS, VIZLAB, stream gages
   audience: General public
+  keywords: [ "water", "USGS", "VIZLAB", "stream gages" ]
   url: https://owi.usgs.gov/vizlab/gages-through-ages/
   thumbnail:  
     url:  "none"  
@@ -221,13 +220,53 @@ visualize:
     inline: true
     depends: 
       daily: processedNMdaily
-    scripts: ["scripts/process/doy.R","scripts/visualize/visualize-map.R"]
+    scripts: ["scripts/visualize/visualize-doy.R","scripts/visualize/visualize-map.R"]
     title: "NM through the ages"
     alttext: "NM gage"
+  -
+    id: thumbnail-map
+    location: figures/thumb-gages-ages.png
+    visualizer: map_thumbnail
+    scripts: ["scripts/visualize/visualize-map.R"]
+    depends: ["state-map", "site-map", "watermark", "bar-data"]
+    export: true
 publish:
+  -
+    id: githubLogo
+    location: images/github.svg
+    mimetype: image/svg
+    inline: true
+    title: "Github"
+    alttext: "Github Logo"
+  -
+    id: twitterLogo
+    location: images/twitter.svg
+    mimetype: image/svg
+    inline: true
+    title: "Twitter"
+    alttext: "Twitter Logo"
+  -
+    id: facebookLogo
+    location: images/facebook.svg
+    mimetype: image/svg
+    inline: true
+    title: "Facebook"
+    alttext: "Facebook Logo"
+  -
+    id: embedIcon
+    location: images/embed.svg
+    mimetype: image/svg
+    inline: true
+    title: "Embed"
+    alttext: "Vizlab Embed Icon"
   -
     id: vizCSS
     location: layout/css/viz.css
+    mimetype: text/css
+    publisher: resource
+  -
+    id: svgCSS
+    location: layout/css/svg.css
     mimetype: text/css
     publisher: resource
   -
@@ -241,10 +280,12 @@ publish:
       map-section: map-section
       doy-section: doy-section
       graph-section: graph-section
+      social-section: social-section
       jquery: jquery-js
       svg-js: svg-js
       gages-js: gages-js
       year-data: year-data
+      svgCSS: svgCSS
       vizCSS: vizCSS
       headerCSS: lib-header-css
       footerCSS: lib-footer-css
@@ -252,15 +293,20 @@ publish:
       header: header
       footer: footer
       sections: [ "map-section", "doy-section", "graph-section" ]
+<<<<<<< HEAD
       resources: [ "jquery", "svg-js", "gages-js", "headerCSS", "footerCSS", "vizCSS"]
+=======
+      resources: [ "jquery", "gages-js", "headerCSS", "footerCSS", "vizCSS", "svgCSS"]
+>>>>>>> 2905a824e655f34aee45bd2597bf7d5d472ea94c
   -
     id: map-section
     publisher: section
-    template: simplefigure
+    template: layout/templates/figureTemplate.mustache
     depends:
       map: map-svg
       svg-js: svg-js
       gages-js: gages-js
+      svgCSS: svgCSS
     context:
       id: gage-map
       figure: map
@@ -268,11 +314,12 @@ publish:
   -
     id: doy-section
     publisher: section
-    template: simplefigure
+    template: layout/templates/figureTemplate.mustache
     depends:
       doyNM_graph: doy-NM
       svg-js: svg-js
       gages-js: gages-js
+      svgCSS: svgCSS
     context:
       id: doyNM-graph
       figure: doyNM_graph
@@ -280,11 +327,12 @@ publish:
   -
     id: graph-section
     publisher: section
-    template: simplefigure
+    template: layout/templates/figureTemplate.mustache
     depends:
       POR_graph: NMHydrograhTotal-svg
       svg-js: svg-js
       gages-js: gages-js
+      svgCSS: svgCSS
     context:
       id: POR_graph
       figure: POR_graph
@@ -295,6 +343,20 @@ publish:
     template: header-template
     context:
       title: Gages Through the Ages
+  -
+    id: social-section
+    publisher: section
+    template: layout/templates/socialMedia.mustache
+    depends:
+      githubLogo: githubLogo
+      twitterLogo: twitterLogo 
+      facebookLogo: facebookLogo
+      embedIcon: embedIcon 
+    context:
+      githubLogo: githubLogo
+      twitterLogo: twitterLogo 
+      facebookLogo: facebookLogo
+      embedIcon: embedIcon 
   -
     id: footer
     publisher: footer

@@ -1,0 +1,20 @@
+.doy-polyline {
+  fill:none;
+  stroke:#e0e0e0;
+}
+
+.years-rect {
+  fill:"red";
+  stroke:none;
+  opacity:0;
+}
+
+.years-rect:hover {
+  opacity:1;
+}
+
+.total-hydrograph {
+  fill:none;
+  stroke:#e0e0e0;
+  stroke-width:0.5;
+}
