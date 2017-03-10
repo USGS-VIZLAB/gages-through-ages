@@ -144,9 +144,11 @@ clean_up_svg <- function(svg, viz){
 #' 
 #' @result a plot
 createThumbnailPlot <- function(states, sites, bars){
-  par(mai=c(0,0,0,0), omi=c(0,0,0,0))
-  sp::plot(states, expandBB = c(0.7,0,0,0))
-  sp::plot(sites, add=TRUE, pch = 20, cex=0.1)
+  
+  par(mar=c(0,0,0,0), oma=c(0,0,0,0))
+  sp::plot(states, expandBB = c(0.8,0,0,1.5))
+  sp::plot(sites, add=TRUE, pch = 20, cex=cex)
+  
   bars.xml <- xml2::read_xml(bars)
   rects <- xml_children(bars.xml)
   xleft <- xml_attr(rects, 'x') %>% as.numeric()
@@ -154,7 +156,9 @@ createThumbnailPlot <- function(states, sites, bars){
   ytop <- max(ys) - ys
   ybottom <- 0
   xright <- xml_attr(rects, 'width') %>% as.numeric %>%  + xleft
-  par(new=TRUE, mar=c(0,0,10,0))
+
+  par(new=TRUE, mar=c(0,0,0,0), oma=c(3,0,0,0))
   plot(0,NA, xlim = c(0,tail(xright,1)), ylim = c(0, max(ys)), axes=FALSE , ylab="", xlab="")
   rect(xleft, ybottom, xright, ytop, col='dodgerblue', border = NA)
+  
 }
