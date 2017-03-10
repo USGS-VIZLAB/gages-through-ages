@@ -113,6 +113,12 @@ fetch:
     remoteItemId: 58c1c297e4b014cc3a3d3aa4 
     remoteFilename: allSitesYears_355.csv 
     mimetype: text/csv
+  -
+    id: siteText
+    location: data/siteText.yaml
+    scripts:
+    reader: md
+    mimetype: text/yaml
     
 process:
   -
@@ -238,6 +244,7 @@ publish:
     depends:
       header: header
       footer: footer
+	  intro: intro
       map-section: map-section
       doy-section: doy-section
       graph-section: graph-section
@@ -250,32 +257,42 @@ publish:
     context:
       header: header
       footer: footer
-      sections: [ "map-section", "doy-section", "graph-section" ]
+      sections: [ "intro", "map-section", "doy-section", "graph-section" ]
       resources: [ "jquery", "gages-js", "headerCSS", "footerCSS", "vizCSS"]
+ 
+ -
+   id: intro
+   template: layout/templates/intro.mustache
+   publisher: section
+   depends: siteText
+   context:
+     data: ["siteText.title", "siteText.subtitle"]
   -
     id: map-section
     publisher: section
     template: simplefigure
-    depends: siteText
+    depends: 
       map: map-svg
       gages-js: gages-js
+	  siteText: siteText
     context:
       id: gage-map
       figure: map
       caption: siteText.explanationText1
-		  data: ["siteText.title", "siteText.subtitle"]
+ 
   -
     id: doy-section
     publisher: section
     template: simplefigure
-    depends: siteText
+    depends: 
       doyNM_graph: doy-NM
       gages-js: gages-js
+	  siteText: siteText
     context:
       id: doyNM-graph
       figure: doyNM_graph
       caption: siteText.explanationText2
-	  data: siteText.dataSources
+
   -
     id: graph-section
     publisher: section
