@@ -7,6 +7,12 @@ process.plot_hydrographTotal <- function(viz=getContentInfo("NMHydrograhTotal-sv
   pixelHeight <- viz[['pixelHeight']]
   pixelWidth <- viz[['pixelWidth']]
   
+  rawData <- dataList$data
+  
+  rawData <- data.frame(approx(rawData$Date, 
+                                       rawData$Flow, 
+                                       n = 5441))
+  
   library(dplyr)
   library(svglite)
   library(xml2)
@@ -28,9 +34,9 @@ process.plot_hydrographTotal <- function(viz=getContentInfo("NMHydrograhTotal-sv
     par(omi=c(0,0,0,0), mai=c(0.5,0.75,0,0),
         las=1, xaxs = "i",mgp=c(2.5,0.25,0))
     plot(1, type='n', axes=F, ann=F, xaxt="n",
-         xlim=c(0, pixelWidth), ylim=c(-50, pixelHeight))
-    axis(side=1, at=at, labels=labels, cex.axis=0.6)
-  }, height=pixelHeight/72, width=pixelWidth/72)
+         xlim=c(1890,2016), ylim=c(-50, 20000))
+    axis(side=1, cex.axis=0.6)
+  }, height=1, width=5.083333)
   
   total_svg <- clean_up_svg(total_svg, viz)
 
@@ -45,18 +51,19 @@ process.plot_hydrographTotal <- function(viz=getContentInfo("NMHydrograhTotal-sv
   
   g.year_rects <- xml_add_sibling(xml_children(total_svg)[[length(xml_children(total_svg))]], 'g', id='rectYears','class'='years-rect-all')
 
-  for(yr in names(rectangles)){
+  for(yr in 1890:2016){
     rect_svg_all <- svglite::xmlSVG({
       par(omi=c(0,0,0,0), mai=c(0.5,0.75,0,0),las=1, xaxs = "i")
       plot(1, type="n", axes=F, ann=F, xaxt="n",
-           xlim=c(0, pixelWidth), ylim=c(0, pixelHeight))
-      rect(xleft=rectangles[[yr]][['xleft']],
-         xright=rectangles[[yr]][['xright']],
-         ybottom=0, ytop=pixelHeight, 
+           xlim=c(1890,2016), ylim=c(-50, 20000))
+      
+      rect(xleft=yr,
+         xright=yr+1,
+         ybottom=0, ytop=20000,
          border="blue", col="blue",
          ann=F, xaxt="n",
          xlim=c(0, pixelWidth), ylim=c(0, pixelHeight))
-    },  height=pixelHeight/72, width=pixelWidth/72)
+    },  height=1, width=5.083333)
   
 
     rect_svg <- xml_children(rect_svg_all)[4]
@@ -74,9 +81,9 @@ process.plot_hydrographTotal <- function(viz=getContentInfo("NMHydrograhTotal-sv
   hydro_lines <- svglite::xmlSVG({
 
     par(omi=c(0,0,0,0), mai=c(0.5,0.75,0,0),las=1, xaxs = "i")
-    plot(data_hydrograph, type="l", axes=F, ann=F, xaxt="n",
-         xlim=c(0, pixelWidth), ylim=c(0, pixelHeight))
-  }, height=pixelHeight/72, width=pixelWidth/72)
+    plot(rawData, # need to de-pixel this
+         type="l", axes=F, ann=F, xaxt="n")
+  }, height=1, width=5.083333)
   
   pline <- xml_find_first(hydro_lines, '//*[local-name()="polyline"]')
   xml_remove(pline)

@@ -9,6 +9,11 @@
   stroke-width:0.5;  
 }
 
+.axis-labels {
+  font-size: 12px;
+  font-family: Arial;
+}
+
 .years-rect {
   fill:red;
   stroke:none;

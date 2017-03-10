@@ -149,7 +149,7 @@ process:
     reader: rds
     depends: 
       dailyData: processedNMdaily
-    pixelHeight: 100
+    pixelHeight: 200
     pixelWidth: 366
   - 
     id: processedNMdailyRect
