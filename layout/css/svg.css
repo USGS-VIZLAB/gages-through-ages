@@ -3,6 +3,12 @@
   stroke:#e0e0e0;
 }
 
+.axis-lines-all {
+  fill:none;
+  stroke:#e0e0e0;
+  stroke-width:0.5;  
+}
+
 .years-rect {
   fill:"red";
   stroke:none;
