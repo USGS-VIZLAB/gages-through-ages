@@ -278,6 +278,7 @@ publish:
       footer: footer
 	  intro: intro
       map-section: map-section
+	  intro2: intro
       doy-section: doy-section
       graph-section: graph-section
       social-section: social-section
@@ -291,8 +292,16 @@ publish:
     context:
       header: header
       footer: footer
-      sections: [ "map-section", "doy-section", "graph-section" ]
+      sections: [ "intro", "map-section", "doy-section", "graph-section" ]
       resources: [ "jquery", "gages-js", "headerCSS", "footerCSS", "vizCSS", "svgCSS"]
+  -
+    id: intro
+    template: layout/templates/intro.mustache
+    publisher: section
+    depends: siteText
+    context:
+      data: ["siteText.title", "siteText.introText"]
+  
   -
     id: map-section
     publisher: section
@@ -306,6 +315,14 @@ publish:
       figure: map
       caption: siteText.explanationText1
  
+ -
+   id: intro2
+   template: layout/templates/intro.mustache
+   publisher: section
+   depends: siteText
+   context:
+     data: siteText.introText
+	 
   -
     id: doy-section
     publisher: section
@@ -317,7 +334,7 @@ publish:
     context:
       id: doyNM-graph
       figure: doyNM_graph
-      caption: siteText.explanationText2
+      caption: 
 
   -
     id: graph-section
@@ -330,7 +347,9 @@ publish:
     context:
       id: POR_graph
       figure: POR_graph
-      caption: PORgraph
+      caption: ["siteText.explanationText2", "dataSources"]
+ 
+
   -
     id: header
     publisher: section
