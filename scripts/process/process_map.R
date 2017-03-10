@@ -60,7 +60,7 @@ process.site_map <- function(viz){
   huc.map <- c(AK = "19", HI = "20", PR = "21")
   
   #parse huc_cd to 2 digits, and rename to huc to stay consistent
-  sites <- sites %>% rename(huc = huc_cd) %>% mutate(huc = substr(huc, 1,2)) 
+  sites <- sites %>% mutate(huc = substr(huc, 1,2)) 
  
   sites.out <- sites %>% filter(!huc %in% huc.map) %>% 
     points_sp()
