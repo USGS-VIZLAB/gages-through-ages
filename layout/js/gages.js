@@ -80,6 +80,7 @@ var hovertext;
   
   vizlab.showyear = function(year) {
     year = "" + year; // force year to be string
+    var barId = '#yr' + year;
     var filterFunc = function(val, i){
       if (undefined !== indices) {
         return (indices.indexOf(i) != -1)
@@ -95,6 +96,8 @@ var hovertext;
         $('#' + group).attr("d", newpath);
       }
     }
+    selectedYear = $(barId).addClass('selected-year');
+    unselectedYears = $(":not(" + barId + ")").removeClass('selected-year');
   }
   
   hovertext = function(text, event) {
