@@ -1,9 +1,13 @@
+var vizlab = vizlab || {};
+var hovertext;
+
 (function(){
   var dataPromise = $.Deferred();
   var pagePromise = $.Deferred();
   
   var yeardata = {};
   var paths = {};
+  var mapSVG;
   
   var interval = setInterval(function(){
     var checkEle = $('#footer')
@@ -25,9 +29,15 @@
       paths[group]["orig"] = $('#' + group).attr("d");
       paths[group]["split"] = paths[group]["orig"].split("M");
     }
+    
   });
   
-  window.vizlab = {}; // remove this
+  $(document).ready(function() {
+    // Set up svg mouse over dom
+    mapSVG = vizlab.svg(document.getElementById("map-svg"));
+    mapSVG.addTooltip();
+  });
+  
   vizlab.showyear = function(year) {
     year = "" + year; // force year to be string
     var filterFunc = function(val, i){
@@ -44,6 +54,17 @@
         newpath = "M" + ((newpath.length > 0) ? newpath.join("M") : "0,0");
         $('#' + group).attr("d", newpath);
       }
+    }
+  }
+  
+  hovertext = function(event, text) {
+    if (text) {
+      var id = this.id;
+      var year = id.slice(2);
+      var tooltipText = text + ', year: ' + year;
+      mapSVG.showTooltip(event.clientX, event.clientY, tooltipText);
+    } else {
+      mapSVG.hideTooltip();
     }
   }
 })();

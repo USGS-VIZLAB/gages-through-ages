@@ -242,6 +242,7 @@ publish:
       doy-section: doy-section
       graph-section: graph-section
       jquery: jquery-js
+      svg-js: svg-js
       gages-js: gages-js
       year-data: year-data
       vizCSS: vizCSS
@@ -251,13 +252,14 @@ publish:
       header: header
       footer: footer
       sections: [ "map-section", "doy-section", "graph-section" ]
-      resources: [ "jquery", "gages-js", "headerCSS", "footerCSS", "vizCSS"]
+      resources: [ "jquery", "svg-js", "gages-js", "headerCSS", "footerCSS", "vizCSS"]
   -
     id: map-section
     publisher: section
     template: simplefigure
     depends:
       map: map-svg
+      svg-js: svg-js
       gages-js: gages-js
     context:
       id: gage-map
@@ -269,6 +271,7 @@ publish:
     template: simplefigure
     depends:
       doyNM_graph: doy-NM
+      svg-js: svg-js
       gages-js: gages-js
     context:
       id: doyNM-graph
@@ -280,6 +283,7 @@ publish:
     template: simplefigure
     depends:
       POR_graph: NMHydrograhTotal-svg
+      svg-js: svg-js
       gages-js: gages-js
     context:
       id: POR_graph
@@ -308,6 +312,10 @@ publish:
   -
     id: jquery-js
     location: layout/js/jquery311.min.js
+    mimetype: text/javascript
+  - 
+    id: svg-js
+    location: layout/js/svg.js
     mimetype: text/javascript
   -
     id: gages-js
