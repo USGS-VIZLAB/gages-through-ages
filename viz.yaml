@@ -88,13 +88,21 @@ process:
     depends: 
       dailyData: NM_data
   - 
+    id: calc-NMHydrographSVGLand
+    location: cache/NMHydrographSVGLand.rds
+    processor: hydrographSVGLand
+    scripts: scripts/process/hydrographs.R
+    reader: rds
+    depends: 
+      dailySmooth: calc-hydrographTotal
+  - 
     id: calc-NMRectangles
     location: cache/NMRectangles.rds
     processor: hydrographRectangles
     scripts: scripts/process/hydrographs.R
     reader: rds
     depends: 
-      dailySmooth: calc-hydrographTotal
+      dailySmoothSVG: calc-NMHydrographSVGLand
   -
     id: watermark
     location: cache/watermark.rds
@@ -108,6 +116,12 @@ process:
     scripts: scripts/process/process_map.R
     reader: rds
     depends: disch-sites
+  - 
+    id: year-data
+    location: cache/year-data.json
+    processor: time_json
+    scripts: scripts/visualize/visualize-map.R
+    depends: "site-map"
 visualize:
   -
     id: map-svg
@@ -119,6 +133,17 @@ visualize:
     inline: true
     title: "Map of U.S. Geological Survey gages through the ages"
     alttext: "Map of U.S. Geological Survey gages"
+  -
+    id: NMHydrograhTotal-svg
+    location: figures/NMHydrograhTotal.svg
+    visualizer: plot_hydrographTotal
+    depends: 
+      dailySmoothSVG: calc-NMHydrographSVGLand
+      rectangles: calc-NMRectangles
+    scripts: ["scripts/visualize/visualize-hydrograph.R","scripts/visualize/visualize-map.R"]
+    inline: true
+    title: ""
+    alttext: ""
   -
     id: doy-NM
     location: figures/doyNM.svg
