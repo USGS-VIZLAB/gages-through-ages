@@ -20,7 +20,9 @@ process.bar_chart <- function(viz){
     xml_add_child(g.bars, 'rect', 
                   x = as.character((i-1)*(bin.w+spc)), 
                   height = as.character(bin.h[i]), 
-                  width = as.character(bin.w), y = as.character(h - bin.h[i]), id = paste0('yr', bars$year[i]))
+                  width = as.character(bin.w), y = as.character(h - bin.h[i]), id = paste0('yr', bars$year[i]), 
+                  onmousemove = sprintf("hovertext('%s gages');vizlab.showyear('%s')", bars$n[i], bars$year[i]),
+                  onmouseoff = sprintf("hovertext(' ');vizlab.playyear('%s')", bars$year[i]))
   }
   write_xml(x = g.bars, file = viz[['location']])
   
