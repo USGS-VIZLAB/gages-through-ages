@@ -9,10 +9,10 @@ process.bar_chart <- function(viz){
   max.sites <- max(bars$n)
   library(xml2)
   g.bars <- read_xml("<g id='year-bars'/>")
-  stop('just starting on this')
-  for (bar in bars$year){
-    xml_add_child(g.bars, 'rect', x)
-  }
-  saveRDS(bars, file = viz[['location']])
+  warning('just starting on this')
+  # for (bar in bars$year){
+  #   xml_add_child(g.bars, 'rect', x)
+  # }
+  saveRDS(g.bars, file = viz[['location']])
   
 }
