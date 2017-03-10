@@ -24,16 +24,20 @@ visualize.plot_hydrographTotal <- function(viz=getContentInfo("NMHydrograhTotal-
   
   total_svg <- svglite::xmlSVG({
 
-    par(omi=c(0,0,0,0), mai=c(0.5,0.75,0,0),las=1, xaxs = "i")
+    par(omi=c(0,0,0,0), mai=c(0.5,0.75,0,0),las=1, xaxs = "i",mgp=c(2.5,0.25,0))
     plot(data_hydrograph, type='l', axes=F, ann=F, xaxt="n",
          xlim=c(0, pixelWidth), ylim=c(0, pixelHeight))
     axis(side=1, at=at, labels=labels, cex.axis=0.6)
   }, height=pixelHeight/72, width=pixelWidth/72)
   
   total_svg <- clean_up_svg(total_svg, viz)
+  pline <- xml_find_first(total_svg, '//*[local-name()="polyline"]')
+  xml_remove(pline)
+  xml_attr(pline,"id") <- "total-hydrograph"
+  xml_attr(pline,"clip-path") <- NULL
+  xml_attr(pline,"style") <- NULL
   
-  xml_set_attr(total_svg, 'fill', "none")
-  xml_set_attr(total_svg, 'stroke', "black")
+  xml_add_child(total_svg, pline)
 
   g.year_rects <- xml_add_sibling(xml_children(total_svg)[[length(xml_children(total_svg))]], 'g', id='rectYears','class'='years-rect')
   
@@ -55,8 +59,8 @@ visualize.plot_hydrographTotal <- function(viz=getContentInfo("NMHydrograhTotal-
     rect_svg <- xml_children(rect_svg_all)[4]
     
     xml_set_attr(rect_svg, 'id', yr)
-    xml_set_attr(rect_svg, 'stroke-width', "0.5")
-    xml_set_attr(rect_svg, 'opacity', "0")
+    # xml_set_attr(rect_svg, 'stroke-width', "0.5")
+    # xml_set_attr(rect_svg, 'opacity', "0")
     xml_attr(rect_svg, "clip-path") <- NULL
     xml_set_attr(rect_svg, 'onmouseover', "evt.target.setAttribute('opacity', '0.5');")
     xml_set_attr(rect_svg, 'onmouseout', "evt.target.setAttribute('opacity', '0');")

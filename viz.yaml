@@ -230,6 +230,11 @@ publish:
     mimetype: text/css
     publisher: resource
   -
+    id: svgCSS
+    location: layout/css/svg.css
+    mimetype: text/css
+    publisher: resource
+  -
     id: index
     name: index
     publisher: page
@@ -243,6 +248,7 @@ publish:
       jquery: jquery-js
       gages-js: gages-js
       year-data: year-data
+      svgCSS: svgCSS
       vizCSS: vizCSS
       headerCSS: lib-header-css
       footerCSS: lib-footer-css
@@ -250,7 +256,7 @@ publish:
       header: header
       footer: footer
       sections: [ "map-section", "doy-section", "graph-section" ]
-      resources: [ "jquery", "gages-js", "headerCSS", "footerCSS", "vizCSS"]
+      resources: [ "jquery", "gages-js", "headerCSS", "footerCSS", "vizCSS", "svgCSS"]
   -
     id: map-section
     publisher: section
@@ -258,6 +264,7 @@ publish:
     depends:
       map: map-svg
       gages-js: gages-js
+      svgCSS: svgCSS
     context:
       id: gage-map
       figure: map
@@ -269,6 +276,7 @@ publish:
     depends:
       doyNM_graph: doy-NM
       gages-js: gages-js
+      svgCSS: svgCSS
     context:
       id: doyNM-graph
       figure: doyNM_graph
@@ -280,6 +288,7 @@ publish:
     depends:
       POR_graph: NMHydrograhTotal-svg
       gages-js: gages-js
+      svgCSS: svgCSS
     context:
       id: POR_graph
       figure: POR_graph
