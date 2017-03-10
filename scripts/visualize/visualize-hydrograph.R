@@ -1,4 +1,4 @@
-visualize.plot_hydrographTotal <- function(viz){
+visualize.plot_hydrographTotal <- function(viz=getContentInfo("NMHydrograhTotal-svg")){
   dataList <- readData(viz[['depends']][['dailySmoothSVG']])
   data <- dataList[['data']]
   pixelDay <- dataList[['pixelDay']]
@@ -11,6 +11,10 @@ visualize.plot_hydrographTotal <- function(viz){
   library(xml2)
   
   data_hydrograph <- dplyr::select(data, DateSVG, FlowSVG)
+  
+  data_hydrograph <- data.frame(approx(data_hydrograph$DateSVG, 
+                                       data_hydrograph$FlowSVG, 
+                                       n = 5441))
   
   # format axis labels
   labels <- seq(1890, 2016, by=10)
