@@ -76,7 +76,7 @@ visualize.states_svg <- function(viz){
 add_bar_chart <- function(svg, bars){
   
   xml_attr(svg, "viewBox") <- "0 0 658.75 550.10" # hack, but do the math!
-  xml_attr(bars, 'transform') <- "translate(0,440)"
+  xml_attr(bars, 'transform') <- "translate(0,440)scale(4,1)"  # hack, but need to do the math!
   xml_add_child(svg, bars)
   return(svg)
 }
