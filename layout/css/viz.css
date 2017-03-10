@@ -97,7 +97,8 @@ body{
 
 #embedSection{
   margin-top: 20px;
-  background:rgb(230,230,230);
+  background:rgb(225,225,225);
+  border-radius:5px;
 }
 
 .spacer{
@@ -124,7 +125,7 @@ body{
 
 .embed,
 #embedSection input{
-  border:1px solid #ccc;
+  border:1px solid rgb(150,150,150);
   background:#fff;
   height:30px;
   outline:none;
