@@ -16,9 +16,8 @@ info:
     since the late 1800s, by year, across the US. In addition, records from one of the
     oldest continuously active USGS stream gages, on the Rio Grande River at Embudo, NM,
     is shown in an interactive plot.  
-  keywords: >-
-    water, USGS, VIZLAB, stream gages
   audience: General public
+  keywords: [ "water", "USGS", "VIZLAB", "stream gages" ]
   url: https://owi.usgs.gov/vizlab/gages-through-ages/
   thumbnail:  
     url:  "none"  
@@ -177,8 +176,8 @@ process:
   - 
     id: year-data
     location: cache/year-data.json
-    processor: time_json
-    scripts: scripts/visualize/visualize-map.R
+    processor: year_json
+    scripts: ["scripts/visualize/visualize-map.R", "scripts/process/process_year-json.R"]
     depends: ["site-map", "disch-data"]
     min-year: 1890
     max-year: 2015
@@ -188,8 +187,8 @@ process:
     id: bar-data
     location: cache/bar-data.xml
     processor: bar_chart
-    scripts: scripts/process/process_bar_chart.R
-    depends: disch-data
+    scripts: ["scripts/process/process_bar_chart.R", "scripts/visualize/visualize-map.R"]
+    depends: ["disch-data", "state-map"]
     reader: filepath
     min-year: 1890
     max-year: 2015
@@ -227,13 +226,46 @@ visualize:
     inline: true
     depends: 
       daily: processedNMdaily
-    scripts: ["scripts/process/doy.R","scripts/visualize/visualize-map.R"]
+    scripts: ["scripts/visualize/visualize-doy.R","scripts/visualize/visualize-map.R"]
     title: "NM through the ages"
     alttext: "NM gage"
 publish:
   -
+    id: githubLogo
+    location: images/github.svg
+    mimetype: image/svg
+    inline: true
+    title: "Github"
+    alttext: "Github Logo"
+  -
+    id: twitterLogo
+    location: images/twitter.svg
+    mimetype: image/svg
+    inline: true
+    title: "Twitter"
+    alttext: "Twitter Logo"
+  -
+    id: facebookLogo
+    location: images/facebook.svg
+    mimetype: image/svg
+    inline: true
+    title: "Facebook"
+    alttext: "Facebook Logo"
+  -
+    id: embedIcon
+    location: images/embed.svg
+    mimetype: image/svg
+    inline: true
+    title: "Embed"
+    alttext: "Vizlab Embed Icon"
+  -
     id: vizCSS
     location: layout/css/viz.css
+    mimetype: text/css
+    publisher: resource
+  -
+    id: svgCSS
+    location: layout/css/svg.css
     mimetype: text/css
     publisher: resource
   -
@@ -248,33 +280,27 @@ publish:
       map-section: map-section
       doy-section: doy-section
       graph-section: graph-section
+      social-section: social-section
       jquery: jquery-js
       gages-js: gages-js
       year-data: year-data
+      svgCSS: svgCSS
       vizCSS: vizCSS
       headerCSS: lib-header-css
       footerCSS: lib-footer-css
     context:
       header: header
       footer: footer
-      sections: [ "intro", "map-section", "doy-section", "graph-section" ]
-      resources: [ "jquery", "gages-js", "headerCSS", "footerCSS", "vizCSS"]
- 
- -
-   id: intro
-   template: layout/templates/intro.mustache
-   publisher: section
-   depends: siteText
-   context:
-     data: ["siteText.title", "siteText.subtitle"]
+      sections: [ "map-section", "doy-section", "graph-section" ]
+      resources: [ "jquery", "gages-js", "headerCSS", "footerCSS", "vizCSS", "svgCSS"]
   -
     id: map-section
     publisher: section
-    template: simplefigure
-    depends: 
+    template: layout/templates/figureTemplate.mustache
+    depends:
       map: map-svg
       gages-js: gages-js
-	  siteText: siteText
+      svgCSS: svgCSS
     context:
       id: gage-map
       figure: map
@@ -283,11 +309,11 @@ publish:
   -
     id: doy-section
     publisher: section
-    template: simplefigure
-    depends: 
+    template: layout/templates/figureTemplate.mustache
+    depends:
       doyNM_graph: doy-NM
       gages-js: gages-js
-	  siteText: siteText
+      svgCSS: svgCSS
     context:
       id: doyNM-graph
       figure: doyNM_graph
@@ -296,10 +322,11 @@ publish:
   -
     id: graph-section
     publisher: section
-    template: simplefigure
+    template: layout/templates/figureTemplate.mustache
     depends:
       POR_graph: NMHydrograhTotal-svg
       gages-js: gages-js
+      svgCSS: svgCSS
     context:
       id: POR_graph
       figure: POR_graph
@@ -310,6 +337,20 @@ publish:
     template: header-template
     context:
       title: Gages Through the Ages
+  -
+    id: social-section
+    publisher: section
+    template: layout/templates/socialMedia.mustache
+    depends:
+      githubLogo: githubLogo
+      twitterLogo: twitterLogo 
+      facebookLogo: facebookLogo
+      embedIcon: embedIcon 
+    context:
+      githubLogo: githubLogo
+      twitterLogo: twitterLogo 
+      facebookLogo: facebookLogo
+      embedIcon: embedIcon 
   -
     id: footer
     publisher: footer
