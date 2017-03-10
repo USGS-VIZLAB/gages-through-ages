@@ -30,12 +30,18 @@
   window.vizlab = {}; // remove this
   vizlab.showyear = function(year) {
     year = "" + year; // force year to be string
-    var filterFunc = function(val, i){return (indices.indexOf(i) != -1)}
+    var filterFunc = function(val, i){
+      if (undefined !== indices) {
+        return (indices.indexOf(i) != -1)
+      } else {
+        return false;
+      }
+    }
     for (var group in yeardata) {
       if (paths.hasOwnProperty(group)) {
         var indices = yeardata[group][year];
         var newpath = paths[group]["split"].filter(filterFunc);
-        newpath = "M" + newpath.join("M");
+        newpath = "M" + ((newpath.length > 0) ? newpath.join("M") : "0,0");
         $('#' + group).attr("d", newpath);
       }
     }
