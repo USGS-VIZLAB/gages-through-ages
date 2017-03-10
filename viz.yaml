@@ -302,6 +302,7 @@ publish:
       graph-section: graph-section
       social-section: social-section
       jquery: jquery-js
+      svg-js: svg-js
       gages-js: gages-js
       year-data: year-data
       svgCSS: svgCSS
@@ -312,13 +313,15 @@ publish:
       header: header
       footer: footer
       sections: [ "map-section", "doy-section", "graph-section" ]
-      resources: [ "jquery", "gages-js", "headerCSS", "footerCSS", "vizCSS", "svgCSS"]
+
+      resources: [ "jquery", "svg-js", "gages-js", "headerCSS", "footerCSS", "vizCSS", "svgCSS"]
   -
     id: map-section
     publisher: section
     template: layout/templates/figureTemplate.mustache
     depends:
       map: map-svg
+      svg-js: svg-js
       gages-js: gages-js
       svgCSS: svgCSS
     context:
@@ -331,6 +334,7 @@ publish:
     template: layout/templates/figureTemplate.mustache
     depends:
       doyNM_graph: doy-NM
+      svg-js: svg-js
       gages-js: gages-js
       svgCSS: svgCSS
     context:
@@ -343,6 +347,7 @@ publish:
     template: layout/templates/figureTemplate.mustache
     depends:
       POR_graph: NMHydrograhTotal-svg
+      svg-js: svg-js
       gages-js: gages-js
       svgCSS: svgCSS
     context:
@@ -386,6 +391,10 @@ publish:
   -
     id: jquery-js
     location: layout/js/jquery311.min.js
+    mimetype: text/javascript
+  - 
+    id: svg-js
+    location: layout/js/svg.js
     mimetype: text/javascript
   -
     id: gages-js
