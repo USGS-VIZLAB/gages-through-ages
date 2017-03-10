@@ -1,10 +1,13 @@
 visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
-  
-  daily <- readData(viz[["depends"]][["daily"]])
-  
+
   library(svglite)
   library(dplyr)
   library(xml2)
+    
+  daily <- readData(viz[["depends"]][["daily"]])
+  zoomer <- readData(viz[["depends"]][["zoomer"]])
+  zoomer.xml <- read_xml(zoomer)
+  
 
   doy_svg = svglite::xmlSVG({
     par(omi=c(0,0,0,0), mai=c(0.5,0.75,0,0),las=1, xaxs = "i")
