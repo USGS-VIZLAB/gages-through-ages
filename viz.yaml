@@ -1,18 +1,66 @@
 vizlab: "0.1.7"
 info:
   id: gages-through-ages
-  name: Visualization long name
+  name: Stream Gages Through the Ages
   date: 2017-03-08
   publish-date: 2017-03-22
   path: /gages-through-ages
   analytics-id: UA-78530187-1
   description: >-
-    Describe project here
+    The U.S. Geological Survey Groundwater and Streamflow Information Program is 
+	funded by Congress to monitor drought and flood across the US through a network 
+	of stream gages. The USGS has been monitoring streamflow since 1889, and data 
+	from streamgages have since become critical to hydropower operations, recreation, 
+	streamflow prediction, flood forecasts, emergency management, engineering designs, 
+	and many other purposes. This data visualization shows an animation of stream gages 
+	since the late 1800s, by year, across the US. In addition, records from one of the 
+	oldest continuously active USGS stream gages, on the Rio Grande River at Embudo, NM, 
+	is shown in an interactive plot.  
+  keywords: >-
+    water, USGS, VIZLAB, stream gages
+  audience: General public
+  url: https://owi.usgs.gov/vizlab/gages-through-ages/
   thumbnail:  
     url:  "none"  
     width: 250    
     height: 250    
     alttext: "some text here"
+  thumbnail-landing: 
+    url: "none"
+  contributors:
+    -
+      name: Mary Bucknell
+      email: mbucknell@usgs.gov
+      affiliation: U.S. Geological Survey
+    -
+      name: Lindsay Carr
+      email: lcarr@usgs.gov
+      affiliation: U.S. Geological Survey
+    -
+      name: Laura DeCicco
+      email: ldecicco@usgs.gov
+      affiliation: U.S. Geological Survey
+    -
+      name: Emily Read
+      email: eread@usgs.gov
+      affiliation: U.S. Geological Survey
+    -
+      name: Jordan Read
+      email: jread@usgs.gov
+      affiliation: U.S. Geological Survey
+    -
+      name: Jordan Walker
+      email: jiwalker@usgs.gov
+      affiliation: U.S. Geological Survey
+    -
+      name: David Watkins
+      email: wwatkins@usgs.gov
+      affiliation: U.S. Geological Survey
+    -
+      name: Marty Wernimont
+      email: mwernimont@usgs.gov
+      affiliation: U.S. Geological Survey
+  twitter: "@USGS_R"
   required-packages:
     vizlab:
       repo: GRAN
@@ -81,38 +129,32 @@ process:
     scripts: scripts/process/process_map.R
     reader: rds
   - 
-    id: calc-hydrographTotal
-    location: cache/hydrographTotal.rds
-    processor: hydrographTotal
+    id: processedNMdaily
+    location: cache/processedNMdaily.rds
+    processor: hydrographData
     scripts: scripts/process/hydrographs.R
     reader: rds
     smooth.days: 30
     depends: 
       dailyData: NM_data
   - 
-    id: calc-hydrographByYear
-    location: cache/hydrographByYear.rds
-    processor: hydrographByYear
+    id: processedNMdailySVG
+    location: cache/processedNMdailySVG.rds
+    processor: hydrographDataSVG
     scripts: scripts/process/hydrographs.R
     reader: rds
     depends: 
-      dailyData: NM_data
+      dailyData: processedNMdaily
+    pixelHeight: 50
+    pixelWidth: 366
   - 
-    id: calc-NMHydrographSVGLand
-    location: cache/NMHydrographSVGLand.rds
-    processor: hydrographSVGLand
-    scripts: scripts/process/hydrographs.R
-    reader: rds
-    depends: 
-      dailySmooth: calc-hydrographTotal
-  - 
-    id: calc-NMRectangles
-    location: cache/NMRectangles.rds
+    id: processedNMdailyRect
+    location: cache/processedNMdailyRect.rds
     processor: hydrographRectangles
     scripts: scripts/process/hydrographs.R
     reader: rds
     depends: 
-      dailySmoothSVG: calc-NMHydrographSVGLand
+      dailyDataSVG: processedNMdailySVG
   -
     id: watermark
     location: cache/watermark.rds
@@ -163,8 +205,10 @@ visualize:
     visualizer: plot_hydrographTotal
     mimetype: image/svg+xml
     depends: 
-      dailySmoothSVG: calc-NMHydrographSVGLand
-      rectangles: calc-NMRectangles
+      dailySmoothSVG: processedNMdailySVG
+      rectangles: processedNMdailyRect
+    pixelHeight: 50
+    pixelWidth: 366
     scripts: ["scripts/visualize/visualize-hydrograph.R","scripts/visualize/visualize-map.R"]
     inline: true
     title: ""
@@ -176,7 +220,7 @@ visualize:
     mimetype: image/svg+xml
     inline: true
     depends: 
-      daily: calc-hydrographByYear
+      daily: processedNMdaily
     scripts: ["scripts/process/doy.R","scripts/visualize/visualize-map.R"]
     title: "NM through the ages"
     alttext: "NM gage"

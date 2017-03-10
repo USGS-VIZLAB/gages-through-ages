@@ -1,78 +1,66 @@
-process.hydrographTotal <- function(viz){
+process.hydrographData <- function(viz){
   library(dataRetrieval)
   library(dplyr)
   library(caTools)
   
-  dailyData <- readData(viz[['depends']][['dailyData']])
+  data <- readData(viz[['depends']][['dailyData']])
   smooth.days <- viz[['smooth.days']]
-  dailyData <- renameNWISColumns(dailyData)
-  dailyData <- arrange(dailyData, Date)
   
-  dailyData[['Flow.smooth']] <- runmean(dailyData[['Flow']], smooth.days, endrule = "constant", align="left")
+  data <- renameNWISColumns(data)
+  data <- arrange(data, Date)
   
-  saveRDS(dailyData, file=viz[["location"]])
+  data[['DayOfYear']] <- as.numeric(format(data[['Date']], "%j"))
+  data[['Year']] <- as.numeric(format(data[['Date']], "%Y"))
+  data[['Flow.smooth']] <- runmean(data[['Flow']], smooth.days, endrule = "constant", align="left")
+  
+  saveRDS(data, file=viz[["location"]])
 }
 
-process.hydrographByYear <- function(viz){
-  library(dataRetrieval)
+
+process.hydrographDataSVG <- function(viz){
+  data <- readData(viz[['depends']][['dailyData']])
+  pixelHeight <- viz[['pixelHeight']]
+  pixelWidth <- viz[['pixelWidth']]
   
-  dailyData <- readData(viz[['depends']][['dailyData']])
-  dailyData <- renameNWISColumns(dailyData)
+  pixelCfs <- round(pixelHeight/max(data[['Flow.smooth']]), 5)
+  pixelDay <- getWidthOfDay(data$Date, pixelWidth)
   
-  dailyData[['DayOfYear']] <- as.numeric(format(dailyData[['Date']], "%j"))
-  dailyData[['Year']] <- as.numeric(format(dailyData[['Date']], "%Y"))
+  data <- dplyr::mutate(data, daysince=as.numeric(Date-min(Date)))
   
-  saveRDS(dailyData, file=viz[["location"]])
+  data[['DateSVG']] <- data[['daysince']]*pixelDay
+  data[['FlowSVG']] <- data[['Flow.smooth']]*pixelCfs
+  
+  dataList <- list(data = data, pixelDay = pixelDay)
+  
+  saveRDS(dataList, file=viz[['location']])
 }
 
 process.hydrographRectangles <- function(viz){
-  dailySmoothSVG <- readData(viz[['depends']][['dailySmoothSVG']])
+  dataList <- readData(viz[['depends']][['dailyDataSVG']])
+  data <- dataList[['data']]
   
   library(dplyr)
-  data <- mutate(dailySmoothSVG, yr = format(Date, "%Y"))
-  data <- group_by(data, yr)
-  data <- summarize(data, 
-                    x=min(DateSVG),
-                    width=max(DateSVG) - min(DateSVG))
-  data <- mutate(data, x=as.character(x), width=as.character(width),
-                 height="100%")
-  allYrs <- data$yr
+  allYrs <- unique(data[['Year']])
+  
+  data <- group_by(data, Year)
+  data <- summarize(data, x=min(DateSVG), width=max(DateSVG) - min(DateSVG))
+  data <- mutate(data, x=as.character(x), width=as.character(width), height="100%")
+  
   rect_specs <- by(data, 1:nrow(data), as.list)
   names(rect_specs) <- paste0("y", allYrs)
-  
-  # 
-  # widthOfPlotRegion <- 366
-  # allYrs <- unique(as.numeric(format(dailySmooth[['Date']], "%Y")))
-  # firstYr <- min(allYrs)
-  # # lastYr <- max(allYrs)
-  # lastYr <- 2016
-  # totalNumYrs <- length(allYrs)
-  # widthOfRect <- round(widthOfPlotRegion/totalNumYrs, digits=3)
-  # 
-  # xvals <- seq(0, by=widthOfRect, length.out=totalNumYrs)
-  
-  # rect_specs <-lapply(xvals, function(x, widthOfRect) {
-  #   rect_args <- list(x=as.character(x),
-  #                     width=as.character(widthOfRect),
-  #                     height="100%")
-  #   return(rect_args)
-  # }, widthOfRect)
   
   saveRDS(rect_specs, file=viz[["location"]])
 }
 
-process.hydrographSVGLand <- function(viz){
-  data <- readData(viz[['depends']][['dailySmooth']])
-  
-  heightOfPlotRegion <- 50
-  widthOfPlotRegion <- 366
-  heightOfOneFlow <- round(heightOfPlotRegion/max(data[['Flow.smooth']]), 5)
-  widthOfDay <- 366/as.numeric(max(data$Date) - min(data$Date))
-
-  data <- dplyr::mutate(data, daysince=as.numeric(Date-min(Date)))
-  
-  data[['DateSVG']] <- data[['daysince']]*widthOfDay
-  data[['FlowSVG']] <- data[['Flow.smooth']]*heightOfOneFlow
-
-  saveRDS(data, file=viz[['location']])
+#' handle date converion to SVG coords
+#' 
+#' @param date_vec a vector of all dates to use
+#' @param plot_width a single numeric value indicating the width
+#' of the plot in pixels.
+#' 
+#' @return SVG coords
+getWidthOfDay <- function(date_vec, plot_width){
+  total_num_days <- as.numeric(max(date_vec) - min(date_vec))
+  pixels_per_day <- plot_width/total_num_days
+  return(pixels_per_day)
 }
