@@ -191,7 +191,6 @@ process:
     reader: filepath
     min-year: 1890
     max-year: 2015
-<<<<<<< HEAD
   -
     id: NMHydrograhTotal-svg
     location: cache/zoom-bar.xml
@@ -204,9 +203,6 @@ process:
     pixelWidth: 366
     scripts: ["scripts/process/process-hydrograph.R","scripts/visualize/visualize-map.R"]
     inline: true
-    
-=======
->>>>>>> 01420b4ca4f4d523dab972082b41c644772dc280
 visualize:
   -
     id: map-svg
@@ -343,25 +339,7 @@ publish:
     context:
       id: doyNM-graph
       figure: doyNM_graph
-<<<<<<< HEAD
       caption: ["siteText.explanationText2", "dataSources"]
-=======
-      caption: 
-  -
-    id: graph-section
-    publisher: section
-    template: layout/templates/figureTemplate.mustache
-    depends:
-      POR_graph: NMHydrograhTotal-svg
-      svg-js: svg-js
-      gages-js: gages-js
-      svgCSS: svgCSS
-      siteText: siteText
-    context:
-      id: POR_graph
-      figure: POR_graph
-      caption: ["siteText.explanationText2", "siteText.dataSources"]
->>>>>>> 01420b4ca4f4d523dab972082b41c644772dc280
   -
     id: header
     publisher: section
