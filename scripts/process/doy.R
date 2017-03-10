@@ -34,7 +34,11 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
   
   for(i in unique(daily$Year)){
     year_data <- filter(daily, Year == i) 
-    #TODO: add NA to Feb.29
+
+    if((i%%4 == 0) & ((i%%100 != 0) | (i%%400 == 0))){
+      year_data$DayOfYear[year_data$DayOfYear>=60] <- year_data$DayOfYear[year_data$DayOfYear>=60]+1
+    }
+    
     
     x <- grab_spark(select(year_data, DayOfYear, Flow))
     polyline <- xml_children(x)[4]
