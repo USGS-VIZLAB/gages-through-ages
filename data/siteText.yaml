@@ -1,0 +1,34 @@
+title: "## Stream Gages Through the Ages"
+
+subtitle: "### In support of citizens, emergency managers, policy makers, and more"
+
+introText1: "### U.S. Geological Survey Active Stream Gages"
+
+explanationText1: |
+   The [U.S. Geological Survey Groundwater and Streamflow Information Program](https://www.usgs.gov/science/mission-areas/water/groundwater-and-streamflow-information?qt-programs_l2_landing_page=0#qt-programs_l2_landing_page)
+   is funded by Congress to monitor drought and flood across the US through a network of stream gages.
+   
+   Why should you care about USGS streamgages? The USGS has been monitoring streamflow since 1889, and data from streamgages
+   have since become critical to hydropower operations, recreation, streamflow prediction, flood forecasts, emergency 
+   management, engineering designs, and many other purposes.
+   
+   Mouse over the timeline below the map to see the distribution of active stream gages for a given year.U.S. freshwater withdrawals, 1950-present
+
+introText2: "What Can You See in a Long Term Record?"
+
+explanationText2: |
+   In 1888, a group of [eight young engineers](https://pubs.usgs.gov/pp/0778/report.pdf) descended on the Rio Grande River at Embudo, NM to 
+   establish the first U.S. Geological Survey stream gage and learn the art and science of hydrography. The team was charged with measuring
+   flow, sediment transport, and other water characteristics for the Rio Grande. With the exception of a few years in the early 1900s,
+   the site has been operated continuously since 1889.
+   
+   Long term records such as for the Rio Grande at Embudo, NM, can be used to 
+   
+   Above, see the long term record of flow at the site. Mouse over the timeline to highlight specific years. The complete data record for
+   this National Water Information System site can be accessed [here](https://waterdata.usgs.gov/nm/nwis/inventory/?site_no=08279500&agency_cd=USGS).
+
+  
+dataSources: |
+  Data sources:
+
+  U.S. Geological Survey, 2016, National Water Information System—Web interface, accessed March 8, 2017, at http://dx.doi.org/10.5066/F7P55KJN.
