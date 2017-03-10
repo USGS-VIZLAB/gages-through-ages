@@ -10,13 +10,14 @@ visualize.plot_hydrographTotal <- function(viz){
   
   # format axis
   labels <- seq(1890, 2016, by=10)
-  widthOfYear <- 366/122
-  at <- (labels-1889)*widthOfYear
+  yrs_since <- labels-1889
+  widthOfYear <- 366/128
+  at <- yrs_since*widthOfYear
   
   total_svg <- svglite::xmlSVG({
     par(omi=c(0,0,0,0), mai=c(0.3,0,0,0),las=1,xaxs="i")
     plot(data_hydrograph, type='l', axes=F, ann=F, xaxt="n")
-    axis(side=1, at=at, labels=labels)
+    axis(side=1, at=at, labels=labels, cex.axis=0.6)
   }, height=1, width=5.083333)
   total_svg <- clean_up_svg(total_svg, viz)
   
