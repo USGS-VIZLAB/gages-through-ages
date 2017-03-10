@@ -20,10 +20,9 @@
   });
   
   $.when(dataPromise).then(function(){
-    var i = 1;
     for (var group in yeardata) {
       paths[group] = {};
-      paths[group]["orig"] = $('#all-sites-' + i++).attr("d");
+      paths[group]["orig"] = $('#' + group).attr("d");
       paths[group]["split"] = paths[group]["orig"].split("M");
     }
   });
@@ -32,13 +31,12 @@
   vizlab.showyear = function(year) {
     year = "" + year; // force year to be string
     var filterFunc = function(val, i){return (indices.indexOf(i) != -1)}
-    var i = 1;
     for (var group in yeardata) {
       if (paths.hasOwnProperty(group)) {
         var indices = yeardata[group][year];
         var newpath = paths[group]["split"].filter(filterFunc);
         newpath = "M" + newpath.join("M");
-        $('#all-sites-' + i++).attr("d", newpath);
+        $('#' + group).attr("d", newpath);
       }
     }
   }
