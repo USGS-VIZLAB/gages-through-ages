@@ -98,7 +98,6 @@ var hovertext;
   }
   
   hovertext = function(text, event) {
-    console.log('text is"' + text + '"');
     if (text) {
       var id = event.currentTarget.id;
       var year = id.slice(2);
