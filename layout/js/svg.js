@@ -12,6 +12,8 @@ var vizlab = vizlab || {};
     
     var cursorPoint = function(screenX, screenY) {
       var point = svg.createSVGPoint();
+      point.x = screenX;
+      point.y = screenY;
       point = point.matrixTransform(svg.getScreenCTM().inverse());
       point.x = Math.round(point.x);
       point.y = Math.round(point.y);
@@ -29,7 +31,7 @@ var vizlab = vizlab || {};
       '<text id="tooltip-text-test" dy="-1.1em" text-anchor="middle" class="svg-text"> </text>';
     
     var addTooltip = function() {
-      var tooltipGroup = document.createElement("g");
+      var tooltipGroup = document.createElementNS(svg.namespaceURI,"g");
       tooltipGroup.id = "tooltip-group-test";
       tooltipGroup.innerHTML = TOOLTIP_HTML;
       svg.appendChild(tooltipGroup);
@@ -43,13 +45,13 @@ var vizlab = vizlab || {};
     var showTooltip = function(x, y, tooltipText) {
       var tooltip = document.getElementById("tooltip-text-test");
       var tooltipBox = document.getElementById("tooltip-box-test");
-      var toolPoint = document.getElementById("tooltip-point-test");
+      var tooltipPoint = document.getElementById("tooltip-point-test");
       var text = (typeof tooltipText === "function") ? tooltipText(options) : tooltipText;
       var svgPoint = cursorPoint(x, y);
       var svgWidth = Number(svg.getAttribute("viewBox").split(" ")[2]);
       var textLength;
       var halfLength;
-      var tooltipX
+      var tooltipX;
       
       tooltip.firstChild.data = text;
       textLength = Math.round(tooltip.getComputedTextLength());
@@ -71,7 +73,7 @@ var vizlab = vizlab || {};
       
       /* Set attributes for background box */
       tooltipBox.setAttribute("x", tooltipX - halfLength - 6);
-      tooltipBox.setAttribute("y", svgPoint - 35);
+      tooltipBox.setAttribute("y", svgPoint.y - 35);
       tooltipBox.setAttribute("width", textLength + 12);
       tooltipBox.setAttribute("class", "tooltip-box");
       
@@ -83,7 +85,7 @@ var vizlab = vizlab || {};
     var hideTooltip = function() {
       var tooltip = document.getElementById("tooltip-text-test");
       var tooltipBox = document.getElementById("tooltip-box-test");
-      var toolPoint = document.getElementById("tooltip-point-test");
+      var tooltipPoint = document.getElementById("tooltip-point-test");
       
       tooltip.firstChild.data = " ";
       tooltipBox.setAttribute("class", "hidden");

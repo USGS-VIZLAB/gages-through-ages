@@ -39,6 +39,7 @@ var hovertext;
   });
   
   vizlab.showyear = function(year) {
+    return;
     year = "" + year; // force year to be string
     var filterFunc = function(val, i){
       if (undefined !== indices) {
@@ -57,9 +58,10 @@ var hovertext;
     }
   }
   
-  hovertext = function(event, text) {
+  hovertext = function(text, event) {
+    console.log('text is"' + text + '"');
     if (text) {
-      var id = this.id;
+      var id = event.currentTarget.id;
       var year = id.slice(2);
       var tooltipText = text + ', year: ' + year;
       mapSVG.showTooltip(event.clientX, event.clientY, tooltipText);
