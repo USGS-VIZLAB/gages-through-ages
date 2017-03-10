@@ -91,31 +91,7 @@ add_bar_chart <- function(svg, bars){
   return(svg)
 }
 
-process.time_json <- function(viz){
-  data.in <- readDepends(viz)
-  library(dplyr)
-  sites <- data.in[['site-map']]
-  sites.w.data <- data.in[["disch-data"]]
-  
-  chunk.s <- seq(1,by=site.chunk, to=length(sites))
-  chunk.e <- c(tail(chunk.s, -1L), length(sites))
-  json.out <- list()
-  for (i in 1:length(chunk.s)){
-    chunk <- list()
-    for (yr in viz[['min-year']]:viz[['max-year']]){
-      sites.n.chunk <- sites$site_no[chunk.s[i]:chunk.e[i]]
-      sites.yr <- sites.w.data %>% filter(year == yr ) %>% .$site_no
-      tmp <- list(which(sites.n.chunk %in% sites.yr)) #which of the sites 
-      names(tmp) <- yr
-      chunk <- append(chunk, tmp)
-    }
-    tmp <- list(chunk)
-    names(tmp) <- sprintf(group.names, i)
-    json.out <- append(json.out, tmp)
-  }
-  json.text <- jsonlite::toJSON(json.out)
-  cat(json.text, file = viz[['location']])
-}
+
 
 #' do the things to the svg that we need to do every time if they come from svglite:
 #' 
