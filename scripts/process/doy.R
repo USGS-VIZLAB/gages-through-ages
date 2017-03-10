@@ -39,8 +39,9 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
       year_data$DayOfYear[year_data$DayOfYear>=60] <- year_data$DayOfYear[year_data$DayOfYear>=60]+1
     }
     
+    sub_data <- data.frame(approx(year_data$DayOfYear, year_data$Flow, n = 183))
     
-    x <- grab_spark(select(year_data, DayOfYear, Flow))
+    x <- grab_spark(sub_data)
     polyline <- xml_children(x)[4]
     xml_attr(polyline, "id") <- paste0("y",i)
     xml_attr(polyline, "class") <- "doy-lines-by-year"
