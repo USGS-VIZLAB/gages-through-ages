@@ -88,14 +88,6 @@ process:
     depends: 
       dailyData: NM_data
   - 
-    id: calc-NMRectangles
-    location: cache/NMRectangles.rds
-    processor: hydrographRectangles
-    scripts: scripts/process/hydrographs.R
-    reader: rds
-    depends: 
-      dailySmooth: calc-hydrographTotal
-  - 
     id: calc-NMHydrographSVGLand
     location: cache/NMHydrographSVGLand.rds
     processor: hydrographSVGLand
@@ -103,6 +95,14 @@ process:
     reader: rds
     depends: 
       dailySmooth: calc-hydrographTotal
+  - 
+    id: calc-NMRectangles
+    location: cache/NMRectangles.rds
+    processor: hydrographRectangles
+    scripts: scripts/process/hydrographs.R
+    reader: rds
+    depends: 
+      dailySmoothSVG: calc-NMHydrographSVGLand
   -
     id: watermark
     location: cache/watermark.rds
