@@ -112,6 +112,12 @@ fetch:
     remoteItemId: 58c1c297e4b014cc3a3d3aa4 
     remoteFilename: allSitesYears_355.csv 
     mimetype: text/csv
+  -
+    id: siteText
+    location: data/siteText.yaml
+    scripts:
+    reader: md
+    mimetype: text/yaml
     
 process:
   -
@@ -208,7 +214,7 @@ visualize:
     scripts: scripts/visualize/visualize-map.R
     mimetype: image/svg+xml
     inline: true
-    title: "Map of U.S. Geological Survey gages through the ages"
+    title: "U.S. Geological Survey Active Stream Gages"
     alttext: "Map of U.S. Geological Survey gages"
 
   -
@@ -277,7 +283,9 @@ publish:
     depends:
       header: header
       footer: footer
+      intro: intro
       map-section: map-section
+      intro2: intro2
       doy-section: doy-section
       social-section: social-section
       jquery: jquery-js
@@ -291,8 +299,17 @@ publish:
     context:
       header: header
       footer: footer
-      sections: [ "map-section", "doy-section"]
+      sections: [ "intro", "map-section", "intro2" "doy-section" ]
       resources: [ "jquery", "svg-js", "gages-js", "headerCSS", "footerCSS", "vizCSS", "svgCSS"]
+
+  -
+    id: intro
+    template: layout/templates/intro.mustache
+    publisher: section
+    depends: siteText
+    context:
+      data: ["siteText.title", "siteText.introText"]
+  
   -
     id: map-section
     publisher: section
@@ -305,7 +322,16 @@ publish:
     context:
       id: gage-map
       figure: map
-      caption: states
+      caption: siteText.explanationText1
+ 
+ -
+   id: intro2
+   template: layout/templates/intro.mustache
+   publisher: section
+   depends: siteText
+   context:
+     data: siteText.introText
+	 
   -
     id: doy-section
     publisher: section
@@ -318,7 +344,8 @@ publish:
     context:
       id: doyNM-graph
       figure: doyNM_graph
-      caption: doyNM
+      caption: 
+
   -
 <<<<<<< HEAD
 =======
@@ -333,7 +360,9 @@ publish:
     context:
       id: POR_graph
       figure: POR_graph
-      caption: PORgraph
+      caption: ["siteText.explanationText2", "dataSources"]
+ 
+
   -
 >>>>>>> 94a5033de420f5dee93f4b068f88bf11f37583b3
     id: header
