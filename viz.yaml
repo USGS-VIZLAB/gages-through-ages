@@ -173,7 +173,7 @@ visualize:
     inline: true
     depends: 
       daily: processedNMdaily
-    scripts: ["scripts/visualize/doy.R","scripts/visualize/visualize-map.R"]
+    scripts: ["scripts/visualize/visualize-doy.R","scripts/visualize/visualize-map.R"]
     title: "NM through the ages"
     alttext: "NM gage"
 publish:
