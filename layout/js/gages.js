@@ -1,6 +1,5 @@
 (function(){
   var dataPromise = $.Deferred();
-  var sliderPromise = $.Deferred();
   var pagePromise = $.Deferred();
   
   var yeardata = {};
@@ -19,6 +18,7 @@
     dataPromise.resolve();
   });
   
+  // also make sure page is fully loaded
   $.when(dataPromise).then(function(){
     for (var group in yeardata) {
       paths[group] = {};
