@@ -160,6 +160,34 @@ visualize:
     alttext: "NM gage"
 publish:
   -
+    id: githubLogo
+    location: images/github.svg
+    mimetype: image/svg
+    inline: true
+    title: "Github"
+    alttext: "Github Logo"
+  -
+    id: twitterLogo
+    location: images/twitter.svg
+    mimetype: image/svg
+    inline: true
+    title: "Twitter"
+    alttext: "Twitter Logo"
+  -
+    id: facebookLogo
+    location: images/facebook.svg
+    mimetype: image/svg
+    inline: true
+    title: "Facebook"
+    alttext: "Facebook Logo"
+  -
+    id: embedIcon
+    location: images/embed.svg
+    mimetype: image/svg
+    inline: true
+    title: "Embed"
+    alttext: "Vizlab Embed Icon"
+  -
     id: vizCSS
     location: layout/css/viz.css
     mimetype: text/css
@@ -175,6 +203,7 @@ publish:
       map-section: map-section
       doy-section: doy-section
       graph-section: graph-section
+      social-section: social-section
       jquery: jquery-js
       gages-js: gages-js
       year-data: year-data
@@ -184,12 +213,12 @@ publish:
     context:
       header: header
       footer: footer
-      sections: [ "map-section", "doy-section", "graph-section" ]
+      sections: [ "map-section", "doy-section", "graph-section",  "social-section"]
       resources: [ "jquery", "gages-js", "headerCSS", "footerCSS", "vizCSS"]
   -
     id: map-section
     publisher: section
-    template: simplefigure
+    template: layout/templates/figureTemplate.mustache
     depends:
       map: map-svg
       gages-js: gages-js
@@ -200,7 +229,7 @@ publish:
   -
     id: doy-section
     publisher: section
-    template: simplefigure
+    template: layout/templates/figureTemplate.mustache
     depends:
       doyNM_graph: doy-NM
       gages-js: gages-js
@@ -211,7 +240,7 @@ publish:
   -
     id: graph-section
     publisher: section
-    template: simplefigure
+    template: layout/templates/figureTemplate.mustache
     depends:
       POR_graph: NMHydrograhTotal-svg
       gages-js: gages-js
@@ -225,6 +254,20 @@ publish:
     template: header-template
     context:
       title: Gages Through the Ages
+  -
+    id: social-section
+    publisher: section
+    template: layout/templates/socialMedia.mustache
+    depends:
+      githubLogo: githubLogo
+      twitterLogo: twitterLogo 
+      facebookLogo: facebookLogo
+      embedIcon: embedIcon 
+    context:
+      githubLogo: githubLogo
+      twitterLogo: twitterLogo 
+      facebookLogo: facebookLogo
+      embedIcon: embedIcon 
   -
     id: footer
     publisher: footer
