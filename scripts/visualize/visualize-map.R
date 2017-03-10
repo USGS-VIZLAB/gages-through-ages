@@ -3,6 +3,10 @@
 site.chunk <- 1000
 group.names <- 'sites-group-%s'
 
+size_map_svg <- function(sp){
+  apply(sp::bbox(sp), 1, diff)/500000
+}
+
 visualize.states_svg <- function(viz){
   data <- readDepends(viz)
   states <- data[['state-map']]
@@ -14,7 +18,7 @@ visualize.states_svg <- function(viz){
   
   library(svglite)
   library(sp)
-  size <- apply(bbox(states), 1, diff)/500000
+  size <- size_map_svg(states)
   svg <- svglite::xmlSVG({
     par(mai=c(0,0,0,0), omi=c(0,0,0,0))
     sp::plot(states, ylim=bbox(states)[2,], xlim=bbox(states)[1,], setParUsrBB = TRUE)
@@ -76,7 +80,7 @@ visualize.states_svg <- function(viz){
 add_bar_chart <- function(svg, bars){
   
   xml_attr(svg, "viewBox") <- "0 0 658.75 550.10" # hack, but do the math!
-  xml_attr(bars, 'transform') <- "translate(0,440)scale(4,1)"  # hack, but need to do the math!
+  xml_attr(bars, 'transform') <- "translate(0,440)"  # hack, but need to do the math!
   xml_add_child(svg, bars)
   return(svg)
 }
