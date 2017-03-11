@@ -121,7 +121,7 @@ add_bar_chart <- function(svg, bars){
   x.tick.labs <- seq(1800,2020, by=20) %>% as.character()
   
   browser()
-  vb[4] <- vb[4] + h + ax.buff
+  vb[4] <- vb[4] + h + ax.buff + 20 # last part for the axis text
   xml_attr(svg, "viewBox") <- paste(vb, collapse=' ')
   g.axes <- xml_add_child(bars, 'g', id='axes')
   xml_add_child(g.axes, 'path', d=sprintf("M-%s,%s v%s", ax.buff, ax.buff, h+ax.buff), id='y-axis', stroke='black')
@@ -138,7 +138,7 @@ add_bar_chart <- function(svg, bars){
       attrs <- xml_attrs(all.mousers[[use.i[1]]])
       xml_add_child(g.x, 'text', year, y = as.character(h+ax.buff), 
                     x=as.character(as.numeric(attrs[['x']])+as.numeric(attrs[['width']])/2), 
-                    'text-anchor' = 'middle', dy = "1.33em")
+                    'text-anchor' = 'middle', dy = "1.0em")
     }
   }
   
