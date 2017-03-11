@@ -138,27 +138,8 @@ process:
     processor: hydrographData
     scripts: scripts/process/hydrographs.R
     reader: rds
-    smooth.days: 30
     depends: 
       dailyData: NM_data
-  - 
-    id: processedNMdailySVG
-    location: cache/processedNMdailySVG.rds
-    processor: hydrographDataSVG
-    scripts: scripts/process/hydrographs.R
-    reader: rds
-    depends: 
-      dailyData: processedNMdaily
-    pixelHeight: 200
-    pixelWidth: 366
-  - 
-    id: processedNMdailyRect
-    location: cache/processedNMdailyRect.rds
-    processor: hydrographRectangles
-    scripts: scripts/process/hydrographs.R
-    reader: rds
-    depends: 
-      dailyDataSVG: processedNMdailySVG
   -
     id: watermark
     location: cache/watermark.rds
@@ -197,12 +178,13 @@ process:
     processor: plot_hydrographTotal
     reader: filepath
     depends: 
-      dailySmoothSVG: processedNMdailySVG
-      rectangles: processedNMdailyRect
-    pixelHeight: 50
-    pixelWidth: 366
-    scripts: ["scripts/process/process-hydrograph.R","scripts/visualize/visualize-map.R"]
-    inline: true
+      data: processedNMdaily
+    height: 1
+    width: 5
+    full-desample: 30
+    minYear: 1889
+    maxYear: 2016
+    scripts: scripts/process/process-hydrograph.R
 visualize:
   -
     id: map-svg
@@ -221,10 +203,15 @@ visualize:
     visualizer: doy
     mimetype: image/svg+xml
     inline: true
+    height: 4
+    width: 5
+    full-desample: 4
+    minYear: 1889
+    maxYear: 2016
     depends: 
       daily: processedNMdaily
       zoomer: NMHydrograhTotal-svg
-    scripts: ["scripts/visualize/visualize-doy.R","scripts/visualize/visualize-map.R"]
+    scripts: scripts/visualize/visualize-doy.R
     title: "NM through the ages"
     alttext: "NM gage"
   -
