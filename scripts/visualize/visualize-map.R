@@ -97,6 +97,7 @@ visualize.states_svg <- function(viz){
 }
 
 add_bar_chart <- function(svg, bars){
+  
   library(dplyr)
   vb <- as.numeric(strsplit(xml_attr(svg, "viewBox"), '[ ]')[[1]])
   ax.buff <- 5
@@ -109,22 +110,36 @@ add_bar_chart <- function(svg, bars){
   heights <- all.bars %>% xml_attr('height') %>% as.numeric()
   h <- max(heights)
   max.i <- which(h == heights)[1]
-  max.gages <- xml_attr(all.mousers[max.i], 'onmousemove') %>% # this is a hack to get the gage count from the element. Brittle
-    stringr::str_extract_all("\\(?[0-9.]+\\)?") %>% .[[1]] %>% .[1] %>% as.numeric
+  # this is a hack to get the gage count from the element. Brittle:
+  gage.meta <- xml_attr(all.mousers, 'onmousemove') %>% 
+    stringr::str_extract_all("\\(?[0-9.]+\\)?")
+  years <-  lapply(gage.meta,function(x) x[2]) %>% unlist
+  max.gages <- gage.meta[[max.i]] %>% .[1] %>% as.numeric
 
-  tick.labs <- pretty(c(0,max.gages))[pretty(c(0,max.gages)) < max.gages]
-  y.ticks <- (h+ax.buff-round(tick.labs*h/max.gages,1)) %>% as.character()
+  y.tick.labs <- pretty(c(0,max.gages))[pretty(c(0,max.gages)) < max.gages]
+  y.ticks <- (h+ax.buff-round(y.tick.labs*h/max.gages,1)) %>% as.character()
+  x.tick.labs <- seq(1800,2020, by=20) %>% as.character()
   
-  
+  browser()
   vb[4] <- vb[4] + h + ax.buff
   xml_attr(svg, "viewBox") <- paste(vb, collapse=' ')
   g.axes <- xml_add_child(bars, 'g', id='axes')
   xml_add_child(g.axes, 'path', d=sprintf("M-%s,%s v%s", ax.buff, ax.buff, h+ax.buff), id='y-axis', stroke='black')
   xml_add_child(g.axes, 'path', d=sprintf("M-%s,%s h%s", ax.buff, h+ax.buff, ax.buff+full.width), id='x-axis', stroke='black')
-  g <- xml_add_child(g.axes, 'g', id = 'y-axis-labels', class='axis-labels svg-text')
+  g.y <- xml_add_child(g.axes, 'g', id = 'y-axis-labels', class='axis-labels svg-text')
+  g.x <- xml_add_child(g.axes, 'g', id = 'x-axis-labels', class='axis-labels svg-text')
   for (i in 1:length(y.ticks)){
-    xml_add_child(g, 'text', tick.labs[i], y = y.ticks[i], 
+    xml_add_child(g.y, 'text', y.tick.labs[i], y = y.ticks[i], 
                   x=as.character(-ax.buff), 'text-anchor' = 'end', dx = "-0.33em")
+  }
+  for (year in x.tick.labs){
+    use.i <- which(years == year)
+    if (length(use.i) > 0){
+      attrs <- xml_attrs(all.mousers[[use.i[1]]])
+      xml_add_child(g.x, 'text', year, y = as.character(h+ax.buff), 
+                    x=as.character(as.numeric(attrs[['x']])+as.numeric(attrs[['width']])/2), 
+                    'text-anchor' = 'middle', dy = "1.33em")
+    }
   }
   
 
@@ -142,8 +157,10 @@ add_bar_chart <- function(svg, bars){
 #' @return a modified version of svg
 clean_up_svg <- function(svg, viz){
   # let this thing scale:
-  xml_set_attrs(svg, c("preserveAspectRatio" = "xMidYMid meet", "xmlns" = 'http://www.w3.org/2000/svg',
-                       "xmlns:xlink" = 'http://www.w3.org/1999/xlink', id = viz[["id"]]))
+  xml_attr(svg, "preserveAspectRatio") <- "xMidYMid meet"
+  xml_attr(svg, "xmlns") <- 'http://www.w3.org/2000/svg'
+  xml_attr(svg, "xmlns:xlink") <- 'http://www.w3.org/1999/xlink'
+  xml_attr(svg, "id") <- viz[["id"]]
   
   r <- xml_find_all(svg, '//*[local-name()="rect"]')
   
