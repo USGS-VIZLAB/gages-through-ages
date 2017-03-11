@@ -1,3 +1,33 @@
+.interior-state {
+  fill:#b8bfac;
+  stroke:#f5f8ef;
+}
+.exterior-state {
+  fill:#b8bfac;
+  stroke:none;
+}
+.watermark {
+  cursor: pointer;
+  fill: #f1f1f1;
+  stroke: #bdbdbd;
+  stroke-width:0.5;
+}
+
+.site-dot {
+  stroke:#2c5258;
+  stroke-linecap:round;
+  stroke-width:2.5;
+}
+
+.gage-count-bar{
+  opacity:0.4;
+  fill: #9BC1BC;
+}
+.selected-year{
+  opacity:1;
+  fill: #ED6A5A;
+}
+
 .doy-polyline {
   fill:none;
   stroke:#e0e0e0;

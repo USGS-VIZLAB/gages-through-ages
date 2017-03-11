@@ -8,7 +8,6 @@ size_map_svg <- function(sp){
 }
 
 visualize.map_thumbnail <- function(viz){
-  library(xml2)
   library(dplyr)
   
   data <- readDepends(viz)
@@ -58,14 +57,15 @@ visualize.states_svg <- function(viz){
   defs <- xml_add_child(svg, 'defs')
   
   g.states <- xml_add_child(svg, 'g', 'id' = 'state-polygons')
-  g.sites <- xml_add_child(svg, 'g', 'id' = 'site-dots',stroke="green", 'stroke-linecap'="round", 'stroke-width'="3")
+  g.sites <- xml_add_child(svg, 'g', 'id' = 'site-dots')
   g.watermark <- xml_add_child(svg, 'g', id='usgs-watermark', 
-                               transform = sprintf('translate(2,%s)scale(0.20)', as.character(vb.num[4]-30)))
+                               transform = sprintf('translate(2,%s)scale(0.20)', as.character(vb.num[4]+15)))
 
-
+  
   for (i in 1:length(state.name)){
     id.name <- gsub(state.name[i], pattern = '[ ]', replacement = '_')
-    xml_add_child(g.states, 'path', d = xml_attr(p[i], 'd'), id=id.name)
+    class <- ifelse(state.name[i] %in% c('AK','HI','PR'), 'exterior-state','interior-state')
+    xml_add_child(g.states, 'path', d = xml_attr(p[i], 'd'), id=id.name, class=class)
   }
   rm(p)
   
@@ -79,7 +79,9 @@ visualize.states_svg <- function(viz){
   if (tail(chunk.e,1) == tail(chunk.s,1)) stop("can't handle this case")
   
   for (i in 1:length(chunk.s)){
-    xml_add_child(g.sites, 'path', d = paste("M",cxs[chunk.s[i]:chunk.e[i]], " ",  cys[chunk.s[i]:chunk.e[i]], "v0", collapse="", sep=''), id=sprintf(group.names, i))
+    xml_add_child(g.sites, 'path', 
+                  d = paste("M",cxs[chunk.s[i]:chunk.e[i]], " ",  cys[chunk.s[i]:chunk.e[i]], "v0", collapse="", sep=''), 
+                  id=sprintf(group.names, i), class='site-dot')
   }
   
   rm(c)
@@ -88,6 +90,7 @@ visualize.states_svg <- function(viz){
   xml_add_child(g.watermark,'path', d=watermark[['wave']], onclick="window.open('https://www2.usgs.gov/water/','_blank')", 'class'='watermark')
   
   bars.xml <- read_xml(bars)
+  
   svg <- add_bar_chart(svg, bars.xml)
   write_xml(svg, viz[['location']])
   
@@ -97,8 +100,7 @@ add_bar_chart <- function(svg, bars){
   vb <- as.numeric(strsplit(xml_attr(svg, "viewBox"), '[ ]')[[1]])
   xml_attr(bars, 'transform') <- sprintf("translate(0,%s)", vb[4])
   
-  
-  h <- xml_find_all(bars, '//*[local-name()="rect"]') %>% xml_attr('height') %>% as.numeric() %>% max
+  h <- xml_find_all(xml_children(bars)[1], '//*[local-name()="rect"]') %>% xml_attr('height') %>% as.numeric() %>% max
   vb[4] <- vb[4] + h
 
   xml_attr(svg, "viewBox") <- paste(vb, collapse=' ')
@@ -144,12 +146,12 @@ clean_up_svg <- function(svg, viz){
 #' 
 #' @result a plot
 createThumbnailPlot <- function(states, sites, bars){
-  
+  library(xml2)
   par(mar=c(0,0,0,0), oma=c(0,0,0,0))
   sp::plot(states, expandBB = c(0.8,0,0,1.5))
   sp::plot(sites, add=TRUE, pch = 20, cex=0.05)
   
-  bars.xml <- xml2::read_xml(bars)
+  bars.xml <- xml2::read_xml(bars) %>% xml_child()
   rects <- xml_children(bars.xml)
   xleft <- xml_attr(rects, 'x') %>% as.numeric()
   ys <- xml_attr(rects, 'y') %>% as.numeric()
