@@ -16,7 +16,8 @@
 .site-dot {
   stroke:#2c5258;
   stroke-linecap:round;
-  stroke-width:2.5;
+  stroke-width:3;
+  opacity:0.7;
 }
 
 .gage-count-bar{
