@@ -203,9 +203,9 @@ visualize:
     visualizer: doy
     mimetype: image/svg+xml
     inline: true
-    height: 4
+    height: 3
     width: 5
-    full-desample: 4
+    full-desample: 5
     minYear: 1889
     maxYear: 2016
     depends: 

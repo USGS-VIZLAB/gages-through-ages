@@ -110,4 +110,26 @@ var hovertext;
       mapSVG.hideTooltip();
     }
   }
+  
+  vizlab.showline = function(year) {
+    year = "" + year; // force year to be string
+    var lineId = '#l' + year;
+    var filterFunc = function(val, i){
+      if (undefined !== indices) {
+        return (indices.indexOf(i) != -1)
+      } else {
+        return false;
+      }
+    }
+    for (var group in yeardata) {
+      if (paths.hasOwnProperty(group)) {
+        var indices = yeardata[group][year];
+        var newpath = paths[group]["split"].filter(filterFunc);
+        newpath = "M" + ((newpath.length > 0) ? newpath.join("M") : "0,0");
+        $('#' + group).attr("d", newpath);
+      }
+    }
+    $(lineId).addClass('selected-year');
+    $(":not(" + lineId + ")").removeClass('selected-year');
+  }
 })();

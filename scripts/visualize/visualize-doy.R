@@ -16,7 +16,7 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
     plot(1, type="n", xlab="", frame.plot=FALSE,
          ylab="Cubic Feet Per Second", mgp=c(2.5,0.25,0), 
          xlim=c(0, 366), ylim=c(0, 16000),xaxt="n")
-    mtext(month.abb, 1, line = -1,
+    mtext(month.abb, 1, line = -0.5,
           at=c(15,46,74,105,135,166,196,227,258,288,319,349))
   }, height=height, width=width)
   
@@ -27,14 +27,18 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
   # !!---- use these lines when we have css for the svg ---!!
   xml_remove(defs)
   
-  lines <- xml_find_all(doy_svg, '//*[local-name()="text"]')
-  xml_attr(lines, "style") <- NULL
+  text <- xml_find_all(doy_svg, '//*[local-name()="text"]')
+  xml_attr(text, "style") <- NULL
+  xml_attr(text, "textLength") <- NULL
+  xml_attr(text, "lengthAdjust") <- NULL
+  
   # clean up junk that svglite adds:
   .junk <- lapply(r, xml_remove)
 
   #################
   xml_name(doy_svg, ns = character()) <- "g"
   xml_attr(doy_svg, "class") <- "axis-labels"
+
   vb <- xml_attr(doy_svg, "viewBox")
   xml_attr(doy_svg, "viewBox") <- NULL
   
