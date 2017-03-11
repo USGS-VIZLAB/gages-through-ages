@@ -124,7 +124,7 @@ add_bar_chart <- function(svg, bars){
   vb[4] <- vb[4] + h + ax.buff + 20 # last part for the axis text
   xml_attr(svg, "viewBox") <- paste(vb, collapse=' ')
   g.axes <- xml_add_child(bars, 'g', id='axes')
-  xml_add_child(g.axes, 'path', d=sprintf("M-%s,%s v%s", ax.buff, ax.buff, h+ax.buff), id='y-axis', stroke='black')
+  xml_add_child(g.axes, 'path', d=sprintf("M-%s,%s v%s", ax.buff, h+ax.buff, h+ax.buff), id='y-axis', stroke='black')
   xml_add_child(g.axes, 'path', d=sprintf("M-%s,%s h%s", ax.buff, h+ax.buff, ax.buff+full.width), id='x-axis', stroke='black')
   g.y <- xml_add_child(g.axes, 'g', id = 'y-axis-labels', class='axis-labels svg-text')
   g.x <- xml_add_child(g.axes, 'g', id = 'x-axis-labels', class='axis-labels svg-text')
