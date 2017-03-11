@@ -96,8 +96,8 @@ var hovertext;
         $('#' + group).attr("d", newpath);
       }
     }
-    selectedYear = $(barId).addClass('selected-year');
-    unselectedYears = $(":not(" + barId + ")").removeClass('selected-year');
+    $(barId).addClass('selected-year');
+    $(":not(" + barId + ")").removeClass('selected-year');
   }
   
   hovertext = function(text, event) {

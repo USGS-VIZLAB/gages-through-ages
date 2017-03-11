@@ -188,10 +188,9 @@ body{
   }
 }
 .gage-count-bar {
-  opacity : 0.8;
+  opacity : 0.3;
 }
 .gage-count-bar.selected-year{
   opacity: 1.0;
   fill: red;
 }
-
