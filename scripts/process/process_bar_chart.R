@@ -11,9 +11,11 @@ process.bar_chart <- function(viz){
   root <- read_xml("<g/>") 
   g.bars <- xml_add_child(root, 'g', id='year-bars')
   g.mousers <- xml_add_sibling(g.bars, 'g', id = 'year-bars-mouser')
-  # since all of the style and formatting stuff will happen in visualize, this will assume a 100 x 100 px plot that can be scaled and fit elsewhere. 
-  w <- round(size[['x']]*72, 1)
+  
+  lm <- 45 
+  w <- round(size[['x']]*72, 1) - lm
   h <- 100
+  
   spc <- round(0.002*w, 2)
   bin.w <- round((w-(length(bars$n)-1)*spc)/length(bars$n),2)
   bin.h <- round(bars$n/max.sites*h, 2)
@@ -25,7 +27,7 @@ process.bar_chart <- function(viz){
                   width = as.character(bin.w), y = as.character(h - bin.h[i]), 
                   id = paste0('yr', bars$year[i]), class = paste0('total-bar-', bars$year[i])) #
     xml_add_child(g.mousers, 'rect', opacity = "0.0",
-                  x = as.character((i-1)*(bin.w+spc)), 
+                  x = as.character((i-1)*(bin.w+spc)-spc/2), 
                   height = as.character(h), 
                   width = as.character(bin.w+spc), y = "0",
                   onmousemove = sprintf("hovertext('%s gages in %s', evt);", bars$n[i], bars$year[i]),

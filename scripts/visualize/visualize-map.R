@@ -59,7 +59,7 @@ visualize.states_svg <- function(viz){
   g.states <- xml_add_child(svg, 'g', 'id' = 'state-polygons')
   g.sites <- xml_add_child(svg, 'g', 'id' = 'site-dots')
   g.watermark <- xml_add_child(svg, 'g', id='usgs-watermark', 
-                               transform = sprintf('translate(2,%s)scale(0.20)', as.character(vb.num[4]+15)))
+                               transform = sprintf('translate(45,%s)scale(0.20)', as.character(vb.num[4]+5)))
 
   
   for (i in 1:length(state.name)){
@@ -97,14 +97,37 @@ visualize.states_svg <- function(viz){
 }
 
 add_bar_chart <- function(svg, bars){
+  library(dplyr)
   vb <- as.numeric(strsplit(xml_attr(svg, "viewBox"), '[ ]')[[1]])
-  xml_attr(bars, 'transform') <- sprintf("translate(0,%s)", vb[4])
+  ax.buff <- 5
+  all.bars <- xml_children(xml_children(bars)[1])
+  all.mousers <- xml_children(xml_children(bars)[2])
+  last.attrs <- tail(all.bars, 1) %>% xml_attrs() %>% .[[1]] 
+  full.width <- as.numeric(last.attrs[['x']]) + as.numeric(last.attrs[['width']])
+  xml_attr(bars, 'transform') <- sprintf("translate(%s,%s)", vb[3]-full.width, vb[4])
   
-  h <- xml_find_all(xml_children(bars)[1], '//*[local-name()="rect"]') %>% xml_attr('height') %>% as.numeric() %>% max
-  vb[4] <- vb[4] + h
+  heights <- all.bars %>% xml_attr('height') %>% as.numeric()
+  h <- max(heights)
+  max.i <- which(h == heights)[1]
+  max.gages <- xml_attr(all.mousers[max.i], 'onmousemove') %>% # this is a hack to get the gage count from the element. Brittle
+    stringr::str_extract_all("\\(?[0-9.]+\\)?") %>% .[[1]] %>% .[1] %>% as.numeric
 
-  xml_attr(svg, "viewBox") <- paste(vb, collapse=' ')
+  tick.labs <- pretty(c(0,max.gages))[pretty(c(0,max.gages)) < max.gages]
+  y.ticks <- (h+ax.buff-round(tick.labs*h/max.gages,1)) %>% as.character()
   
+  
+  vb[4] <- vb[4] + h + ax.buff
+  xml_attr(svg, "viewBox") <- paste(vb, collapse=' ')
+  g.axes <- xml_add_child(bars, 'g', id='axes')
+  xml_add_child(g.axes, 'path', d=sprintf("M-%s,%s v%s", ax.buff, ax.buff, h+ax.buff), id='y-axis', stroke='black')
+  xml_add_child(g.axes, 'path', d=sprintf("M-%s,%s h%s", ax.buff, h+ax.buff, ax.buff+full.width), id='x-axis', stroke='black')
+  g <- xml_add_child(g.axes, 'g', id = 'y-axis-labels', class='axis-labels svg-text')
+  for (i in 1:length(y.ticks)){
+    xml_add_child(g, 'text', tick.labs[i], y = y.ticks[i], 
+                  x=as.character(-ax.buff), 'text-anchor' = 'end', dx = "-0.33em")
+  }
+  
+
   xml_add_child(svg, bars)
   return(svg)
 }
@@ -119,10 +142,8 @@ add_bar_chart <- function(svg, bars){
 #' @return a modified version of svg
 clean_up_svg <- function(svg, viz){
   # let this thing scale:
-  xml_attr(svg, "preserveAspectRatio") <- "xMidYMid meet"
-  xml_attr(svg, "xmlns") <- 'http://www.w3.org/2000/svg'
-  xml_attr(svg, "xmlns:xlink") <- 'http://www.w3.org/1999/xlink'
-  xml_attr(svg, "id") <- viz[["id"]]
+  xml_set_attrs(svg, c("preserveAspectRatio" = "xMidYMid meet", "xmlns" = 'http://www.w3.org/2000/svg',
+                       "xmlns:xlink" = 'http://www.w3.org/1999/xlink', id = viz[["id"]]))
   
   r <- xml_find_all(svg, '//*[local-name()="rect"]')
   
