@@ -18,7 +18,7 @@ visualize.map_thumbnail <- function(viz){
   width <- viz[['fig-width']]
   
   png(filename = viz[['location']], width = width, height = height, units = 'px')
-  createThumbnailPlot(states, sites, bars)
+  createThumbnailPlot(states, sites, bars, width)
   dev.off()
 }
 
@@ -183,22 +183,22 @@ clean_up_svg <- function(svg, viz){
 #' @param bars filepath to the xml file with bar data
 #' 
 #' @result a plot
-createThumbnailPlot <- function(states, sites, bars){
+createThumbnailPlot <- function(states, sites, bars, width){
   library(xml2)
+  
   par(mar=c(0,0,0,0), oma=c(0,0,0,0))
-  sp::plot(states, expandBB = c(0.8,0,0,1.5))
-  sp::plot(sites, add=TRUE, pch = 20, cex=0.05)
+  
+  sp::plot(states, col='#b8bfac', border = '#f5f8ef')
+  sp::plot(sites, add=TRUE, pch = 16, cex=width/2000, col='#2c525833') # 20% opacity
   
   bars.xml <- xml2::read_xml(bars) %>% xml_child()
   rects <- xml_children(bars.xml)
   xleft <- xml_attr(rects, 'x') %>% as.numeric()
   ys <- xml_attr(rects, 'y') %>% as.numeric()
   ytop <- max(ys) - ys
-  ybottom <- 0
-  xright <- xml_attr(rects, 'width') %>% as.numeric %>%  + xleft
-
-  par(new=TRUE, mar=c(0,0,0,0), oma=c(3,0,0,0))
-  plot(0,NA, xlim = c(0,tail(xright,1)), ylim = c(0, max(ys)), axes=FALSE , ylab="", xlab="")
-  rect(xleft, ybottom, xright, ytop, col='dodgerblue', border = NA)
+  
+  par(new=TRUE, mar=c(0,0,0,0), oma=c(0,0,0,0))
+  plot(xleft, ytop, type = 'l', axes=FALSE , 
+       ylab="", xlab="", col='#9BC1BCCC', lwd = width/60)
   
 }
