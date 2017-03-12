@@ -16,9 +16,9 @@ process.bar_chart <- function(viz){
   w <- round(size[['x']]*72, 1) - lm
   h <- 100
   
-  spc <- round(0.002*w, 2)
-  bin.w <- round((w-(length(bars$n)-1)*spc)/length(bars$n),2)
-  bin.h <- round(bars$n/max.sites*h, 2)
+  spc <- round(0.002*w, 1)
+  bin.w <- round((w-(length(bars$n)-1)*spc)/length(bars$n),1)
+  bin.h <- round(bars$n/max.sites*h, 1)
   
   for (i in 1:length(bars$year)){
     xml_add_child(g.bars, 'rect', class = "gage-count-bar",
