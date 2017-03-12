@@ -102,10 +102,7 @@ var hovertext;
   
   hovertext = function(text, event) {
     if (text) {
-      var id = event.currentTarget.id;
-      var year = id.slice(2);
-      var tooltipText = text + ' in ' + year;
-      mapSVG.showTooltip(event.clientX, event.clientY, tooltipText);
+      mapSVG.showTooltip(event.clientX, event.clientY, text);
     } else {
       mapSVG.hideTooltip();
     }
