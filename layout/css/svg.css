@@ -50,6 +50,12 @@
   opacity:1;
 }
 
+.axis-labels{
+  fill:#666666;
+  stroke:none;
+  font-size: 0.75em;
+}
+
 .total-hydrograph {
   fill:none;
   stroke:#e0e0e0;

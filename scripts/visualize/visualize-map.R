@@ -59,7 +59,7 @@ visualize.states_svg <- function(viz){
   g.states <- xml_add_child(svg, 'g', 'id' = 'state-polygons')
   g.sites <- xml_add_child(svg, 'g', 'id' = 'site-dots')
   g.watermark <- xml_add_child(svg, 'g', id='usgs-watermark', 
-                               transform = sprintf('translate(45,%s)scale(0.20)', as.character(vb.num[4]+5)))
+                               transform = sprintf('translate(45,%s)scale(0.20)', as.character(vb.num[4]-3)))
 
   
   for (i in 1:length(state.name)){
@@ -118,7 +118,7 @@ add_bar_chart <- function(svg, bars){
 
   y.tick.labs <- pretty(c(0,max.gages))[pretty(c(0,max.gages)) < max.gages]
   y.ticks <- (h+ax.buff-round(y.tick.labs*h/max.gages,1)) %>% as.character()
-  x.tick.labs <- seq(1800,2020, by=20) %>% as.character()
+  x.tick.labs <- seq(1800,2020, by=10) %>% as.character()
   
   browser()
   vb[4] <- vb[4] + h + ax.buff + 20 # last part for the axis text

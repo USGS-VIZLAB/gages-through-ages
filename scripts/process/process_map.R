@@ -26,7 +26,7 @@ points_sp <- function(locations){
     sp::SpatialPointsDataFrame(data = locations[c('site_no')])
 }
 
-shifts <- list(AK = list(scale = 0.42, shift = c(75,-465), rotate = -50),
+shifts <- list(AK = list(scale = 0.37, shift = c(90,-460), rotate = -50),
                HI = list(scale = 1, shift = c(520, -110), rotate = -35),
                PR = list(scale = 2.5, shift = c(-140, 90), rotate=20))
 
