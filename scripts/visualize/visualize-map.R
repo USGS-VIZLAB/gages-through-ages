@@ -59,7 +59,7 @@ visualize.states_svg <- function(viz){
   g.states <- xml_add_child(svg, 'g', 'id' = 'state-polygons')
   g.sites <- xml_add_child(svg, 'g', 'id' = 'site-dots')
   g.watermark <- xml_add_child(svg, 'g', id='usgs-watermark', 
-                               transform = sprintf('translate(45,%s)scale(0.20)', as.character(vb.num[4]-3)))
+                               transform = sprintf('translate(45,%s)scale(0.20)', as.character(vb.num[4]+12)))
 
   
   for (i in 1:length(state.name)){
@@ -120,10 +120,9 @@ add_bar_chart <- function(svg, bars){
   y.ticks <- (h+ax.buff-round(y.tick.labs*h/max.gages,1)) %>% as.character()
   x.tick.labs <- seq(1800,2020, by=10) %>% as.character()
   
-  browser()
   vb[4] <- vb[4] + h + ax.buff + 20 # last part for the axis text
   xml_attr(svg, "viewBox") <- paste(vb, collapse=' ')
-  g.axes <- xml_add_child(bars, 'g', id='axes')
+  g.axes <- xml_add_child(bars, 'g', id='axes', .where = 1)
   xml_add_child(g.axes, 'path', d=sprintf("M-%s,%s v%s", ax.buff, "0", h+ax.buff), id='y-axis', stroke='black')
   xml_add_child(g.axes, 'path', d=sprintf("M-%s,%s h%s", ax.buff, h+ax.buff, ax.buff+full.width), id='x-axis', stroke='black')
   g.y <- xml_add_child(g.axes, 'g', id = 'y-axis-labels', class='axis-labels svg-text')
@@ -141,7 +140,7 @@ add_bar_chart <- function(svg, bars){
                     'text-anchor' = 'middle', dy = "1.0em")
     }
   }
-  
+  xml_add_child(g.axes, 'text', class='axis-labels svg-text', "Number of active gages", dy="0.66em", dx="1") 
 
   xml_add_child(svg, bars)
   return(svg)
