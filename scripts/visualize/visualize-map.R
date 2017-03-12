@@ -8,7 +8,6 @@ size_map_svg <- function(sp){
 }
 
 visualize.map_thumbnail <- function(viz){
-  library(xml2)
   library(dplyr)
   
   data <- readDepends(viz)
@@ -58,14 +57,15 @@ visualize.states_svg <- function(viz){
   defs <- xml_add_child(svg, 'defs')
   
   g.states <- xml_add_child(svg, 'g', 'id' = 'state-polygons')
-  g.sites <- xml_add_child(svg, 'g', 'id' = 'site-dots',stroke="green", 'stroke-linecap'="round", 'stroke-width'="3")
+  g.sites <- xml_add_child(svg, 'g', 'id' = 'site-dots')
   g.watermark <- xml_add_child(svg, 'g', id='usgs-watermark', 
-                               transform = sprintf('translate(2,%s)scale(0.20)', as.character(vb.num[4]-30)))
+                               transform = sprintf('translate(45,%s)scale(0.20)', as.character(vb.num[4]-3)))
 
-
+  
   for (i in 1:length(state.name)){
     id.name <- gsub(state.name[i], pattern = '[ ]', replacement = '_')
-    xml_add_child(g.states, 'path', d = xml_attr(p[i], 'd'), id=id.name)
+    class <- ifelse(state.name[i] %in% c('AK','HI','PR'), 'exterior-state','interior-state')
+    xml_add_child(g.states, 'path', d = xml_attr(p[i], 'd'), id=id.name, class=class)
   }
   rm(p)
   
@@ -79,7 +79,9 @@ visualize.states_svg <- function(viz){
   if (tail(chunk.e,1) == tail(chunk.s,1)) stop("can't handle this case")
   
   for (i in 1:length(chunk.s)){
-    xml_add_child(g.sites, 'path', d = paste("M",cxs[chunk.s[i]:chunk.e[i]], " ",  cys[chunk.s[i]:chunk.e[i]], "v0", collapse="", sep=''), id=sprintf(group.names, i))
+    xml_add_child(g.sites, 'path', 
+                  d = paste("M",cxs[chunk.s[i]:chunk.e[i]], " ",  cys[chunk.s[i]:chunk.e[i]], "v0", collapse="", sep=''), 
+                  id=sprintf(group.names, i), class='site-dot')
   }
   
   rm(c)
@@ -88,21 +90,59 @@ visualize.states_svg <- function(viz){
   xml_add_child(g.watermark,'path', d=watermark[['wave']], onclick="window.open('https://www2.usgs.gov/water/','_blank')", 'class'='watermark')
   
   bars.xml <- read_xml(bars)
+  
   svg <- add_bar_chart(svg, bars.xml)
   write_xml(svg, viz[['location']])
   
 }
 
 add_bar_chart <- function(svg, bars){
+  
+  library(dplyr)
   vb <- as.numeric(strsplit(xml_attr(svg, "viewBox"), '[ ]')[[1]])
-  xml_attr(bars, 'transform') <- sprintf("translate(0,%s)", vb[4])
+  ax.buff <- 5
+  all.bars <- xml_children(xml_children(bars)[1])
+  all.mousers <- xml_children(xml_children(bars)[2])
+  last.attrs <- tail(all.bars, 1) %>% xml_attrs() %>% .[[1]] 
+  full.width <- as.numeric(last.attrs[['x']]) + as.numeric(last.attrs[['width']])
+  xml_attr(bars, 'transform') <- sprintf("translate(%s,%s)", vb[3]-full.width, vb[4])
   
-  
-  h <- xml_find_all(bars, '//*[local-name()="rect"]') %>% xml_attr('height') %>% as.numeric() %>% max
-  vb[4] <- vb[4] + h
+  heights <- all.bars %>% xml_attr('height') %>% as.numeric()
+  h <- max(heights)
+  max.i <- which(h == heights)[1]
+  # this is a hack to get the gage count from the element. Brittle:
+  gage.meta <- xml_attr(all.mousers, 'onmousemove') %>% 
+    stringr::str_extract_all("\\(?[0-9.]+\\)?")
+  years <-  lapply(gage.meta,function(x) x[2]) %>% unlist
+  max.gages <- gage.meta[[max.i]] %>% .[1] %>% as.numeric
 
-  xml_attr(svg, "viewBox") <- paste(vb, collapse=' ')
+  y.tick.labs <- pretty(c(0,max.gages))[pretty(c(0,max.gages)) < max.gages]
+  y.ticks <- (h+ax.buff-round(y.tick.labs*h/max.gages,1)) %>% as.character()
+  x.tick.labs <- seq(1800,2020, by=10) %>% as.character()
   
+  browser()
+  vb[4] <- vb[4] + h + ax.buff + 20 # last part for the axis text
+  xml_attr(svg, "viewBox") <- paste(vb, collapse=' ')
+  g.axes <- xml_add_child(bars, 'g', id='axes')
+  xml_add_child(g.axes, 'path', d=sprintf("M-%s,%s v%s", ax.buff, "0", h+ax.buff), id='y-axis', stroke='black')
+  xml_add_child(g.axes, 'path', d=sprintf("M-%s,%s h%s", ax.buff, h+ax.buff, ax.buff+full.width), id='x-axis', stroke='black')
+  g.y <- xml_add_child(g.axes, 'g', id = 'y-axis-labels', class='axis-labels svg-text')
+  g.x <- xml_add_child(g.axes, 'g', id = 'x-axis-labels', class='axis-labels svg-text')
+  for (i in 1:length(y.ticks)){
+    xml_add_child(g.y, 'text', y.tick.labs[i], y = y.ticks[i], 
+                  x=as.character(-ax.buff), 'text-anchor' = 'end', dx = "-0.33em")
+  }
+  for (year in x.tick.labs){
+    use.i <- which(years == year)
+    if (length(use.i) > 0){
+      attrs <- xml_attrs(all.mousers[[use.i[1]]])
+      xml_add_child(g.x, 'text', year, y = as.character(h+ax.buff), 
+                    x=as.character(as.numeric(attrs[['x']])+as.numeric(attrs[['width']])/2), 
+                    'text-anchor' = 'middle', dy = "1.0em")
+    }
+  }
+  
+
   xml_add_child(svg, bars)
   return(svg)
 }
@@ -144,12 +184,12 @@ clean_up_svg <- function(svg, viz){
 #' 
 #' @result a plot
 createThumbnailPlot <- function(states, sites, bars){
-  
+  library(xml2)
   par(mar=c(0,0,0,0), oma=c(0,0,0,0))
   sp::plot(states, expandBB = c(0.8,0,0,1.5))
   sp::plot(sites, add=TRUE, pch = 20, cex=0.05)
   
-  bars.xml <- xml2::read_xml(bars)
+  bars.xml <- xml2::read_xml(bars) %>% xml_child()
   rects <- xml_children(bars.xml)
   xleft <- xml_attr(rects, 'x') %>% as.numeric()
   ys <- xml_attr(rects, 'y') %>% as.numeric()
