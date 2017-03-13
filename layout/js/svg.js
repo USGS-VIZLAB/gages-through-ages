@@ -8,7 +8,7 @@ var vizlab = vizlab || {};
    * @param {SVGSVGElement} svg
    * 
    */
-  vizlab.svg = function(svg) {
+  vizlab.svg = function(svg, options) {
     
     var cursorPoint = function(screenX, screenY) {
       var point = svg.createSVGPoint();
@@ -20,19 +20,22 @@ var vizlab = vizlab || {};
       return point;
     }
     
+    var svgId = $(svg).attr("id");
+    var tooltipGroupId = svgId + '-tooltip-group';
+    
     var TOOLTIP_HTML = 
       '<defs>' + 
-      '<clipPath id="tipClip-test">' +
+      '<clipPath class="tipClip">' +
       '<rect x="-6" y="-11.5" height="11" width="12"/>' +
       '</clipPath>' + 
       '</defs>' + 
-      '<rect id="tooltip-box-test" height="24" class="tooltip-box"/>' +
-      '<path id="tooltip-point-test" d="M-6,-12 l6,10 l6,-10" class="tooltip-box" clip-path="url(#tipClip-test)"/>' +
-      '<text id="tooltip-text-test" dy="-1.1em" text-anchor="middle" class="svg-text"> </text>';
+      '<rect height="24" class="tooltip-box hidden"/>' +
+      '<path d="M-6,-12 l6,10 l6,-10" class="tooltip-point hidden" clip-path="url(#tipClip-test)"/>' +
+      '<text dy="-1.1em" text-anchor="middle" class="tooltip-text svg-text"> </text>';
     
     var addTooltip = function() {
       var tooltipGroup = document.createElementNS(svg.namespaceURI,"g");
-      tooltipGroup.id = "tooltip-group-test";
+      tooltipGroup.id = tooltipGroupId
       tooltipGroup.innerHTML = TOOLTIP_HTML;
       svg.appendChild(tooltipGroup);
     };
@@ -43,9 +46,10 @@ var vizlab = vizlab || {};
           the function parameters will be evt, options.
      */
     var showTooltip = function(x, y, tooltipText) {
-      var tooltip = document.getElementById("tooltip-text-test");
-      var tooltipBox = document.getElementById("tooltip-box-test");
-      var tooltipPoint = document.getElementById("tooltip-point-test");
+      var $tooltip = $(svg).find('.tooltip-text');
+      var $tooltipBox = $(svg).find('.tooltip-box');
+      var $tooltipPoint = $(svg).find('.tooltip-point');
+      
       var text = (typeof tooltipText === "function") ? tooltipText(options) : tooltipText;
       var svgPoint = cursorPoint(x, y);
       var svgWidth = Number(svg.getAttribute("viewBox").split(" ")[2]);
@@ -53,8 +57,8 @@ var vizlab = vizlab || {};
       var halfLength;
       var tooltipX;
       
-      tooltip.firstChild.data = text;
-      textLength = Math.round(tooltip.getComputedTextLength());
+      $tooltip.html(text);
+      textLength = Math.round($tooltip.get()[0].getComputedTextLength());
       halfLength = textLength / 2;
       
       /* Make sure tooltip text is within the SVG */
@@ -67,29 +71,19 @@ var vizlab = vizlab || {};
       else {
         tooltipX = svgPoint.x;
       }
-      tooltip.setAttribute("x", tooltipX);
-      tooltip.setAttribute("y", svgPoint.y);
-      tooltip.setAttribute("class", "shown");
+      $tooltip.attr("x", tooltipX).attr("y", svgPoint.y);
       
       /* Set attributes for background box */
-      tooltipBox.setAttribute("x", tooltipX - halfLength - 6);
-      tooltipBox.setAttribute("y", svgPoint.y - 35);
-      tooltipBox.setAttribute("width", textLength + 12);
-      tooltipBox.setAttribute("class", "tooltip-box");
+     $tooltipBox.attr("x", tooltipX - halfLength - 6).attr("y", svgPoint.y - 35).attr("width", textLength + 12).removeClass("hidden");
       
       /* Set attributes for the tooltip point */
-      tooltipPoint.setAttribute("transform", "translate(" + svgPoint.x + "," + svgPoint.y + ")");
-      tooltipPoint.setAttribute("class", "tooltip-box");
+      $tooltipPoint.attr("transform", "translate(" + svgPoint.x + "," + svgPoint.y + ")").removeClass("hidden");
     };
     
     var hideTooltip = function() {
-      var tooltip = document.getElementById("tooltip-text-test");
-      var tooltipBox = document.getElementById("tooltip-box-test");
-      var tooltipPoint = document.getElementById("tooltip-point-test");
-      
-      tooltip.firstChild.data = " ";
-      tooltipBox.setAttribute("class", "hidden");
-      tooltipPoint.setAttribute("class", "hidden");
+      $(svg).find('.tooltip-text').html("");
+      $(svg).find('.tooltip-box').addClass("hidden");
+      $(svg).find('.tooltip-point').addClass("hidden");
     };
   
     return {
