@@ -8,7 +8,7 @@
 }
 .watermark {
   cursor: pointer;
-  fill: #f1f1f1;
+  fill: #c0c0c0;
   stroke: #bdbdbd;
   stroke-width:0.5;
 }
@@ -54,7 +54,15 @@
 }
 
 .axis-labels{
-  fill:#666666;
+  fill:#909090;
+  stroke:none;
+  font-size: 0.75em;
+}
+#y-axis, #x-axis{
+  stroke: #909090;
+}
+.context-label{
+  fill:#c0c0c0;
   stroke:none;
   font-size: 0.75em;
 }
