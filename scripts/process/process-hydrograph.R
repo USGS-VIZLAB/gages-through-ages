@@ -32,6 +32,12 @@ process.plot_hydrographTotal <- function(viz=getContentInfo("NMHydrograhTotal-sv
   defs <- xml_find_all(total_svg, '//*[local-name()="defs"]')
   xml_remove(defs)
   
+  text <- xml_find_all(total_svg, '//*[local-name()="text"]')
+  xml_attr(text, "style") <- NULL
+  xml_attr(text, "textLength") <- NULL
+  xml_attr(text, "lengthAdjust") <- NULL
+  xml_attr(text, "class") <- "axis-labels"
+  
   # clean up junk that svglite adds:
   .junk <- lapply(r, xml_remove)
 
