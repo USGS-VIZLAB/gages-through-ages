@@ -30,7 +30,7 @@ var vizlab = vizlab || {};
       '</clipPath>' + 
       '</defs>' + 
       '<rect height="24" class="tooltip-box hidden"/>' +
-      '<path d="M-6,-12 l6,10 l6,-10" class="tooltip-point hidden" clip-path="url(#'+ svgId + '-tipClip"/>' +
+      '<path d="M-6,-12 l6,10 l6,-10" class="tooltip-point hidden" clipPath="url(#'+ svgId + '-tipClip"/>' +
       '<text dy="-1.1em" text-anchor="middle" class="tooltip-text svg-text"> </text>';
     
     var addTooltip = function() {
