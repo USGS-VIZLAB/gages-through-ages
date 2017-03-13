@@ -29,8 +29,9 @@
   fill: #ED6A5A;
 }
 
-.doy-lines-by-year.selected-doy{
+.selected-doy{
   opacity:1;
+  fill: #ED6A5A;
 }
 
 .doy-polyline {
@@ -47,10 +48,6 @@
   fill:red;
   stroke:none;
   opacity:0;
-}
-
-.years-rect.selected-year{
-  opacity: 1.0;
 }
 
 .years-rect:hover {
