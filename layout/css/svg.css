@@ -29,6 +29,10 @@
   fill: #ED6A5A;
 }
 
+.doy-lines-by-year.selected-doy{
+  opacity:1;
+}
+
 .doy-polyline {
   fill:none;
   stroke:#e0e0e0;
