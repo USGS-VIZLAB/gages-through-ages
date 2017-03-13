@@ -101,8 +101,8 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
 
   xml_add_child(g.zoomer, zoomer.xml)
   
-  h <- xml_find_all(g.zoomer, '//*[local-name()="rect"]') %>% xml_attr('height') %>% as.numeric() %>% max
-  vb[4] <- vb[4] + h*1.5
+  h <- xml_find_all(g.zoomer, '//*[local-name()="rect"]')[1] %>% xml_attr('height') %>% as.numeric() %>% max
+  vb[4] <- vb[4] + h*2
   
   xml_attr(root, "viewBox") <- paste(vb, collapse=' ')
   

@@ -112,8 +112,6 @@ var hovertext;
      var lineId = '#l' + year;
      document.getElementById(lineId).setAttribute(class, 'selected-year');
   }
-  vizlab.greyline = function(year) {
-     var lineId = '#l' + year;
-     document.getElementById(lineId).setAttribute(class, 'not-sure-what-class');
+
   }
 })();

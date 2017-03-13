@@ -55,9 +55,15 @@ process.plot_hydrographTotal <- function(viz=getContentInfo("NMHydrograhTotal-sv
     rects <- xml_find_all(rect_svg_all, '//*[local-name()="rect"]')
     rect_svg <- rects[length(rects)]
     
-    xml_set_attrs(rect_svg, c("id" = paste0("b",yr), 
-                              "onmouseover" = paste0("vizlab.showline('",yr,"')"),
-                              "onmouseout" =paste0("vizlab.greyline('",yr,"')")))
+    xml_set_attr(rect_svg, 'id', paste0("b",yr))
+    xml_attr(rect_svg, "style") <- NULL
+    xml_attr(rect_svg, "clip-path") <- NULL
+    xml_attr(rect_svg, "clip-path") <- NULL
+    xml_attr(rect_svg, "class") <- "years-rect"
+    xml_attr(rect_svg, "class") <- "years-rect"
+    xml_attr(rect_svg, "onmouseover") <- paste0("vizlab.showline('",yr,"')")
+    xml_attr(rect_svg, "onmouseout") <- paste0("vizlab.greyline('",yr,"')")
+
     xml_add_child(g.year_rects, rect_svg[[1]])
   }
   

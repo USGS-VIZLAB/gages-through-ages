@@ -180,7 +180,7 @@ process:
     depends: 
       data: processedNMdaily
     height: 1
-    width: 5
+    width: 10
     full-desample: 30
     minYear: 1889
     maxYear: 2016
@@ -204,7 +204,7 @@ visualize:
     mimetype: image/svg+xml
     inline: true
     height: 3
-    width: 5
+    width: 10
     full-desample: 5
     minYear: 1889
     maxYear: 2016
