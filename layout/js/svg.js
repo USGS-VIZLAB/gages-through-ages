@@ -25,12 +25,12 @@ var vizlab = vizlab || {};
     
     var TOOLTIP_HTML = 
       '<defs>' + 
-      '<clipPath class="tipClip">' +
+      '<clipPath id="' + svgId + '-tipClip">' +
       '<rect x="-6" y="-11.5" height="11" width="12"/>' +
       '</clipPath>' + 
       '</defs>' + 
       '<rect height="24" class="tooltip-box hidden"/>' +
-      '<path d="M-6,-12 l6,10 l6,-10" class="tooltip-point hidden" clip-path="url(#tipClip-test)"/>' +
+      '<path d="M-6,-12 l6,10 l6,-10" class="tooltip-point hidden" clip-path="url(#'+ svgId + '-tipClip"/>' +
       '<text dy="-1.1em" text-anchor="middle" class="tooltip-text svg-text"> </text>';
     
     var addTooltip = function() {
