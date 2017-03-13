@@ -34,20 +34,23 @@
   stroke:#e0e0e0;
 }
 
-.axis-lines-all {
-  fill:none;
-  stroke:#e0e0e0;
-  stroke-width:0.5;  
+.axis-labels {
+  font-size: 8px;
+  font-family: Arial;
 }
 
 .years-rect {
-  fill:"red";
+  fill:red;
   stroke:none;
   opacity:0;
 }
 
+.years-rect.selected-year{
+  opacity: 1.0;
+}
+
 .years-rect:hover {
-  opacity:1;
+  opacity:1.0;
 }
 
 .axis-labels{
@@ -70,6 +73,7 @@
   stroke-width:0.5;
 }
 
+
 .svg-text {
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none;   /* Chrome/Safari/Opera */
@@ -78,3 +82,4 @@
 	-ms-user-select: none;       /* Internet Explorer/Edge */
 	cursor: default;
 }
+

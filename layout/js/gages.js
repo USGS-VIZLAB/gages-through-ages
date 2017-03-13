@@ -107,4 +107,11 @@ var hovertext;
       mapSVG.hideTooltip();
     }
   }
+  
+//  vizlab.showline = function(year) {
+//     var lineId = '#l' + year;
+//     document.getElementById(lineId).setAttribute(class, 'selected-year'//);
+//  }
+
+  
 })();
