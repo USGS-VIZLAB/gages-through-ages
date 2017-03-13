@@ -68,7 +68,6 @@ process.plot_hydrographTotal <- function(viz=getContentInfo("NMHydrograhTotal-sv
     xml_attr(rect_svg, "class") <- "years-rect"
     xml_attr(rect_svg, "class") <- "years-rect"
     xml_attr(rect_svg, "onmouseover") <- paste0("vizlab.showline('",yr,"')")
-    xml_attr(rect_svg, "onmouseout") <- paste0("vizlab.greyline('",yr,"')")
 
     xml_add_child(g.year_rects, rect_svg[[1]])
   }
