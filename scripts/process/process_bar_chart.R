@@ -3,7 +3,9 @@ process.bar_chart <- function(viz){
   size <- size_map_svg(data.in[['state-map']])
   sites <- data.in$`disch-data`
   library(dplyr)
+  browser()
   bars <- filter(sites, year >= viz[['min-year']], year <= viz[['max-year']]) %>% 
+    select(site_no, year) %>% distinct %>% 
     group_by(year) %>% tally %>% data.frame
   
   max.sites <- max(bars$n)

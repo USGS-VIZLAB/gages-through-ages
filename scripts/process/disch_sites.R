@@ -3,7 +3,7 @@
 #'@param viz the vizlab object 
 process.disch_sites <- function(viz){
   data.in <- readDepends(viz)
-  browser()
+  
   library(dplyr)
   sites <- data.in[['disch-data']] %>% group_by(site_no) %>% 
     summarize(huc = stringr::str_sub(unique(huc_cd), 1L, 2L), 
