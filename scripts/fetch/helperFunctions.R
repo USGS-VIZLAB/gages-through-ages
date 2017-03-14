@@ -32,23 +32,11 @@ checkCompleteYears <- function(df) {
         longOK <- bind_rows(longOK, siteDF)
     }
   }
-  
-  #make long DF of site and year
-  # longOK <- data.frame()
-  # for(i in 1:nrow(df)) {
-  #   endYear <- year(df$end_date[i])
-  #   beginYear <- year(df$begin_date[i])
-  #   years <- seq(beginYear + 1, endYear - 1) #exclude start and end
-  #   if(countStartYear[i]) {years <- append(years, beginYear)}
-  #   if(countEndYear[i]) {years <-  append(years, endYear)}
-  # 
-  #   siteDF <- data.frame(site_no=rep(df$site_no[i], length(years)), year = years,
-  #                        stringsAsFactors = FALSE)
-  #   longOK <- bind_rows(longOK, siteDF)
-  # }
+
   return(longOK)
   
 }
+
 
 #find which sites already downloaded
 checkDownloadedSites <- function(dir) {
@@ -69,26 +57,24 @@ yearsFunc <- function(files) {
   library(data.table)
   library(dplyr)
   library(lubridate)
-  allIncompleteYears <- data.frame()
+  allCompleteYears <- data.frame()
   for(f in files) {
     print(paste("starting", f))
     chunk <- fread(f, select = c("site_no", "Date"), 
                    colClasses = c("site_no"="character", "Date"="character"))
     incompleteYears <- data.frame()
-    #for(s in unique(chunk$site_no)) {
-      #siteDF <- filter(chunk, site_no == s)
-      #need to actually check number of days
-      #unique days of each year - then summarize with n()
-      uniqueDF <- chunk[!duplicated(chunk),]#old chunks might have downloaded sites > once
-      uniqueDF$year <- year(uniqueDF$Date)
-      uniqueGrp <- group_by(uniqueDF, site_no, year)
-      summaryDF <- filter(summarize(uniqueGrp, nDays = n()), nDays >= 355)
-      if(any(summaryDF$nDays > 366)){cat(paste('ERRROR > 366', f), file = "ERRORLOG.txt")}
-      #out <- data.frame(site_no = s, year = unique(year(siteDF$Date)))
-      #incompleteYears <- bind_rows(incompleteYears, out)
-    #}
-    allIncompleteYears <- bind_rows(allIncompleteYears, summaryDF)
+    #need to actually check number of days
+    uniqueDF <- chunk[!duplicated(chunk),]#old chunks might have downloaded sites > once
+    uniqueDF$year <- year(uniqueDF$Date)
+    
+    uniqueGrp <- group_by(uniqueDF, site_no, year) %>%
+      summarize(nDays = n()) %>%
+      filter(nDays >= 355)
+      
+    if(any(uniqueGrp$nDays > 366)){cat(paste('ERRROR > 366', f), file = "ERRORLOG.txt")}
+
+    allCompleteYears <- bind_rows(allCompleteYears, select(uniqueGrp, -nDays))
     print(paste("finished", f))
   }
-  return(allIncompleteYears)
+  return(allCompleteYears)
 }
