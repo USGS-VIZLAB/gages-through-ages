@@ -9,7 +9,7 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
   zoomer.xml <- read_xml(zoomer)
   zoom.vb <- xml_attr(zoomer.xml, "viewBox")
   zoom.vb <- as.numeric(strsplit(zoom.vb, ' ')[[1]])
-  
+  xml_attr(zoomer.xml, "viewBox") <- NULL
   
   height <- viz[["height"]]
   width <- viz[["width"]]
