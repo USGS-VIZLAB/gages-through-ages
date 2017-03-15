@@ -40,8 +40,14 @@
 }
 
 .axis-labels {
-  font-size: 8px;
+  stroke:none;
+  fill:#909090;
   font-family: Arial;
+  font-size: 0.75em;
+}
+
+.axis-lines {
+  stroke: #909090;
 }
 
 .years-rect {
@@ -54,11 +60,6 @@
   opacity:1.0;
 }
 
-.axis-labels{
-  fill:#909090;
-  stroke:none;
-  font-size: 0.75em;
-}
 #y-axis, #x-axis{
   stroke: #909090;
 }

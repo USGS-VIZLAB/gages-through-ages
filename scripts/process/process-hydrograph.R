@@ -28,17 +28,23 @@ process.plot_hydrographTotal <- function(viz=getContentInfo("NMHydrograhTotal-sv
   }, height=height, width=width)
   
   r <- xml_find_all(total_svg, '//*[local-name()="rect"]')
+  .junk <- lapply(r, xml_remove)
+  
   defs <- xml_find_all(total_svg, '//*[local-name()="defs"]')
   xml_remove(defs)
   
   text <- xml_find_all(total_svg, '//*[local-name()="text"]')
+  xml_remove(text)
   xml_attr(text, "style") <- NULL
   xml_attr(text, "textLength") <- NULL
   xml_attr(text, "lengthAdjust") <- NULL
-  xml_attr(text, "class") <- "axis-labels"
   
-  # clean up junk that svglite adds:
-  .junk <- lapply(r, xml_remove)
+  g.labels <- xml_add_sibling(xml_children(total_svg)[[length(xml_children(total_svg))]], 
+                              'g', 'class'='axis-labels svg-text')
+  
+  for(i in text){
+    xml_add_child(g.labels, i)
+  }
 
   lines <- xml_find_all(total_svg, '//*[local-name()="line"]')
   .junk <- xml_remove(lines)
@@ -60,7 +66,7 @@ process.plot_hydrographTotal <- function(viz=getContentInfo("NMHydrograhTotal-sv
     rects <- xml_find_all(rect_svg_all, '//*[local-name()="rect"]')
     rect_svg <- rects[length(rects)]
     
-    xml_set_attr(rect_svg, 'data-year', as.character(yr))
+    xml_set_attr(rect_svg, 'id', paste0("r_",yr))
     xml_attr(rect_svg, "style") <- NULL
     xml_attr(rect_svg, "clip-path") <- NULL
     xml_attr(rect_svg, "class") <- "years-rect"
@@ -91,7 +97,6 @@ process.plot_hydrographTotal <- function(viz=getContentInfo("NMHydrograhTotal-sv
     
     pline <- xml_find_first(hydro_lines, '//*[local-name()="polyline"]')
     xml_remove(pline)
-    xml_attr(pline,"class") <- "total-hydrograph"
     xml_attr(pline,"clip-path") <- NULL
     xml_attr(pline,"style") <- NULL
     
