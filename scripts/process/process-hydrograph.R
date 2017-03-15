@@ -107,6 +107,7 @@ process.plot_hydrographTotal <- function(viz=getContentInfo("NMHydrograhTotal-sv
   xml_attr(total_svg, "xmlns") <- NULL
   xml_attr(total_svg, "preserveAspectRatio") <- NULL
   xml_attr(total_svg, "xmlns:xlink") <- NULL
-  
+  xml_attr(total_svg, "id") <- 'total_hydro'
+  xml_attr(total_svg, "class") <- 'total_hydro'
   write_xml(total_svg, viz[["location"]])
 }

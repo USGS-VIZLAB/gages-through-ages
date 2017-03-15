@@ -127,10 +127,7 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
   xml_add_sibling(xml_children(root)[[1]], 'title', .where='before', viz[["title"]])
   ################
   
-  g.zoomer <- xml_add_sibling(xml_children(root)[[length(xml_children(root))]], 'g', id='total_hydro','class'='total_hydro')
-
-  group_total <- xml_find_first(zoomer.xml, '//*[local-name()="g"]')
-  xml_add_child(g.zoomer, group_total)
+  xml_add_child(root, zoomer.xml)
 
   zoom.vb[4] <- vb_doy[4] + zoom.vb[4]
   
