@@ -108,15 +108,4 @@ var hovertext;
     }
   }
   
-  vizlab.showline = function(year) {
-    
-    year = "" + year; // force year to be string
-    var yearDOYId = year;
-
-
-    $(yearDOYId).addClass('selected-doy');
-    $(":not(" + yearDOYId + ")").removeClass('selected-doy');
-  }
-
-  
 })();
