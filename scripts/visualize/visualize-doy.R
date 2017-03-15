@@ -7,6 +7,9 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
   daily <- readData(viz[["depends"]][["daily"]])
   zoomer <- readData(viz[["depends"]][["zoomer"]])
   zoomer.xml <- read_xml(zoomer)
+  zoom.vb <- xml_attr(zoomer.xml, "viewBox")
+  zoom.vb <- as.numeric(strsplit(zoom.vb, ' ')[[1]])
+  
   
   height <- viz[["height"]]
   width <- viz[["width"]]
@@ -38,9 +41,12 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
   #################
   xml_name(doy_svg, ns = character()) <- "g"
   xml_attr(doy_svg, "class") <- "axis-labels"
-
-  vb <- xml_attr(doy_svg, "viewBox")
+  vb_doy <- xml_attr(doy_svg, "viewBox")
+  vb_doy <- as.numeric(strsplit(vb_doy, ' ')[[1]])
+  
   xml_attr(doy_svg, "viewBox") <- NULL
+  
+  xml_attr(doy_svg, 'transform') <- sprintf("translate(0,%s)", zoom.vb[4])
   
   root <- xml_new_document() %>% xml_add_child("svg")
   xml_add_child(root, doy_svg)
@@ -65,6 +71,7 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
   }
   
   g.doys <- xml_add_sibling(xml_children(root)[[length(xml_children(root))]], 'g', id='dayOfYear','class'='doy-polyline')
+  xml_attr(g.doys, 'transform') <- sprintf("translate(0,%s)", zoom.vb[4])
   
   yMax <- max(daily$Flow, na.rm = TRUE)
   maxYear <- viz[["maxYear"]]
@@ -86,7 +93,7 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
     
     x <- grab_spark(sub_data, yMax, height, width)
     polyline <- xml_find_first(x, '//*[local-name()="polyline"]')
-    xml_attr(polyline, "id") <- paste0("l",i)
+    xml_attr(polyline, "data-year") <- as.character(i)
     xml_attr(polyline, "class") <- "doy-lines-by-year"
     xml_attr(polyline, "clip-path") <- NULL
     xml_attr(polyline, "style") <- NULL
@@ -96,15 +103,13 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
   
   g.zoomer <- xml_add_sibling(xml_children(root)[[length(xml_children(root))]], 'g', id='total_hydro','class'='total_hydro')
   
-  vb <- as.numeric(strsplit(vb, ' ')[[1]])
-  xml_attr(g.zoomer, 'transform') <- sprintf("translate(0,%s)", vb[4])
+    # xml_attr(g.zoomer, 'transform') <- sprintf("translate(0,%s)", vb[4])
 
   xml_add_child(g.zoomer, zoomer.xml)
+
+  zoom.vb[4] <- vb_doy[4] + zoom.vb[4]
   
-  h <- xml_find_all(g.zoomer, '//*[local-name()="rect"]')[1] %>% xml_attr('height') %>% as.numeric() %>% max
-  vb[4] <- vb[4] + h*2
-  
-  xml_attr(root, "viewBox") <- paste(vb, collapse=' ')
+  xml_attr(root, "viewBox") <- paste(zoom.vb, collapse=' ')
   
   write_xml(root, viz[["location"]])
   

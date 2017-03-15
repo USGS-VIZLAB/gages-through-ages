@@ -61,11 +61,10 @@ process.plot_hydrographTotal <- function(viz=getContentInfo("NMHydrograhTotal-sv
     rects <- xml_find_all(rect_svg_all, '//*[local-name()="rect"]')
     rect_svg <- rects[length(rects)]
     
-    xml_set_attr(rect_svg, 'id', paste0("b",yr))
+    xml_set_attr(rect_svg, 'data-year', as.character(yr))
     xml_attr(rect_svg, "style") <- NULL
     xml_attr(rect_svg, "clip-path") <- NULL
     xml_attr(rect_svg, "class") <- "years-rect"
-    xml_attr(rect_svg, "onmouseover") <- paste0("vizlab.showline('",yr,"')")
 
     xml_add_child(g.year_rects, rect_svg[[1]])
   }
@@ -90,7 +89,6 @@ process.plot_hydrographTotal <- function(viz=getContentInfo("NMHydrograhTotal-sv
   
   xml_name(total_svg, ns = character()) <- "g"
   xml_attr(total_svg, "xmlns") <- NULL
-  xml_attr(total_svg, "viewBox") <- NULL
   xml_attr(total_svg, "preserveAspectRatio") <- NULL
   xml_attr(total_svg, "xmlns:xlink") <- NULL
   
