@@ -10,13 +10,13 @@ library(dataRetrieval)
 library(lubridate)
 library(parallel)
 
-source('helperFunctions.R')
+source('scripts/fetch/helperFunctions.R')
 
 dir.create('chunks',showWarnings = FALSE)
 
 #loop over HUC regions
 hucs <- str_pad(1:21, width = 2, pad = "0")
-
+setAccess("internal")
 allDF <- data.frame()
 for(h in hucs) {
   #dataRet call
@@ -43,15 +43,20 @@ allDF <- mutate(allDF, begin_date = as.Date(begin_date),
 # x <- allDF[c(duplicated(allDF$site_no),duplicated(allDF$site_no, fromLast = TRUE)),]
 #get sites where ratio days/ years is off
 saveRDS(allDF, "allDF.rds")
+allDF <- readRDS("allDF.rds")
 
-completeSiteDF <- filter(allDF, diff <= 10) #can't have less than 355 days in any non-start/end year
+completeSiteDF <- filter(allDF, 
+                         diff <= 10,
+                         count_nu > 355) #can't have less than 355 days in any non-start/end year
 incompleteSiteDF <- filter(allDF, diff > 10)
+incompleteSiteDF <- filter(incompleteSiteDF, count_nu >= 355)
+
 
 #want long df with row for each site/year
 #For complete sites, check if start and end years should be counted
 longOK <- checkCompleteYears(completeSiteDF)
 longOK <- longOK[!duplicated(longOK),]
-fwrite(longOK, file = 'sitesYearsComplete_latLon_355_NEW.csv')
+# fwrite(longOK, file = 'sitesYearsComplete_latLon_355_NEW.csv')
 
 # #need to deal with multiple lines for some sites in allDF
 # allDF_oneLineSite <- allDF[!duplicated(allDF$site_no),]
@@ -72,9 +77,22 @@ reqBks <- seq(1,length(toDownloadSites),by=200)
 for(i in reqBks) {
   sites <- na.omit(toDownloadSites[i:(i+199)])
   print(paste('starting', i))
-  currentSitesDF <- readNWISdv(siteNumber = sites, parameterCd = "00060")
-  fwrite(currentSitesDF, file = file.path('chunks', paste0('newChunk', i)))
+  
+  all_sites <- tryCatch({
+    currentSitesDF <- readNWISdv(siteNumber = sites, parameterCd = "00060")
+    fwrite(currentSitesDF, file = file.path('chunks', paste0('newChunk', i)))
+  },
+  error=function(cond) {
+    message("***************Errored on",i,"***********\n")
+    return(all_sites)
+  })
   print(paste("Finished sites", i, "through", i+199))
+}
+
+completeFromIncomplete <- data.frame()
+for(i in files){
+  complete <- yearsFunc(i)
+  completeFromIncomplete <- bind_rows(completeFromIncomplete, complete)
 }
 
 cl <- makeCluster(4)
