@@ -85,7 +85,7 @@ process.plot_hydrographTotal <- function(viz=getContentInfo("NMHydrograhTotal-sv
     hydro_lines <- svglite::xmlSVG({
   
       par(omi=c(0,0,0,0), mai=c(0.5,0.75,0,0),las=1, xaxs = "i")
-      plot(chunk_data, xlim=full_range,
+      plot(chunk_data, xlim=full_range,ylim=c(0, yMax),
            type="l", axes=F, ann=F, xaxt="n")
     }, height=height, width=width)
     
