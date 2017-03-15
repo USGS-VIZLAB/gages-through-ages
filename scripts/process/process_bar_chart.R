@@ -12,7 +12,7 @@ process.bar_chart <- function(viz){
   library(xml2)
   root <- read_xml("<g/>") 
   g.bars <- xml_add_child(root, 'g', id='year-bars')
-  g.mousers <- xml_add_sibling(g.bars, 'g', id = 'year-bars-mouser', opacity = "0.0")
+  g.mousers <- xml_add_sibling(g.bars, 'g', id = 'year-bars-mouser', class='mouser-shape')
   
   lm <- 45 
   w <- round(size[['x']]*72, 1) - lm

@@ -6,6 +6,9 @@
   fill:#b8bfac;
   stroke:none;
 }
+.mouser-shape{
+  opacity:0;
+}
 .watermark {
   cursor: pointer;
   fill: #c0c0c0;
