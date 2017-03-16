@@ -6,6 +6,8 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
     
   daily <- readData(viz[["depends"]][["daily"]])
   zoomer <- readData(viz[["depends"]][["zoomer"]])
+  watermark <- readData(viz[["depends"]][['watermark']])
+  
   zoomer.xml <- read_xml(zoomer)
   zoom.vb <- xml_attr(zoomer.xml, "viewBox")
   zoom.vb <- as.numeric(strsplit(zoom.vb, ' ')[[1]])
@@ -13,21 +15,22 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
   
   height <- viz[["height"]]
   width <- viz[["width"]]
+  yMax <- max(daily$Flow, na.rm = TRUE)
   
   doy_svg = svglite::xmlSVG({
     par(omi=c(0,0,0,0), mai=c(0.5,0.75,0,0),las=1, xaxs = "i")
     plot(1, type="n", xlab="", frame.plot=FALSE,
-         ylab= "Cubic Feet Per Second", 
+         ylab= expression(paste("Discharge [", ft^3, "/s]")),#"Cubic Feet Per Second", 
          mgp=c(2.5,0.25,0), 
-         xlim=c(0, 366), ylim=c(0, 16000),axes = FALSE)
+         xlim=c(0, 366), ylim=c(0, yMax),axes = FALSE)
     mtext(month.abb, 1, line = 0,
           at=c(15,46,74,105,135,166,196,227,258,288,319,349))
     axis(1, labels = FALSE, lwd.ticks = 0, at=c(0,366))
-    axis(2, labels = FALSE, lwd.ticks = 0, at=c(-1000,16000))
     axis(1, labels = FALSE, 
          at=c(32,60,91,121,152,182,213,244,274,305,335))
-    axis(2, labels = c("0","5,000","10,000","15,000"),
-         at = c(0,5000, 10000,15000), lwd.ticks = 0, mgp=c(2.5,0.25,0))
+    axis(2, at=axTicks(2), labels=format(axTicks(2),  big.mark=',',scientific=FALSE), 
+         lwd.ticks = 0, mgp=c(2.5,0.25,0))
+    axis(2, labels = FALSE, lwd.ticks = 0, at=c(par("usr")[3:4]))
   }, height=height, width=width)
   
   #################
