@@ -132,9 +132,16 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
   
   xml_add_child(root, zoomer.xml)
 
-  zoom.vb[4] <- vb_doy[4] + zoom.vb[4]
+  vb_overall <- zoom.vb
+  vb_overall[4] <- vb_doy[4] + zoom.vb[4]
   
-  xml_attr(root, "viewBox") <- paste(zoom.vb, collapse=' ')
+  xml_attr(root, "viewBox") <- paste(vb_overall, collapse=' ')
+  
+  g.watermark <- xml_add_child(root, 'g', id='usgs-watermark', 
+                               transform = sprintf('translate(50,%s)scale(0.20)', 
+                                                   as.character(zoom.vb[4]-3)))
+  xml_add_child(g.watermark,'path', d=watermark[['usgs']], onclick="window.open('https://www2.usgs.gov/water/','_blank')", 'class'='watermark')
+  xml_add_child(g.watermark,'path', d=watermark[['wave']], onclick="window.open('https://www2.usgs.gov/water/','_blank')", 'class'='watermark')
   
   write_xml(root, viz[["location"]])
   
