@@ -75,7 +75,7 @@ process.plot_hydrographTotal <- function(viz=getContentInfo("NMHydrograhTotal-sv
   }
   
   g.totalPoly <- xml_add_sibling(xml_children(total_svg)[[length(xml_children(total_svg))]], 
-                                 'g', id='totalHydro','class'='total-hydrograph')
+                                 'g', id='totalHydro')
   
   full_range <- as.Date(c(paste0(yearRange[1],"-01-01"),
                           paste0(yearRange[2],"-12-31")))
@@ -107,7 +107,6 @@ process.plot_hydrographTotal <- function(viz=getContentInfo("NMHydrograhTotal-sv
   xml_attr(total_svg, "xmlns") <- NULL
   xml_attr(total_svg, "preserveAspectRatio") <- NULL
   xml_attr(total_svg, "xmlns:xlink") <- NULL
-  xml_attr(total_svg, "id") <- 'total_hydro'
-  xml_attr(total_svg, "class") <- 'total_hydro'
+  xml_attr(total_svg, "class") <- 'total-hydrograph'
   write_xml(total_svg, viz[["location"]])
 }
