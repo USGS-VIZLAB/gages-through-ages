@@ -18,16 +18,16 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
   yMax <- max(daily$Flow, na.rm = TRUE)
   
   doy_svg = svglite::xmlSVG({
-    par(omi=c(0,0,0,0), mai=c(0.5,0.75,0,0),las=1, xaxs = "i")
+    par(omi=c(0,0,0,0), mai=c(0.5,0.55,0,0),las=1, xaxs = "i")
     plot(1, type="n", xlab="", frame.plot=FALSE,
-         ylab= expression(paste("Discharge [", ft^3, "/s]")),#"Cubic Feet Per Second", 
+         ylab= "",
          mgp=c(2.5,0.25,0), 
          xlim=c(0, 366), ylim=c(0, yMax),axes = FALSE)
     mtext(month.abb, 1, line = 0,
-          at=c(15,46,74,105,135,166,196,227,258,288,319,349))
+          at=c(15,46,74,105,135,166,196,227,258,288,319,349)) #midpoint of months
     axis(1, labels = FALSE, lwd.ticks = 0, at=c(0,366))
     axis(1, labels = FALSE, 
-         at=c(32,60,91,121,152,182,213,244,274,305,335))
+         at=c(32,60,91,121,152,182,213,244,274,305,335)) #first day of months
     axis(2, at=axTicks(2), labels=format(axTicks(2),  big.mark=',',scientific=FALSE), 
          lwd.ticks = 0, mgp=c(2.5,0.25,0))
     axis(2, labels = FALSE, lwd.ticks = 0, at=c(par("usr")[3:4]))
@@ -38,15 +38,15 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
   .junk <- lapply(r, xml_remove)
   
   defs <- xml_find_all(doy_svg, '//*[local-name()="defs"]')
-  xml_remove(defs)
+  .junk <- xml_remove(defs)
   
   text <- xml_find_all(doy_svg, '//*[local-name()="text"]')
-  xml_remove(text)
+  .junk <- xml_remove(text)
   
   xml_attr(text, "style") <- NULL
   xml_attr(text, "textLength") <- NULL
   xml_attr(text, "lengthAdjust") <- NULL
-  
+
   g.labels <- xml_add_sibling(xml_children(doy_svg)[[length(xml_children(doy_svg))]], 
                                  'g', 'class'='axis-labels svg-text')
   
@@ -78,7 +78,7 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
   grab_spark <- function(vals, yMax, height, width){
     
     x = svglite::xmlSVG({
-      par(omi=c(0,0,0,0), mai=c(0.5,0.75,0,0),
+      par(omi=c(0,0,0,0), mai=c(0.5,0.55,0,0),
           las=1, mgp=c(2.5,0.25,0), xaxs = "i")
       plot(vals, type='l', axes=F, ann=F,
            xlim=c(0, 366), ylim=c(0, yMax))

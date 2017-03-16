@@ -19,7 +19,7 @@ process.plot_hydrographTotal <- function(viz=getContentInfo("NMHydrograhTotal-sv
   
   total_svg <- svglite::xmlSVG({
 
-    par(omi=c(0,0,0,0), mai=c(0.5,0.75,0,0),
+    par(omi=c(0,0,0,0), mai=c(0.5,0.55,0,0),
         las=1, xaxs = "i",mgp=c(2.5,0.25,0))
     plot(1, type='n', axes=F, ann=F, xaxt="n",
          xlim=yearRange, 
@@ -53,7 +53,7 @@ process.plot_hydrographTotal <- function(viz=getContentInfo("NMHydrograhTotal-sv
 
   for(yr in c(yearRange[1]:yearRange[2])){
     rect_svg_all <- svglite::xmlSVG({
-      par(omi=c(0,0,0,0), mai=c(0.5,0.75,0,0),
+      par(omi=c(0,0,0,0), mai=c(0.5,0.55,0,0),
           las=1, xaxs = "i")
       plot(1, type="n", axes=F, ann=F, xaxt="n",
            xlim=yearRange, ylim=c(0, yMax))
@@ -90,7 +90,7 @@ process.plot_hydrographTotal <- function(viz=getContentInfo("NMHydrograhTotal-sv
     
     hydro_lines <- svglite::xmlSVG({
   
-      par(omi=c(0,0,0,0), mai=c(0.5,0.75,0,0),las=1, xaxs = "i")
+      par(omi=c(0,0,0,0), mai=c(0.5,0.55,0,0),las=1, xaxs = "i")
       plot(chunk_data, xlim=full_range,ylim=c(0, yMax),
            type="l", axes=F, ann=F, xaxt="n")
     }, height=height, width=width)
