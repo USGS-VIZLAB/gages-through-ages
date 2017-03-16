@@ -32,14 +32,25 @@
   fill: #ED6A5A;
 }
 
+.selected-doy{
+  opacity:1;
+  fill: #ED6A5A;
+}
+
 .doy-polyline {
   fill:none;
   stroke:#e0e0e0;
 }
 
 .axis-labels {
-  font-size: 8px;
+  stroke:none;
+  fill:#909090;
   font-family: Arial;
+  font-size: 0.75em;
+}
+
+.axis-lines {
+  stroke: #909090;
 }
 
 .years-rect {
@@ -48,19 +59,10 @@
   opacity:0;
 }
 
-.years-rect.selected-year{
-  opacity: 1.0;
-}
-
 .years-rect:hover {
   opacity:1.0;
 }
 
-.axis-labels{
-  fill:#909090;
-  stroke:none;
-  font-size: 0.75em;
-}
 #y-axis, #x-axis{
   stroke: #909090;
 }

@@ -108,10 +108,4 @@ var hovertext;
     }
   }
   
-//  vizlab.showline = function(year) {
-//     var lineId = '#l' + year;
-//     document.getElementById(lineId).setAttribute(class, 'selected-year'//);
-//  }
-
-  
 })();

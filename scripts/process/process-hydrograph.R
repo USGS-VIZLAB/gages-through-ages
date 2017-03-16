@@ -10,13 +10,12 @@ process.plot_hydrographTotal <- function(viz=getContentInfo("NMHydrograhTotal-sv
   maxYear <- viz[["maxYear"]]
   minYear <- viz[["minYear"]]
   
-  rawData <- data.frame(approx(rawData$Date, 
-                               rawData$Flow, 
-                               n = nrow(rawData)/viz[["full-desample"]]))
-
+  date_chunks <- split(rawData$Date, cumsum(c(0, diff(rawData$Date)>=2)))
+  flow_chunks <- split(rawData$Flow, cumsum(c(0, diff(rawData$Date)>=2)))
+  
   yearRange <- c(minYear, maxYear)
   
-  yMax <- 1.2*max(rawData$x, na.rm = TRUE)
+  yMax <- 1.2*max(rawData$Flow, na.rm = TRUE)
   
   total_svg <- svglite::xmlSVG({
 
@@ -29,17 +28,23 @@ process.plot_hydrographTotal <- function(viz=getContentInfo("NMHydrograhTotal-sv
   }, height=height, width=width)
   
   r <- xml_find_all(total_svg, '//*[local-name()="rect"]')
+  .junk <- lapply(r, xml_remove)
+  
   defs <- xml_find_all(total_svg, '//*[local-name()="defs"]')
   xml_remove(defs)
   
   text <- xml_find_all(total_svg, '//*[local-name()="text"]')
+  xml_remove(text)
   xml_attr(text, "style") <- NULL
   xml_attr(text, "textLength") <- NULL
   xml_attr(text, "lengthAdjust") <- NULL
-  xml_attr(text, "class") <- "axis-labels"
   
-  # clean up junk that svglite adds:
-  .junk <- lapply(r, xml_remove)
+  g.labels <- xml_add_sibling(xml_children(total_svg)[[length(xml_children(total_svg))]], 
+                              'g', 'class'='axis-labels svg-text')
+  
+  for(i in text){
+    xml_add_child(g.labels, i)
+  }
 
   lines <- xml_find_all(total_svg, '//*[local-name()="line"]')
   .junk <- xml_remove(lines)
@@ -61,41 +66,47 @@ process.plot_hydrographTotal <- function(viz=getContentInfo("NMHydrograhTotal-sv
     rects <- xml_find_all(rect_svg_all, '//*[local-name()="rect"]')
     rect_svg <- rects[length(rects)]
     
-    xml_set_attr(rect_svg, 'id', paste0("b",yr))
+    xml_set_attr(rect_svg, 'id', paste0("r_",yr))
     xml_attr(rect_svg, "style") <- NULL
     xml_attr(rect_svg, "clip-path") <- NULL
-    xml_attr(rect_svg, "clip-path") <- NULL
     xml_attr(rect_svg, "class") <- "years-rect"
-    xml_attr(rect_svg, "class") <- "years-rect"
-    xml_attr(rect_svg, "onmouseover") <- paste0("vizlab.showline('",yr,"')")
-    xml_attr(rect_svg, "onmouseout") <- paste0("vizlab.greyline('",yr,"')")
 
     xml_add_child(g.year_rects, rect_svg[[1]])
   }
   
   g.totalPoly <- xml_add_sibling(xml_children(total_svg)[[length(xml_children(total_svg))]], 
-                                 'g', id='totalHydro','class'='total-hydrograph')
+                                 'g', id='totalHydro')
   
-  hydro_lines <- svglite::xmlSVG({
-
-    par(omi=c(0,0,0,0), mai=c(0.5,0.75,0,0),las=1, xaxs = "i")
-    plot(rawData, 
-         type="l", axes=F, ann=F, xaxt="n")
-  }, height=height, width=width)
+  full_range <- as.Date(c(paste0(yearRange[1],"-01-01"),
+                          paste0(yearRange[2],"-12-31")))
   
-  pline <- xml_find_first(hydro_lines, '//*[local-name()="polyline"]')
-  xml_remove(pline)
-  xml_attr(pline,"class") <- "total-hydrograph"
-  xml_attr(pline,"clip-path") <- NULL
-  xml_attr(pline,"style") <- NULL
+  for(i in 1:length(date_chunks)){
+    x <- date_chunks[[i]]
+    y <- flow_chunks[[i]]
+    
+    chunk_data <- data.frame(approx(x, y, 
+                                   n = length(x)/viz[["full-desample"]]))
+    chunk_data$x <- as.Date(chunk_data$x, origin="1970-01-01")
+    
+    hydro_lines <- svglite::xmlSVG({
   
-  xml_add_child(g.totalPoly, pline)
+      par(omi=c(0,0,0,0), mai=c(0.5,0.75,0,0),las=1, xaxs = "i")
+      plot(chunk_data, xlim=full_range,ylim=c(0, yMax),
+           type="l", axes=F, ann=F, xaxt="n")
+    }, height=height, width=width)
+    
+    pline <- xml_find_first(hydro_lines, '//*[local-name()="polyline"]')
+    xml_remove(pline)
+    xml_attr(pline,"clip-path") <- NULL
+    xml_attr(pline,"style") <- NULL
+    
+    xml_add_child(g.totalPoly, pline)
+  }
   
   xml_name(total_svg, ns = character()) <- "g"
   xml_attr(total_svg, "xmlns") <- NULL
-  xml_attr(total_svg, "viewBox") <- NULL
   xml_attr(total_svg, "preserveAspectRatio") <- NULL
   xml_attr(total_svg, "xmlns:xlink") <- NULL
-  
+  xml_attr(total_svg, "class") <- 'total-hydrograph'
   write_xml(total_svg, viz[["location"]])
 }
