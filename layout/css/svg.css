@@ -34,7 +34,7 @@
 
 .selected-doy{
   opacity:1;
-  fill: #ED6A5A;
+  stroke: #ED6A5A;
 }
 
 .doy-polyline {
