@@ -104,7 +104,8 @@ visualize.doy <- function(viz = getContentInfo(viz.id = "doy-NM")){
     }
     
     sub_data <- data.frame(approx(year_data$DayOfYear, 
-                                  year_data$Flow, n = 366/viz[["full-desample"]]))
+                                  year_data$Flow, 
+                                  n = nrow(year_data)/viz[["full-desample"]]))
     
     x <- grab_spark(sub_data, yMax, height, width)
     polyline <- xml_find_first(x, '//*[local-name()="polyline"]')
