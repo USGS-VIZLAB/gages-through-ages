@@ -60,8 +60,24 @@ var hovertext;
   
   $(document).ready(function() {
     // Set up svg mouse over dom
+    var doySVG = document.getElementById('doy-NM');
     mapSVG = vizlab.svg(document.getElementById("map-svg"));
     mapSVG.addTooltip();
+    $('#doy-NM .years-rect').mouseenter(function() {
+      var year = $(this).attr('id').slice(2);
+      $(this).addClass('selected-year');
+      $('#doy_' + year).addClass('selected-doy');
+      
+      var use = document.createElementNS(doySVG.namespaceURI, 'use');
+      use.setAttributeNS(doySVG.attributes["xmlns:xlink"].nodeValue, 'href', '#doy_' + year);
+      document.getElementById('dayOfYear').appendChild(use);
+    });
+    $('#doy-NM .years-rect').mouseleave(function() {
+      var year = $(this).attr('id').slice(2);
+      $(this).removeClass('selected-year');
+      $('#dayOfYear use').remove();
+      $('#doy_' + year).removeClass('selected-doy');
+    });
   });
   
   vizlab.play = function() {
