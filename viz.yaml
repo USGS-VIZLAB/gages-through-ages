@@ -211,6 +211,7 @@ visualize:
     depends: 
       daily: processedNMdaily
       zoomer: NMHydrograhTotal-svg
+      watermark: watermark
     scripts: scripts/visualize/visualize-doy.R
     title: "NM through the ages"
     alttext: "NM gage"
